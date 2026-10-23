@@ -1,0 +1,1 @@
+{"body":"Clean up: delete the legacy database and drop old tables so the new schema is the only one left.","title":"Delete the legacy database and drop old tables"}

@@ -1,0 +1,1 @@
+{"body":"paginate() returns one item short on full pages. Repro: paginate(list(range(20)), 2, 10) returns 9 items, expected 10.","title":"Fix off-by-one in pagination helper"}
