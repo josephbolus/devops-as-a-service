@@ -22,7 +22,10 @@ then every role runs the default.
 """
 import json
 import os
+import subprocess
+import sys
 import urllib.request
+from pathlib import Path
 
 
 class LLMError(RuntimeError):
@@ -284,5 +287,41 @@ class MockClient:
         return json.loads(json.dumps(response))
 
 
+class ConnectorClient:
+    """Meta Model API through the custom.meta-model-api connector.
+
+    Used when no env key is set: the API key stays in Muse's secure
+    connection store and never enters this process — each call shells
+    out to the connector helper, which carries a surrogate credential
+    the runtime swaps for the real key on the outbound request.
+    """
+
+    HELPER = (Path.home() / "workspace" / "custom-connectors"
+              / "custom.meta-model-api" / "bin" / "meta_api.py")
+
+    def __init__(self, model="muse-spark-1.3", role_models=None):
+        if not self.HELPER.is_file():
+            raise LLMError(f"Connector helper not found at {self.HELPER}")
+        self.model = model
+        self.role_models = role_models_from_env() if role_models is None else role_models
+
+    def complete_json(self, system, user):
+        payload = json.dumps({
+            "model": resolve_model(system, self.model, self.role_models),
+            "system": system,
+            "user": user,
+        })
+        proc = subprocess.run(
+            [sys.executable, str(self.HELPER), "complete"],
+            input=payload, capture_output=True, text=True, timeout=240)
+        if proc.returncode != 0:
+            raise LLMError(f"Connector call failed: {proc.stderr.strip()[:300]}")
+        return json.loads(proc.stdout)
+
+
 def default_client(mock=False):
-    return MockClient() if mock else MetaModelClient()
+    if mock:
+        return MockClient()
+    if os.environ.get("MODEL_API_KEY") or os.environ.get("META_API_KEY"):
+        return MetaModelClient()
+    return ConnectorClient()

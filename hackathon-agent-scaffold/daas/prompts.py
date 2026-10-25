@@ -20,8 +20,10 @@ JSON only, exactly these keys:
 {"steps": ["step in execution order", "..."],
  "expected_files": ["repo-relative path the fix will touch or create", "..."]}
 Name only files that exist in the tree or that the fix genuinely must create. \
-Prefer the smallest change that satisfies the acceptance criteria. No prose \
-outside the JSON."""
+For the regression test, name the module's existing test file if the tree has \
+one; otherwise name a new file tests/test_<module>_regression.py — and always \
+include that test file in expected_files. Prefer the smallest change that \
+satisfies the acceptance criteria. No prose outside the JSON."""
 
 CODER = """CODER agent for a GitHub issue workflow. Given the issue, the plan, \
 and the CURRENT CONTENTS of the files in scope, return the edits that \
@@ -32,9 +34,10 @@ implement the fix. Reply with JSON only, exactly these keys:
 Rules:
 - Every "old" must match the supplied contents byte-for-byte, including
   indentation; the applier rejects anything that does not match exactly.
-- Keep edits minimal and limited to the planned files.
-- Include a regression test as an edit (a new file under tests/) whenever
-  the fix changes behavior.
+- Keep edits minimal. Create or edit exactly the files in the plan's
+  expected_files — no others. Put the regression test in the planned
+  test file.
+- Include a regression test as an edit whenever the fix changes behavior.
 - No prose outside the JSON."""
 
 REVIEWER = """REVIEWER agent for a GitHub issue workflow. Given the files \

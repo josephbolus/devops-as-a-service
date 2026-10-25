@@ -43,10 +43,24 @@ def _file_contents(repo: Path, files):
 
 
 def _diff(repo: Path, changed):
-    """Unified diff of the changed files when the repo is under git."""
+    """Unified diff of the changed files when the repo is under git.
+
+    `git diff` never shows untracked files, and the coder's regression
+    test is usually a brand-new file — synthesize a new-file block for
+    those so the reviewer can actually verify the coverage.
+    """
     proc = subprocess.run(["git", "-C", str(repo), "diff", "--", *changed],
                           capture_output=True, text=True, cwd=str(repo))
-    return proc.stdout if proc.returncode == 0 else ""
+    out = proc.stdout if proc.returncode == 0 else ""
+    listed = subprocess.run(["git", "-C", str(repo), "ls-files", "--", *changed],
+                            capture_output=True, text=True, cwd=str(repo))
+    tracked = set(listed.stdout.split()) if listed.returncode == 0 else set()
+    for name in changed:
+        path = repo / name
+        if name not in tracked and path.is_file():
+            body = "".join(f"+{line}\n" for line in path.read_text().splitlines())
+            out += f"\n--- new file: {name} ---\n{body}"
+    return out
 
 
 def _apply_edits(repo: Path, edits):
