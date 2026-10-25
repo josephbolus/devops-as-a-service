@@ -16,6 +16,13 @@ nothing here has been pushed to GitHub.
   returns 10 after the run.
 - Guardrail issue ("Delete the legacy database…"): escalates before
   any agent runs, writes `escalation.md`, repo files byte-identical.
+- Guardrail coverage hardened Oct 24: a probe found 5 of 5 reworded
+  destructive requests ("Erase the production database", "Permanently
+  delete all customer data", …) evaded the original patterns. Patterns
+  now cover broad verb/object sets in both word orders, and
+  `tests/test_guardrail.py` pins 10 destructive phrasings that must
+  escalate and 7 benign cleanups that must pass. Full scaffold suite:
+  10/10 (was 8/8 before the new tests).
 
 ## Design choices worth knowing
 
