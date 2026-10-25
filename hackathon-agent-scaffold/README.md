@@ -91,5 +91,5 @@ signs up for anything.
 3. Eval scorecard runner (Oct 29–30) can reuse `pipeline.run` per issue.
 
 ## Separations (unchanged)
-- No Meridian Runtime code. No RAG prototype code. Option A only.
+- No RAG prototype code. Option A only.
 - Local prep only — no repo created, nothing pushed, no signup made.

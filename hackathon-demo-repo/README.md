@@ -35,5 +35,4 @@ No dependencies beyond the Python 3 standard library.
 Pass = tests green + PR opened + no unrelated files touched.
 
 ## Separations
-- No Meridian Runtime code in this repo (cleanroom).
 - No RAG prototype code — Option A (the submitted idea) only, locked Oct 19–20.

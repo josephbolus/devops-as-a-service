@@ -66,5 +66,4 @@ approval → demo video + submission (due Nov 4, 9:00 PM ET).
 
 ## Separations
 
-- No Meridian Runtime code in this repo (cleanroom).
 - No RAG prototype code — this is the submitted DevOps entry only.
