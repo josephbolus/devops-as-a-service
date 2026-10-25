@@ -74,6 +74,16 @@ nothing here has been pushed to GitHub.
   reviewer approved) under `live/tier1-pr16/` with a provenance
   note. Mock and live artifacts are labeled as such throughout, and
   `tests/test_demo_fallbacks.py` pins the package's completeness.
+- Demo run-of-show added Oct 25 (maximizer iteration 7):
+  repo-root `../DEMO_RUN_OF_SHOW.md` is the Nov 2 operator sheet —
+  timed beats (2:30–3:00) mapped to the demo console's stage
+  timeline (guardrail → triage → plan → code → tests → review →
+  done), a Mock-mode pre-flight, fallback decision thresholds
+  pointing at `../demo-fallbacks/`, and the two-take rehearsal log.
+  It also scores the demo console itself (commit 698a628, unscored
+  in iteration 6). `tests/test_demo_run_of_show.py` pins the stage
+  order, timings, and every fallback path's existence. Full
+  scaffold suite: 49/49. Still not recorded — no video exists yet.
 
 ## Demo console (added Oct 25)
 

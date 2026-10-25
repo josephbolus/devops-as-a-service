@@ -37,6 +37,9 @@ cd hackathon-agent-scaffold && python3 generate_demo_fallbacks.py
    no unexpected files). Label the mock artifacts as mock on camera;
    the live PR needs no label beyond what it is.
 
+The timed operator sheet for recording day (beats, console actions,
+fallback thresholds, two-take log) is `../DEMO_RUN_OF_SHOW.md`.
+
 ## Rehearsal checklist (do once before Nov 2)
 
 - [ ] Open every file above once at 125% browser zoom — diff text readable.
