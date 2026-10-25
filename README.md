@@ -60,6 +60,8 @@ Model calls go through one `llm` abstraction pointed at the Meta Model API.
 | `DEMO_RUN_OF_SHOW.md` | The Nov 2 recording run-of-show: timed beats (2:30–3:00) mapped to the demo console's stage timeline, pre-flight rehearsal in Mock mode, fallback decision thresholds pointing at `demo-fallbacks/`, and the two-take rehearsal log. Pinned by `tests/test_demo_run_of_show.py`. Not yet recorded — no video exists yet. |
 | `IMPACT_MODEL.md` | A worked time-saving model for the five-engineer shop (50 min saved per passed issue at the stated inputs; 2.50–8.33 senior hours/week across the volume grid), with every input labeled measured, entry assertion, or model assumption, a review-time sensitivity table, explicit non-claims (no dollars, no wait-time, no pass-rate adjustment), and the measurement plan that replaces each assumption. A model, not a measured result — pinned by `tests/test_impact_model.py`, which recomputes its tables. |
 | `APPROVE_AND_RESUME.md` | The completed human gate (former Days 5–6): validated decision recording, reject/handle-manually closing with zero model calls (counting-client pinned), rescope as the only resumable path with the guardrail re-checked, via `pipeline.resume`, the `run_resume.py` CLI, and the demo console's decision endpoint. Measured Oct 25: mock rescope passed 6 → 7; live rescope (connector, split config) passed 6 → 9 in 16.84s. Pinned by `tests/test_resume.py`. |
+| `SUBMISSION.md` | The Day-8 submission dry run, drafted early (Oct 25): full submission form text (project, track, tagline, per-criterion sections with the measured numbers), an honest status (draft — not submitted; demo video not yet recorded, URL a placeholder), and the Day-8 checklist (README/architecture/scorecard/license/hygiene verified; the three `daas/*` branches each back an open live PR, #16/#17/#18). Pinned by `tests/test_submission.py`. |
+| `LICENSE` | MIT License (Copyright (c) 2026 Joseph Bolus) — the Day-8 license file from the sprint plan. |
 | `META_AI_TOOLING.md` | How the entry uses the Meta Model API: `muse-spark-1.3` via one `llm` abstraction (connector / direct / mock clients, mock never counted as tooling evidence), four schema-pinned role prompts with the exact JSON keys the pipeline consumes, and the per-role model mechanism (`DAAS_MODEL_<ROLE>`, resolved before the call on both live transports) — with the split experiment run Oct 25 and its decision recorded (keep the split: CODER/REVIEWER on `muse-wonder-1.0`, decided on test growth +10 vs +9 after a pass-count tie; record in `eval-scorecard/split-runs.json`, pinned by `tests/test_split_eval.py`) and a not-claimed section. Pinned by `tests/test_meta_tooling.py`, which also proves both live transports' routing with mocked transports (no API call). |
 
 ## Run the baselines
@@ -77,7 +79,11 @@ use the Meta Model API via `MODEL_API_KEY` / `META_API_KEY`.
 
 Day-by-day plan (Oct 26 – Nov 4) is tracked in this repo's **milestones and
 issues**: agent loop → eval gate + published scorecard → guardrails + human
-approval → demo video + submission (due Nov 4, 9:00 PM ET).
+approval → demo video + submission (due Nov 4, 9:00 PM ET). Per the
+builder's Oct 25 instruction, all build milestones were completed early
+(agent loop, live eval, model split, approve-and-resume, Day-8 dry run in
+`SUBMISSION.md`); what remains is the demo video recording (Nov 2) and
+the submission itself (Nov 4, the builder's go).
 
 ## Separations
 

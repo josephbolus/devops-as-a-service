@@ -3,12 +3,15 @@
 Pulls the sprint plan's Days 1–2 work (Oct 27–28: triage → planner →
 coder → reviewer → PR) forward into a tested skeleton, so the sprint
 starts from working plumbing instead of a blank repo. Repo-agnostic,
-like the issue pack: it drops into whichever repo the user picks, and
-nothing here has been pushed to GitHub.
+like the issue pack: it drops into whichever repo the user picks.
+(This scaffold lives in the public repo
+github.com/josephbolus/devops-as-a-service; the bullets below are the
+Oct 22 pre-build proof, with dated updates appended since.)
 
 ## What's proven (verified Oct 22 evening, local run)
 
-- `python3 -m unittest discover -s tests` — 2/2 pass.
+- `python3 -m unittest discover -s tests` — 2/2 pass at pre-build
+  (suite has grown since; see the dated bullets below).
 - Tier-1 end-to-end with the mock provider, against a copy of
   `../hackathon-demo-repo`: issue in → guardrail pass → triage → plan →
   coder edits applied → 7 tests green (6 baseline + new regression) →
@@ -215,12 +218,19 @@ signs up for anything.
 
 ## What remains for the real build (unchanged sprint scope)
 
-1. Real prompts per agent (mock responses are canned per issue for
-   Tier 1/2/3; the real provider still needs real prompts).
-2. GitHub intake: read a live issue via `gh issue view --json`, branch,
-   commit, `gh pr create` (Day 0–1, once the repo choice lands).
+1. ~~Real prompts per agent~~ — done: schema-pinned prompts live in
+   `daas/prompts.py` and served every live run (see
+   `../META_AI_TOOLING.md`); MockClient responses remain canned per
+   issue for offline tests only.
+2. ~~GitHub intake~~ — done early Oct 25: `run_pr.py` branches, commits,
+   pushes, and opens the PR; live runs opened PRs #16/#17/#18.
 3. ~~Eval scorecard runner (Oct 29–30) can reuse `pipeline.run` per issue~~ — done early Oct 25 (`run_scorecard.py`, see above); the live Tier 2/3 + guardrail runs were also completed Oct 25 and the scorecard regenerated with those rows (timed 3/3 + PRs #16/#17/#18).
+4. Submission dry run — done early Oct 25 (maximizer iteration 13):
+   repo-root `../SUBMISSION.md` carries the full draft form text and
+   the Day-8 checklist, and `../LICENSE` (MIT) is in place, both
+   pinned by `tests/test_submission.py`, which also scans tracked
+   files for key values. Remaining: the demo video (Nov 2) and the
+   submission itself (Nov 4, the builder's go).
 
 ## Separations (unchanged)
 - No RAG prototype code. Option A only.
-- Local prep only — no repo created, nothing pushed, no signup made.
