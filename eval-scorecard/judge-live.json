@@ -1,0 +1,91 @@
+{
+  "record": "Judge Mode live run \u2014 DevOps as a Service, Oct 25, 2026 (maximizer iteration 20)",
+  "config": "live via Judge Mode (POST /api/judge/run, mode=live), split (kept config): CODER/REVIEWER=muse-wonder-1.0, TRIAGE/PLANNER=muse-spark-1.3, Meta Model API through the custom.meta-model-api connector, no env key",
+  "runs": [
+    {
+      "issue_id": "tier1",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "started_at": "2026-10-25T23:56:23.547504+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 29
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 2154
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 4740
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 16541
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "6 \u2192 9 (+3)",
+          "elapsed_ms": 16654
+        },
+        {
+          "stage": "review",
+          "status": "pass",
+          "detail": "approve",
+          "elapsed_ms": 20436
+        },
+        {
+          "stage": "done",
+          "status": "pass",
+          "detail": "PR-ready",
+          "elapsed_ms": 20437
+        }
+      ],
+      "tests_before": 6,
+      "tests_after": 9,
+      "tests_delta": 3,
+      "captions": 7,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 20437,
+      "cost_total_usd_est": 0.010789,
+      "cost_method": "char_estimate",
+      "cost_calls": 4,
+      "cost_per_role_models": {
+        "TRIAGE": [
+          "muse-spark-1.3"
+        ],
+        "PLANNER": [
+          "muse-spark-1.3"
+        ],
+        "CODER": [
+          "muse-wonder-1.0"
+        ],
+        "REVIEWER": [
+          "muse-wonder-1.0"
+        ]
+      },
+      "links_live_prs": 3,
+      "error": null
+    }
+  ],
+  "summary": {
+    "runs": 1,
+    "passed": true,
+    "tests_delta": 3,
+    "captions": 7,
+    "cost_total_usd_est": 0.010789,
+    "total_elapsed_ms": 20437
+  }
+}

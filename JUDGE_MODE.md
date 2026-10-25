@@ -68,6 +68,23 @@ the guardrail stop ends escalated with its later stages pending
 (1 caption). Mock is plumbing proof, not model performance — the tour
 proves a judge can reach every stop unaided, nothing more.
 
+## Live run (Oct 25, iteration 20)
+
+Judge Mode was mock-proven (above); it has now also run **live** end
+to end. `hackathon-agent-scaffold/run_judge_live.py` exercised the
+same one-click endpoint over real HTTP with `mode: "live"` — the
+Tier 1 issue, no operator choices after the click, real Meta Model
+API calls through the custom.meta-model-api connector under the kept
+split config. Measured: overall **pass**, tests 6 → 9 (+3), 7
+event-derived captions, every stage pass in the closing card,
+20.44s total elapsed, est. API cost $0.0108 (char-count estimate),
+and the card's per-role cost summary records the split models on the
+calls that ran (TRIAGE/PLANNER muse-spark-1.3, CODER/REVIEWER
+muse-wonder-1.0). Record: `eval-scorecard/JUDGE_LIVE.md` +
+`judge-live.json`, pinned by `tests/test_judge_live.py`. One live
+run of one seeded issue through the console path — it proves the
+self-guided path works with real models, and opens no PR.
+
 ## Pinned by tests
 
 `tests/test_judge_tour.py` pins the tour record (summary recomputed

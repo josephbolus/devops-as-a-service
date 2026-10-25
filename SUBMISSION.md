@@ -82,7 +82,10 @@ all: Judge Mode (`JUDGE_MODE.md`) runs any seeded issue from one click
 with narration captions tied to each pipeline event and a closing
 results card — and the full tour is measured, all four stops over
 HTTP: work issues 3/3 pass, the guardrail stop ends escalated
-(`eval-scorecard/JUDGE_TOUR.md`). Video status: not yet recorded.
+(`eval-scorecard/JUDGE_TOUR.md`). Judge Mode has also run live end
+to end through the same one-click endpoint: Tier 1 pass, tests
+6 → 9, 20.44s, est. $0.0108 (`eval-scorecard/JUDGE_LIVE.md`).
+Video status: not yet recorded.
 
 ## Technical depth & execution (20%)
 
@@ -96,7 +99,7 @@ HTTP: work issues 3/3 pass, the guardrail stop ends escalated
   live rescope under the split passed 6 → 9 in 16.84s
   (`eval-scorecard/resume-runs.json`).
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 156/156, demo repo 6/6, generalization
+- Suites at drafting: scaffold 163/163, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, all stdlib-only.
 
 ## Dry-run checklist (Day 8 exit criteria)
