@@ -28,6 +28,7 @@ import subprocess
 import sys
 import tempfile
 import threading
+import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -68,17 +69,138 @@ def load_issue(issue_id):
     return None
 
 
+# ---------------------------------------------------------------- judge mode
+
+REPO_URL = "https://github.com/josephbolus/devops-as-a-service"
+EVAL_SCORECARD_URL = REPO_URL + "/blob/main/eval-scorecard/SCORECARD.md"
+GENERALIZATION_URL = REPO_URL + "/blob/main/eval-scorecard/GENERALIZATION.md"
+LIVE_PR_URLS = [REPO_URL + "/pull/16", REPO_URL + "/pull/17",
+                REPO_URL + "/pull/18"]
+JUDGE_STAGES = ["guardrail", "triage", "plan", "code", "tests", "review", "done"]
+
+
+def caption_for_event(event):
+    """Narration caption for one pipeline event — Judge Mode speaks in
+    plain language about what just happened and why it matters, tied to
+    the event that actually fired (never pre-scripted stage text)."""
+    stage, d = event.get("stage"), event.get("data") or {}
+    if stage == "guardrail":
+        if d.get("blocked"):
+            return ("Judge Mode: Stop — the deterministic guardrail blocked this "
+                    "request before any model ran. Nothing was changed; a human "
+                    "receives the approval request instead. That is the safety "
+                    "story of this system, in one event.")
+        return ("Judge Mode: First, a deterministic guardrail — plain code, not "
+                "a model — checked this issue for destructive requests. It "
+                "passed, so the agents may proceed.")
+    if stage == "triage":
+        return (f"Judge Mode: The triage agent classified this as a "
+                f"{d.get('kind', 'issue')} and wrote the acceptance criteria "
+                f"the rest of the pipeline will be judged against.")
+    if stage == "plan":
+        steps = d.get("steps") or []
+        return (f"Judge Mode: The planner read the repository tree and laid "
+                f"out {len(steps)} step(s), naming the exact files it expects "
+                f"to change. Anything outside that list fails the run.")
+    if stage == "code":
+        changed = d.get("changed") or []
+        return (f"Judge Mode: The coder edited {len(changed)} file(s) — "
+                f"{', '.join(changed) or 'none'} — including a new regression "
+                f"test, following the plan rather than improvising.")
+    if stage == "tests":
+        delta = (d.get("tests_after") or 0) - (d.get("tests_before") or 0)
+        verdict = "passed" if d.get("tests_ok") else "FAILED"
+        return (f"Judge Mode: The full test suite ran and {verdict}: "
+                f"{d.get('tests_before')} → {d.get('tests_after')} discovered "
+                f"tests ({delta:+d}). A new test only counts if the count grows.")
+    if stage == "review":
+        return (f"Judge Mode: An independent reviewer agent read the actual "
+                f"diff and returned '{d.get('verdict', '?')}'. The pipeline "
+                f"only calls a run PR-ready when the reviewer approves.")
+    if stage == "done":
+        r = d.get("result") or {}
+        if r.get("passed"):
+            return ("Judge Mode: Done — every stage passed, so this run is "
+                    "PR-ready. The results card below collects the evidence.")
+        return ("Judge Mode: Done — this run is NOT PR-ready. The results "
+                "card below shows exactly which stage held it back.")
+    if stage == "resume":
+        return (f"Judge Mode: A human recorded a '{d.get('decision')}' "
+                f"decision; the pipeline resumes only on that instruction.")
+    return f"Judge Mode: Stage '{stage}' fired."
+
+
+def results_card(snapshot):
+    """Closing Judge Mode results card, derived only from a run
+    snapshot's real events/result: pass/fail per stage, per-stage
+    timing (elapsed_ms recorded when the event fired), the test-count
+    delta, and links to the opened PRs and the eval scorecard."""
+    events = snapshot.get("events") or []
+    by_stage = {}
+    for e in events:
+        by_stage.setdefault(e.get("stage"), e)
+    result = snapshot.get("result") or {}
+    if not result and "done" in by_stage:
+        result = (by_stage["done"].get("data") or {}).get("result") or {}
+    stages = []
+    for stage in JUDGE_STAGES:
+        e = by_stage.get(stage)
+        entry = {"stage": stage, "status": "pending", "detail": "",
+                 "elapsed_ms": e.get("elapsed_ms") if e else None}
+        if e is not None:
+            d = e.get("data") or {}
+            if stage == "guardrail":
+                entry["status"] = "escalated" if d.get("blocked") else "pass"
+                entry["detail"] = d.get("reason", "") if d.get("blocked") else "allowed"
+            elif stage == "tests":
+                entry["status"] = "pass" if d.get("tests_ok") else "fail"
+                entry["detail"] = (f"{d.get('tests_before')} → {d.get('tests_after')} "
+                                   f"({(d.get('tests_after') or 0) - (d.get('tests_before') or 0):+d})")
+            elif stage == "review":
+                entry["status"] = "pass" if d.get("verdict") == "approve" else "fail"
+                entry["detail"] = d.get("verdict", "")
+            elif stage == "done":
+                entry["status"] = "pass" if result.get("passed") else "fail"
+                entry["detail"] = "PR-ready" if result.get("passed") else "not PR-ready"
+            else:
+                entry["status"] = "pass"
+                entry["detail"] = "completed"
+        stages.append(entry)
+    tests_ev = by_stage.get("tests", {}).get("data") or {}
+    pr_url = result.get("pr_url")
+    return {
+        "status": snapshot.get("status"),
+        "overall": ("escalated" if snapshot.get("status") == "escalated"
+                    else "pass" if result.get("passed") else
+                    "fail" if snapshot.get("status") in ("done", "error") else "running"),
+        "stages": stages,
+        "tests_before": tests_ev.get("tests_before", result.get("tests_before")),
+        "tests_after": tests_ev.get("tests_after", result.get("tests_after")),
+        "tests_delta": ((tests_ev.get("tests_after") - tests_ev.get("tests_before"))
+                        if tests_ev.get("tests_after") is not None
+                        and tests_ev.get("tests_before") is not None else None),
+        "total_elapsed_ms": (events[-1].get("elapsed_ms") if events else None),
+        "pr_url": pr_url,
+        "links": {"pr_url": pr_url, "live_prs": list(LIVE_PR_URLS),
+                  "eval_scorecard": EVAL_SCORECARD_URL,
+                  "generalization": GENERALIZATION_URL,
+                  "repository": REPO_URL},
+    }
+
+
 # ---------------------------------------------------------------- runs
 
 _RUNS = {}
 _RUNS_LOCK = threading.Lock()
 
 
-def _new_run(issue_id, mode, open_pr):
+def _new_run(issue_id, mode, open_pr, judge_mode=False):
     run_id = uuid.uuid4().hex[:12]
     record = {"id": run_id, "issue_id": issue_id, "mode": mode,
-              "open_pr": open_pr, "status": "running", "events": [],
-              "result": None, "error": None, "lock": threading.Lock()}
+              "open_pr": open_pr, "judge_mode": bool(judge_mode),
+              "status": "running", "events": [],
+              "result": None, "error": None, "lock": threading.Lock(),
+              "started": time.monotonic()}
     with _RUNS_LOCK:
         _RUNS[run_id] = record
     return record
@@ -91,6 +213,9 @@ def get_run(run_id):
 
 def _collector(record):
     def collect(event):
+        event = dict(event)
+        event["elapsed_ms"] = int((time.monotonic() - record["started"]) * 1000)
+        event["caption"] = caption_for_event(event)
         with record["lock"]:
             record["events"].append(event)
     return collect
@@ -155,19 +280,35 @@ def _execute_run(record):
         record["error"] = f"{type(e).__name__}: {e}"
 
 
-def start_run(issue_id, mode, open_pr):
-    record = _new_run(issue_id, mode, open_pr)
+def start_run(issue_id, mode, open_pr, judge_mode=False):
+    record = _new_run(issue_id, mode, open_pr, judge_mode=judge_mode)
     threading.Thread(target=_execute_run, args=(record,), daemon=True).start()
     return record
+
+
+def start_judge_run(issue_id="tier1", mode="mock"):
+    """One-click Judge Mode: a self-guided run a judge can start with no
+    operator choices — defaults to the Tier 1 issue in mock mode (offline,
+    deterministic) unless the caller names another seeded issue/mode."""
+    if load_issue(issue_id) is None:
+        raise ValueError(f"unknown issue_id {issue_id!r}")
+    if mode not in ("mock", "live"):
+        raise ValueError("mode must be 'mock' or 'live'")
+    return start_run(issue_id, mode, False, judge_mode=True)
 
 
 def run_snapshot(record):
     with record["lock"]:
         events = list(record["events"])
-    return {"id": record["id"], "status": record["status"],
+    snap = {"id": record["id"], "status": record["status"],
             "issue_id": record["issue_id"], "mode": record["mode"],
-            "open_pr": record["open_pr"], "events": events,
+            "open_pr": record["open_pr"],
+            "judge_mode": record.get("judge_mode", False),
+            "events": events,
+            "captions": [e.get("caption") for e in events],
             "result": record["result"], "error": record["error"]}
+    snap["results_card"] = results_card(snap)
+    return snap
 
 
 def decide_approval(request, decision, decided_by, decided_at,
@@ -240,7 +381,15 @@ class Handler(BaseHTTPRequestHandler):
         except (ValueError, UnicodeDecodeError):
             self._send_json(400, {"error": "request body must be JSON"})
             return
-        if self.path == "/api/run":
+        if self.path == "/api/judge/run":
+            try:
+                record = start_judge_run(str(payload.get("issue_id", "tier1")),
+                                         str(payload.get("mode", "mock")))
+            except ValueError as e:
+                self._send_json(400, {"error": str(e)})
+                return
+            self._send_json(200, {"run_id": record["id"], "judge_mode": True})
+        elif self.path == "/api/run":
             issue_id = payload.get("issue_id")
             mode = payload.get("mode", "mock")
             open_pr = bool(payload.get("open_pr", False))
@@ -252,7 +401,8 @@ class Handler(BaseHTTPRequestHandler):
                 return
             if open_pr and mode != "live":
                 open_pr = False  # a real PR only makes sense live
-            record = start_run(issue_id, mode, open_pr)
+            record = start_run(issue_id, mode, open_pr,
+                               judge_mode=bool(payload.get("judge_mode", False)))
             self._send_json(200, {"run_id": record["id"]})
         elif self.path == "/api/approval/decide":
             try:
@@ -365,6 +515,15 @@ PAGE = r"""<!DOCTYPE html>
 <main>
   <div>
     <div class="panel">
+      <h2>Judge Mode — self-guided</h2>
+      <p class="hint">One click, no operator needed: runs the Tier 1 issue
+        end to end with narration captions as each stage fires, and ends
+        in a results card with pass/fail per stage, timings, test-count
+        deltas, and links to the live PRs and eval scorecard.</p>
+      <button id="judgeBtn" style="width:100%;padding:11px;font-size:15px;font-weight:600;border:0;border-radius:8px;background:var(--green);color:#06130a;cursor:pointer;">▶ Run Judge Mode</button>
+      <div id="judgeStatus" style="margin-top:10px;font-size:13px;color:var(--dim);min-height:18px;"></div>
+    </div>
+    <div class="panel">
       <h2>1 · Pick an issue</h2>
       <div id="issues">Loading…</div>
     </div>
@@ -385,6 +544,14 @@ PAGE = r"""<!DOCTYPE html>
     </div>
   </div>
   <div id="timeline">
+    <div class="panel" id="judgeCaptionPanel" style="display:none;">
+      <h2>Narration</h2>
+      <div id="judgeCaption" style="font-size:15px;line-height:1.55;"></div>
+    </div>
+    <div class="panel" id="judgeResultsPanel" style="display:none;">
+      <h2>Results card</h2>
+      <div id="judgeResults"></div>
+    </div>
     <div class="stage" id="stage-guardrail"><h3>🛡 Guardrail</h3><div class="body"><span class="empty">Waiting…</span></div></div>
     <div class="stage" id="stage-triage"><h3>🔍 Triage</h3><div class="body"><span class="empty">Waiting…</span></div></div>
     <div class="stage" id="stage-plan"><h3>🗺 Plan</h3><div class="body"><span class="empty">Waiting…</span></div></div>
@@ -477,6 +644,10 @@ function resetTimeline() {
 
 function renderEvent(ev) {
   const d = ev.data || {};
+  if (ev.caption) {
+    $("judgeCaptionPanel").style.display = "block";
+    $("judgeCaption").textContent = ev.caption;
+  }
   if (ev.stage === "guardrail") {
     setStage("guardrail", b => {
       if (d.blocked) {
@@ -530,12 +701,38 @@ function renderEvent(ev) {
   }
 }
 
+function renderResultsCard(card) {
+  if (!card) return;
+  $("judgeResultsPanel").style.display = "block";
+  const box = $("judgeResults"); box.textContent = "";
+  box.appendChild(el("div", card.overall === "pass" ? "✔ Overall: PASS" : card.overall === "escalated" ? "⛔ Overall: ESCALATED" : "Overall: " + card.overall.toUpperCase(), "banner " + (card.overall === "pass" ? "pass" : card.overall === "escalated" ? "esc" : "fail")));
+  const ul = el("ul", null, "steps");
+  card.stages.forEach(s => {
+    const ms = s.elapsed_ms === null || s.elapsed_ms === undefined ? "" : " · " + s.elapsed_ms + " ms";
+    ul.appendChild(el("li", s.stage + ": " + s.status.toUpperCase() + (s.detail ? " — " + s.detail : "") + ms));
+  });
+  box.appendChild(ul);
+  if (card.tests_delta !== null && card.tests_delta !== undefined)
+    box.appendChild(el("p", "Tests: " + card.tests_before + " → " + card.tests_after + " (" + (card.tests_delta >= 0 ? "+" : "") + card.tests_delta + ")"));
+  if (card.links) {
+    const p = el("p");
+    const mk = (href, label) => { const a = el("a", label); a.href = href; a.target = "_blank"; p.appendChild(a); p.appendChild(document.createTextNode(" · ")); };
+    if (card.links.pr_url) mk(card.links.pr_url, "This run's PR");
+    (card.links.live_prs || []).forEach((u, i) => mk(u, "Live PR #" + [16,17,18][i]));
+    mk(card.links.eval_scorecard, "Eval scorecard");
+    mk(card.links.generalization, "Generalization run");
+    box.appendChild(p);
+  }
+}
+
 async function poll() {
   const snap = await (await fetch("/api/run/" + currentRun)).json();
   while (rendered < snap.events.length) { renderEvent(snap.events[rendered]); rendered++; }
   if (snap.status === "running") return;
   clearInterval(poller);
+  if (snap.judge_mode) renderResultsCard(snap.results_card);
   $("runBtn").disabled = false;
+  const jb = $("judgeBtn"); if (jb) { jb.disabled = false; if (snap.judge_mode) $("judgeStatus").textContent = "Judge Mode complete — see the results card."; }
   if (snap.status === "escalated") {
     $("runStatus").textContent = "Escalated by the guardrail — no agent ran, nothing was changed.";
     setStage("done", b => {
@@ -563,6 +760,21 @@ async function poll() {
     }
   }
 }
+
+$("judgeBtn").onclick = async () => {
+  resetTimeline();
+  $("judgeResultsPanel").style.display = "none";
+  $("judgeBtn").disabled = true; $("runBtn").disabled = true;
+  $("judgeStatus").textContent = "Judge Mode running — narration appears as stages fire…";
+  const resp = await fetch("/api/judge/run", {method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({issue_id: "tier1", mode: "mock"})});
+  const data = await resp.json();
+  if (!data.run_id) { $("judgeStatus").textContent = "Error: " + (data.error || "unknown"); $("judgeBtn").disabled = false; $("runBtn").disabled = false; return; }
+  currentRun = data.run_id;
+  poller = setInterval(poll, 500);
+  poll();
+};
 
 $("runBtn").onclick = async () => {
   if (!selectedIssue) return;
