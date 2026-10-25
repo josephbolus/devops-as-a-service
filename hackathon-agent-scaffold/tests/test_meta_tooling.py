@@ -61,8 +61,11 @@ class TestToolingDoc(unittest.TestCase):
 
     def test_honest_not_claimed_section(self):
         self.assertIn("What is NOT claimed", self.text)
-        self.assertIn("split itself is a Day-1 (Oct 27) decision",
+        self.assertIn("Per-role split: experiment run, decision recorded",
                       self.text)
+        self.assertIn("Decision: keep the split", self.text)
+        self.assertIn("muse-wonder-1.0", self.text)
+        self.assertIn("split-runs.json", self.text)
         self.assertIn("PR #16", self.text)
 
     def test_root_readme_links_it(self):

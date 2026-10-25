@@ -6,9 +6,11 @@ this repo, and `hackathon-agent-scaffold/tests/test_meta_tooling.py`
 pins the claims against the code — including the claims about what is
 NOT decided or proven yet.
 
-## The model and the endpoint
+## The models and the endpoint
 
-- Model: `muse-spark-1.3` (the default for every agent role).
+- Models: `muse-spark-1.3` (the default for every agent role) and,
+  since the Oct 25 split experiment below, `muse-wonder-1.0` for the
+  CODER and REVIEWER roles in the entry's live configuration.
 - Endpoint: Meta Model API chat completions at `https://api.meta.ai/v1`
   (OpenAI-compatible).
 - Every live call asks for structured output:
@@ -53,7 +55,7 @@ test must be a `unittest.TestCase` class — the suite runs
 pytest-style functions (the failure PR #15 taught, and the
 live-coverage guard now enforces).
 
-## Per-role models: mechanism proven, split NOT decided
+## Per-role split: experiment run, decision recorded
 
 The llm layer supports a different model per role via
 `DAAS_MODEL_<ROLE>` env vars (`DAAS_MODEL_TRIAGE`,
@@ -64,10 +66,47 @@ call — the connector helper only ever sees the final model name.
 `tests/test_meta_tooling.py` pins that routing for both transports
 (mocked transport, no API call).
 
-The split itself is a Day-1 (Oct 27) decision: which roles, if any,
-move off the default depends on dashboard model availability, and it
-is not decided in this document. Until then every role runs
-`muse-spark-1.3`.
+The split was the former Day-1 (Oct 27) decision; it was run early
+on Oct 25, 2026 as a measured experiment, not a preference. Split
+under test: CODER and REVIEWER on `muse-wonder-1.0` (Meta's most
+capable model on the Model API — availability probed live through
+the connector with a tiny JSON completion before the runs), TRIAGE
+and PLANNER on the `muse-spark-1.3` default. Method identical to
+the uniform live eval in `eval-scorecard/live-runs.json`:
+`pipeline.run` per seeded issue against a fresh git-initialized
+copy of the demo repo, through the connector, timed. The full
+record is `eval-scorecard/split-runs.json`, produced by
+`hackathon-agent-scaffold/run_split_eval.py`;
+`tests/test_split_eval.py` pins the record and the decision rule.
+
+Decision rule, registered in the runner BEFORE any split run:
+(1) pass count (work tiers + guardrail), then (2) total
+discovered-test growth across the work tiers, then (3) total wall
+clock. The split is kept only if it wins on (1), or ties (1) and
+wins on (2), or ties (1)–(2) and wins on (3); a full tie keeps
+uniform, which is also the cheaper configuration per token.
+
+| Configuration | Tier 1 | Tier 2 | Tier 3 | Guardrail | Total wall | Test growth |
+|---|---|---|---|---|---|---|
+| Uniform `muse-spark-1.3` | pass 6 → 9, 16.64s | pass 6 → 10, 47.02s | pass 6 → 8, 30.99s | escalated, 0 calls | 94.65s | +9 |
+| Split (Wonder coder/reviewer) | pass 6 → 9, 49.40s | pass 6 → 10, 125.95s | pass 6 → 9, 33.79s | escalated, 0 calls | 209.14s | +10 |
+
+**Decision: keep the split.** Pass counts tied at 4/4 (3/3 work
+tiers + guardrail), so the rule decided on test growth: +10 vs +9
+(the Wonder coder's Tier-3 run added 3 regression tests to the
+uniform run's 2). The entry's live configuration is therefore
+`DAAS_MODEL_CODER=muse-wonder-1.0` and
+`DAAS_MODEL_REVIEWER=muse-wonder-1.0`, with TRIAGE and PLANNER on
+the default — set as env vars for live runs, which
+`default_client()` resolves before every call; the code default
+stays `muse-spark-1.3`.
+
+The cost is recorded, not hidden: the split took 209.14s against
+the uniform run's 94.65s (about 2.2× the wall clock) and Wonder is
+the premium-priced tier. The winning margin is one regression test
+on n=3 seeded issues, one run each — a real but thin margin, kept
+because the rule was registered before the runs, not because the
+split is proven generally better.
 
 ## Verified live evidence
 
@@ -80,15 +119,26 @@ is not decided in this document. Until then every role runs
   discovered tests 6 → 8, no unexpected files. The captured end state
   is in `demo-fallbacks/live/tier1-pr16/` with provenance, and the row
   is in `eval-scorecard/SCORECARD.md`.
+- Oct 25, 2026: the timed live eval (all three tiers + guardrail,
+  94.65s, PRs #16/#17/#18) in `eval-scorecard/live-runs.json`, and
+  the per-role split experiment in `eval-scorecard/split-runs.json`:
+  three more timed live passes with CODER/REVIEWER recorded per call
+  as `muse-wonder-1.0` and TRIAGE/PLANNER as `muse-spark-1.3`,
+  plus the guardrail escalation at 0 model calls.
 
 ## What is NOT claimed
 
-- No model other than `muse-spark-1.3` is proven live; the per-role
-  split is a mechanism, not a result.
+- `muse-wonder-1.0` is proven live only in the CODER and REVIEWER
+  roles, on the seeded set, one run per tier. The split's +1-test
+  margin does not prove it better on unseeded issues or a real
+  backlog, and no such claim is made.
+- No other models are proven live: not `muse-spark-1.2`/`1.1`, not
+  the contributor variants, and Wonder is not claimed in the TRIAGE
+  or PLANNER roles (never run there).
 - No tool calling, no responses endpoint (`/v1/responses`), no
   fine-tuning, and no image or audio models are used or claimed.
 - Live Tier 2/3 runs were completed Oct 25 (ahead of their Days 3–4
   slot): live model-performance evidence is now timed passes on all
-  three tiers plus PRs #16 (Tier 1), #17 (Tier 2), and #18 (Tier 3).
-  The per-role split comparison has not been run yet.
+  three tiers plus PRs #16 (Tier 1), #17 (Tier 2), and #18 (Tier 3),
+  under both the uniform and the split configurations.
 - `MockClient` runs prove plumbing only — never model performance.

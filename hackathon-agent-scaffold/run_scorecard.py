@@ -248,7 +248,9 @@ def render_markdown(sc):
         "  files touched, approval request written.",
         "- It does NOT prove performance on unseeded issues or a real",
         "  team's backlog — n=3 seeded issues, one run each. The per-role",
-        "  model split comparison is the next measurement.",
+        "  model split comparison was run Oct 25 (split-runs.json next to",
+        "  this file): keep the split (CODER/REVIEWER on muse-wonder-1.0),",
+        "  decided on test growth +10 vs +9 after a pass-count tie.",
         "",
     ]
     return "\n".join(lines)

@@ -95,6 +95,9 @@ decision record — as `escalation.md` plus machine-readable
   on Oct 25: the scorecard's live section carries timed live passes
   for all three tiers plus the live guardrail escalation, and
   live-opened PRs #16/#17/#18.
-- The **per-role model split** is a Day-1 (Oct 27) decision; the
-  override mechanism exists and is tested, the split itself is not
-  decided in this document.
+- The **per-role model split** (former Day-1 decision) was decided
+  Oct 25 by measured experiment: CODER/REVIEWER run
+  `muse-wonder-1.0`, TRIAGE/PLANNER the `muse-spark-1.3` default,
+  in the entry's live configuration. Record and decision rule:
+  `eval-scorecard/split-runs.json`, summarized in
+  `META_AI_TOOLING.md`.

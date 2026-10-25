@@ -17,8 +17,10 @@ Per-role models: each agent role (TRIAGE, PLANNER, CODER, REVIEWER —
 the system prompt's first word, the same convention MockClient uses) can
 be pointed at a different model via `DAAS_MODEL_<ROLE>` env vars, e.g.
 DAAS_MODEL_CODER=<stronger model>. Roles without an override use the
-client's default model. The split is a Day-1 (Oct 27) decision; until
-then every role runs the default.
+client's default model. Split decided Oct 25, 2026 by measured
+experiment (repo-root META_AI_TOOLING.md, eval-scorecard/split-runs.json):
+the entry's live configuration sets CODER and REVIEWER to
+muse-wonder-1.0; TRIAGE and PLANNER run the default.
 """
 import json
 import os

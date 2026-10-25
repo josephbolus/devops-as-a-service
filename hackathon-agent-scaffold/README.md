@@ -107,8 +107,9 @@ nothing here has been pushed to GitHub.
   `llm` abstraction (connector / direct / mock, with mock explicitly
   not tooling evidence), the four schema-pinned role prompts with
   the exact JSON keys the pipeline consumes, and the per-role model
-  mechanism with the split itself honestly marked undecided (Day-1,
-  Oct 27 decision). `tests/test_meta_tooling.py` pins the doc AND
+  mechanism (the split experiment and its recorded decision were
+  added Oct 25, maximizer iteration 11 — see the tooling doc and
+  `eval-scorecard/split-runs.json`). `tests/test_meta_tooling.py` pins the doc AND
   the mechanisms: prompt schemas (`BY_ROLE` = the four agent roles,
   each prompt opening with its role word and naming its exact keys,
   coder verbatim + `unittest.TestCase` rules), and — with mocked
@@ -116,6 +117,17 @@ nothing here has been pushed to GitHub.
   `DAAS_MODEL_<ROLE>` override before the call (the connector
   client's routing had never been pinned before). Full scaffold
   suite: 70/70.
+- Per-role split experiment run Oct 25 (maximizer iteration 11):
+  `run_split_eval.py` re-ran the live eval set under the split
+  (CODER/REVIEWER on `muse-wonder-1.0`, TRIAGE/PLANNER on the
+  `muse-spark-1.3` default) with a decision rule registered in the
+  runner before the runs (pass count → test growth → wall clock).
+  Result in `../eval-scorecard/split-runs.json`: pass counts tied
+  4/4, test growth +10 vs the uniform run's +9, wall clock 209.14s
+  vs 94.65s — decision per the rule: keep the split, recorded in
+  `../META_AI_TOOLING.md` with its costs. `tests/test_split_eval.py`
+  pins the rule and the record. The demo run-of-show pre-flight now
+  sets the split env vars for live runs.
 
 ## Demo console (added Oct 25)
 

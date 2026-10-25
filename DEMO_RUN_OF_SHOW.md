@@ -51,6 +51,11 @@ never mutated. Only Live + "Open real PR" touches the real repo.
 - [ ] Tier-1 issue text ready to paste, not typed live. No real
       client names, repos, or data anywhere on screen.
 - [ ] Eval scorecard open in a tab: `eval-scorecard/SCORECARD.md`.
+- [ ] For Live runs, the split configuration is set in the console's
+      environment (the Oct 25 measured decision, `split-runs.json`):
+      `DAAS_MODEL_CODER=muse-wonder-1.0` and
+      `DAAS_MODEL_REVIEWER=muse-wonder-1.0`; TRIAGE/PLANNER stay on
+      the `muse-spark-1.3` default.
 
 ## Timed beats (2:30–3:00 total)
 
