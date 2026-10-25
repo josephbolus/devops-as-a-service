@@ -1,9 +1,11 @@
 """Pipeline: issue in -> triage -> planner -> coder -> tests -> reviewer -> PR body out.
 
-The PR step stops at a written PR body (pr_body.md) plus the list of
-changed files. Actually opening the PR is one `gh pr create` on Day 0
-once the repo choice is made; keeping it out of the scaffold means the
-whole loop is testable offline today, with no GitHub side effects.
+The pipeline itself stops at a written PR body (pr_body.md) plus the list
+of changed files, so the whole loop is testable offline with no GitHub
+side effects. run_pr.py wraps it with the real branch/commit/PR steps.
+The agents receive real context: the planner sees the repo file tree,
+the coder sees the current contents of the planned files (its edits
+must quote them verbatim), and the reviewer sees the actual diff.
 """
 import json
 import subprocess
@@ -11,12 +13,40 @@ import sys
 from pathlib import Path
 
 from . import guardrail
+from . import prompts
 
 
 class Escalation(RuntimeError):
     def __init__(self, reason):
         super().__init__(reason)
         self.reason = reason
+
+
+def _repo_tree(repo: Path):
+    """Repo-relative file paths, skipping noise — the planner's map."""
+    skip = {".git", "__pycache__", ".pytest_cache"}
+    out = []
+    for p in sorted(repo.rglob("*")):
+        if p.is_file() and not any(part in skip for part in p.parts):
+            out.append(str(p.relative_to(repo)))
+    return out
+
+
+def _file_contents(repo: Path, files):
+    """Current contents of the planned files that already exist."""
+    out = {}
+    for name in files:
+        path = repo / name
+        if path.is_file():
+            out[name] = path.read_text()
+    return out
+
+
+def _diff(repo: Path, changed):
+    """Unified diff of the changed files when the repo is under git."""
+    proc = subprocess.run(["git", "-C", str(repo), "diff", "--", *changed],
+                          capture_output=True, text=True, cwd=str(repo))
+    return proc.stdout if proc.returncode == 0 else ""
 
 
 def _apply_edits(repo: Path, edits):
@@ -55,17 +85,20 @@ def run(repo, issue, client, out_dir):
         (out_dir / "escalation.md").write_text(summary)
         raise Escalation(reason)
 
-    triage = client.complete_json("TRIAGE agent: classify the GitHub issue as JSON.",
-                                  json.dumps(issue))
-    plan = client.complete_json("PLANNER agent: plan the fix as JSON.",
-                                json.dumps({"issue": issue, "triage": triage}))
-    coder = client.complete_json("CODER agent: return file edits as JSON.",
-                                 json.dumps({"issue": issue, "plan": plan}))
+    triage = client.complete_json(prompts.TRIAGE, json.dumps(issue))
+    plan = client.complete_json(prompts.PLANNER,
+                                json.dumps({"issue": issue, "triage": triage,
+                                            "repo_tree": _repo_tree(repo)}))
+    coder = client.complete_json(prompts.CODER,
+                                 json.dumps({"issue": issue, "plan": plan,
+                                             "files": _file_contents(
+                                                 repo, plan.get("expected_files", []))}))
     changed = _apply_edits(repo, coder["edits"])
 
     tests_ok, test_log = _run_tests(repo)
-    review = client.complete_json("REVIEWER agent: review the diff as JSON.",
-                                  json.dumps({"changed": changed, "tests_ok": tests_ok}))
+    review = client.complete_json(prompts.REVIEWER,
+                                  json.dumps({"changed": changed, "tests_ok": tests_ok,
+                                              "diff": _diff(repo, changed)}))
 
     unexpected = sorted(set(changed) - set(plan.get("expected_files", changed)))
     passed = tests_ok and review.get("verdict") == "approve" and not unexpected
