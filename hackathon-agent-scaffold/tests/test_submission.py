@@ -60,8 +60,17 @@ class TestSubmissionDraft(unittest.TestCase):
         # re-measured, this draft must be updated in the same commit.
         for token in ("3/3", "94.65s", "6 → 9", "6 → 10", "6 → 8",
                       "#16", "#17", "#18", "50 min saved",
-                      "216.7", "+10 vs +9", "209.14s", "16.84s"):
+                      "216.7", "+10 vs +9", "209.14s", "16.84s",
+                      "150/150"):
             self.assertIn(token, self.text, token)
+
+    def test_current_evidence_included(self):
+        # Iteration 18: the draft must carry the post-dry-run measured
+        # record, not the stale Day-8 snapshot.
+        for token in ("9/9", "9 → 13", "$0.0254", "Judge Mode",
+                      "JUDGE_TOUR.md", "GENERALIZATION.md"):
+            self.assertIn(token, self.text, token)
+        self.assertNotIn("one run each", self.text)
 
     def test_models_named(self):
         self.assertIn("muse-wonder-1.0", self.text)

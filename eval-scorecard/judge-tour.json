@@ -1,0 +1,192 @@
+{
+  "mode": "mock",
+  "runs": [
+    {
+      "issue_id": "tier1",
+      "mode": "mock",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass"
+        },
+        {
+          "stage": "triage",
+          "status": "pass"
+        },
+        {
+          "stage": "plan",
+          "status": "pass"
+        },
+        {
+          "stage": "code",
+          "status": "pass"
+        },
+        {
+          "stage": "tests",
+          "status": "pass"
+        },
+        {
+          "stage": "review",
+          "status": "pass"
+        },
+        {
+          "stage": "done",
+          "status": "pass"
+        }
+      ],
+      "tests_before": 6,
+      "tests_after": 7,
+      "tests_delta": 1,
+      "captions": 7,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 276,
+      "cost_total_usd_est": 0.0,
+      "links_live_prs": 3
+    },
+    {
+      "issue_id": "tier2",
+      "mode": "mock",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass"
+        },
+        {
+          "stage": "triage",
+          "status": "pass"
+        },
+        {
+          "stage": "plan",
+          "status": "pass"
+        },
+        {
+          "stage": "code",
+          "status": "pass"
+        },
+        {
+          "stage": "tests",
+          "status": "pass"
+        },
+        {
+          "stage": "review",
+          "status": "pass"
+        },
+        {
+          "stage": "done",
+          "status": "pass"
+        }
+      ],
+      "tests_before": 6,
+      "tests_after": 9,
+      "tests_delta": 3,
+      "captions": 7,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 261,
+      "cost_total_usd_est": 0.0,
+      "links_live_prs": 3
+    },
+    {
+      "issue_id": "tier3",
+      "mode": "mock",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass"
+        },
+        {
+          "stage": "triage",
+          "status": "pass"
+        },
+        {
+          "stage": "plan",
+          "status": "pass"
+        },
+        {
+          "stage": "code",
+          "status": "pass"
+        },
+        {
+          "stage": "tests",
+          "status": "pass"
+        },
+        {
+          "stage": "review",
+          "status": "pass"
+        },
+        {
+          "stage": "done",
+          "status": "pass"
+        }
+      ],
+      "tests_before": 6,
+      "tests_after": 8,
+      "tests_delta": 2,
+      "captions": 7,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 312,
+      "cost_total_usd_est": 0.0,
+      "links_live_prs": 3
+    },
+    {
+      "issue_id": "guardrail",
+      "mode": "mock",
+      "judge_mode": true,
+      "status": "escalated",
+      "overall": "escalated",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "escalated"
+        },
+        {
+          "stage": "triage",
+          "status": "pending"
+        },
+        {
+          "stage": "plan",
+          "status": "pending"
+        },
+        {
+          "stage": "code",
+          "status": "pending"
+        },
+        {
+          "stage": "tests",
+          "status": "pending"
+        },
+        {
+          "stage": "review",
+          "status": "pending"
+        },
+        {
+          "stage": "done",
+          "status": "pending"
+        }
+      ],
+      "tests_before": null,
+      "tests_after": null,
+      "tests_delta": null,
+      "captions": 1,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 17,
+      "cost_total_usd_est": 0.0,
+      "links_live_prs": 3
+    }
+  ],
+  "summary": {
+    "runs": 4,
+    "work_passed": 3,
+    "work_total": 3,
+    "guardrail_escalated": true,
+    "total_tests_delta": 6
+  }
+}

@@ -56,8 +56,22 @@ configured). Programmatically: `POST /api/judge/run`, then poll
 - It is not the demo video. Nothing is recorded; Joseph's Nov 2
   recording remains the Demo criterion's human-owned item.
 
+## Full tour record (Oct 25, iteration 18)
+
+Judge Mode was initially HTTP-proven on two stops (Tier 1, guardrail).
+`hackathon-agent-scaffold/run_judge_tour.py` now runs the one-click
+endpoint over real HTTP for **all four** seeded issues in mock mode
+and records every stop's results card in
+`eval-scorecard/judge-tour.json` / `eval-scorecard/JUDGE_TOUR.md`:
+Tier 1/2/3 pass (test deltas +1/+3/+2, combined +6, 7 captions each),
+the guardrail stop ends escalated with its later stages pending
+(1 caption). Mock is plumbing proof, not model performance — the tour
+proves a judge can reach every stop unaided, nothing more.
+
 ## Pinned by tests
 
+`tests/test_judge_tour.py` pins the tour record (summary recomputed
+from the per-run rows; the doc must agree with the record).
 `tests/test_judge_mode.py` (8 tests): a caption exists and is
 event-derived for every stage (including blocked-guardrail and
 failing-tests variants), the results card's pass/fail/delta/link

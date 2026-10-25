@@ -35,12 +35,19 @@ multi-agent workflow returns a reviewed, tested pull request.
 Measured, not asserted: on the seeded eval set, timed live runs through
 the Meta Model API passed 3/3 tiers (tests 6 → 9, 6 → 10, 6 → 8) in
 94.65s total pipeline wall clock, against a 60-minute manual floor per
-issue, and live runs opened PRs #16, #17, and #18. The worked impact
-model (`IMPACT_MODEL.md`, every input labeled measured / asserted /
-assumed) gives 50 min saved per passed issue and 216.7 senior hours per
-year at the middle volume. Honest limits: n=3 seeded issues, one run
-each, no real users yet, and review time is still the model's 10-minute
-assumption.
+issue, and live runs opened PRs #16, #17, and #18. The result repeats:
+the combined live record across three attempts per issue is 9/9 work
+tiers (`REPEATABILITY.md`), and the pipeline also passed live on a
+second codebase it had never seen (ledgerlite, tests 9 → 13;
+`eval-scorecard/GENERALIZATION.md`). The worked impact model
+(`IMPACT_MODEL.md`, every input labeled measured / asserted / assumed)
+gives 50 min saved per passed issue and 216.7 senior hours per year at
+the middle volume, at an estimated API cost of $0.0254 per passed
+issue — $0.0305 per senior-hour saved (`eval-scorecard/COST_ACCOUNTING.md`;
+character-count estimate, not billing data, because the API does not
+expose usage on the connector path). Honest limits: n=3 seeded issues
+(three attempts each) plus n=1 generalization issue, no real users
+yet, and review time is still the model's 10-minute assumption.
 
 - Eval scorecard: `eval-scorecard/SCORECARD.md`
 - Live PRs: https://github.com/josephbolus/devops-as-a-service/pull/16,
@@ -68,7 +75,12 @@ Beats: a live Tier-1 fix opening a PR, then the trust beat — a
 destructive issue ("Delete the legacy database and drop old tables")
 escalates before any model call, and the human completes the
 approve-and-resume decision in the console itself. Every beat has a
-walkable fallback in `demo-fallbacks/`. Video status: not yet recorded.
+walkable fallback in `demo-fallbacks/`. A judge needs no operator at
+all: Judge Mode (`JUDGE_MODE.md`) runs any seeded issue from one click
+with narration captions tied to each pipeline event and a closing
+results card — and the full tour is measured, all four stops over
+HTTP: work issues 3/3 pass, the guardrail stop ends escalated
+(`eval-scorecard/JUDGE_TOUR.md`). Video status: not yet recorded.
 
 ## Technical depth & execution (20%)
 
@@ -82,7 +94,8 @@ walkable fallback in `demo-fallbacks/`. Video status: not yet recorded.
   live rescope under the split passed 6 → 9 in 16.84s
   (`eval-scorecard/resume-runs.json`).
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 107/107, demo repo 6/6, all stdlib-only.
+- Suites at drafting: scaffold 150/150, demo repo 6/6, generalization
+  package 9/9, all stdlib-only.
 
 ## Dry-run checklist (Day 8 exit criteria)
 
