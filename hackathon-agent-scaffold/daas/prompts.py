@@ -38,6 +38,9 @@ Rules:
   expected_files — no others. Put the regression test in the planned
   test file.
 - Include a regression test as an edit whenever the fix changes behavior.
+  Write it as a unittest.TestCase class — the suite runs
+  `python -m unittest discover`, which does NOT collect bare pytest-style
+  functions; a test that never runs is not coverage.
 - No prose outside the JSON."""
 
 REVIEWER = """REVIEWER agent for a GitHub issue workflow. Given the files \

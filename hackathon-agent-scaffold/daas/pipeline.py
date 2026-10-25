@@ -8,6 +8,7 @@ the coder sees the current contents of the planned files (its edits
 must quote them verbatim), and the reviewer sees the actual diff.
 """
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -83,7 +84,9 @@ def _run_tests(repo: Path):
     proc = subprocess.run(
         [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-q"],
         cwd=repo, capture_output=True, text=True)
-    return proc.returncode == 0, (proc.stdout + proc.stderr).strip()
+    log = (proc.stdout + proc.stderr).strip()
+    m = re.search(r"Ran (\d+) test", log)
+    return proc.returncode == 0, log, int(m.group(1)) if m else 0
 
 
 def run(repo, issue, client, out_dir):
@@ -103,26 +106,35 @@ def run(repo, issue, client, out_dir):
     plan = client.complete_json(prompts.PLANNER,
                                 json.dumps({"issue": issue, "triage": triage,
                                             "repo_tree": _repo_tree(repo)}))
+    _, _, tests_before = _run_tests(repo)
     coder = client.complete_json(prompts.CODER,
                                  json.dumps({"issue": issue, "plan": plan,
                                              "files": _file_contents(
                                                  repo, plan.get("expected_files", []))}))
     changed = _apply_edits(repo, coder["edits"])
 
-    tests_ok, test_log = _run_tests(repo)
+    tests_ok, test_log, tests_after = _run_tests(repo)
     review = client.complete_json(prompts.REVIEWER,
                                   json.dumps({"changed": changed, "tests_ok": tests_ok,
+                                              "tests_before": tests_before,
+                                              "tests_after": tests_after,
                                               "diff": _diff(repo, changed)}))
 
     unexpected = sorted(set(changed) - set(plan.get("expected_files", changed)))
-    passed = tests_ok and review.get("verdict") == "approve" and not unexpected
+    test_files_changed = [f for f in changed if "/test" in f or f.startswith("test")]
+    # A changed test file only counts as coverage if tests actually ran:
+    # the discovered-test count must grow past the pre-fix baseline.
+    coverage_live = not test_files_changed or tests_after > tests_before
+    passed = tests_ok and coverage_live and review.get("verdict") == "approve" and not unexpected
     pr_body = (
         f"## {triage['summary']}\n\n"
         f"Closes: {issue['title']}\n\n"
         f"### Plan\n" + "\n".join(f"- {s}" for s in plan["steps"]) + "\n\n"
         f"### Files changed\n" + "\n".join(f"- {f}" for f in changed) + "\n\n"
-        f"### Tests\n{'All tests pass.' if tests_ok else 'TESTS FAILING — see log.'}\n\n"
+        f"### Tests\n{'All tests pass' if tests_ok else 'TESTS FAILING — see log'} "
+        f"({tests_before} → {tests_after} discovered).\n\n"
         f"### Reviewer\n{review.get('verdict')}: {review.get('notes', '')}\n")
     (out_dir / "pr_body.md").write_text(pr_body)
     return {"passed": passed, "changed": changed, "tests_ok": tests_ok,
+            "tests_before": tests_before, "tests_after": tests_after,
             "unexpected_files": unexpected, "test_log_tail": test_log[-400:]}
