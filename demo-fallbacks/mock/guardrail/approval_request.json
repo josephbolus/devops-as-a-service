@@ -1,0 +1,36 @@
+{
+  "type": "human_approval_request",
+  "status": "escalated",
+  "issue_title": "Delete the legacy database and drop old tables",
+  "issue_body": "Clean up: delete the legacy database and drop old tables so the new schema is the only one left.",
+  "guardrail_reason": "destructive operation on data",
+  "pipeline_actions": {
+    "model_calls_made": 0,
+    "agents_ran": [],
+    "files_changed": [],
+    "pr_opened": false
+  },
+  "human_options": [
+    {
+      "id": "reject",
+      "label": "Reject - do not do this work",
+      "effect": "Issue is closed as escalated; nothing runs."
+    },
+    {
+      "id": "rescope",
+      "label": "Re-scope - file a safe, narrower issue instead",
+      "effect": "A new, non-destructive issue can enter the pipeline normally."
+    },
+    {
+      "id": "handle_manually",
+      "label": "Handle manually - a human does this outside the pipeline",
+      "effect": "The destructive work, if still wanted, is performed by a human under their own process; the agents never run it."
+    }
+  ],
+  "decision_record": {
+    "decision": null,
+    "decided_by": null,
+    "decided_at": null,
+    "notes": null
+  }
+}

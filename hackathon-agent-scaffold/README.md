@@ -46,6 +46,16 @@ nothing here has been pushed to GitHub.
   their scheduled sprint days. `tests/test_scorecard.py` pins all of
   it. Full scaffold suite: 25/25.
 
+- Human-approval handoff added Oct 25 (maximizer iteration 5):
+  `daas/approval.py` turns a guardrail escalation into a structured
+  approval request — a walkable `escalation.md` plus a machine-readable
+  `approval_request.json` recording what the pipeline provably did NOT
+  do (0 model calls, no agents, no files changed, no PR), the three
+  decisions a human can make (reject / re-scope / handle manually),
+  and a blank decision record. This is a loop-sized slice of the
+  Days 5–6 human-approval gate: the request format is built and
+  pinned by `tests/test_approval.py`; the approve-and-resume flow
+  remains sprint work. Full scaffold suite: 30/30.
 - Demo fallback package added Oct 25 (maximizer iteration 3):
   `../demo-fallbacks/` holds a walkable end state for every demo
   beat — mock Tier 1/2/3 PR bodies, results and diffs plus the

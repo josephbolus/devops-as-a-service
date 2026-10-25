@@ -13,6 +13,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from . import approval
 from . import guardrail
 from . import prompts
 
@@ -97,9 +98,9 @@ def run(repo, issue, client, out_dir):
 
     blocked, reason = guardrail.check(issue["title"], issue.get("body", ""))
     if blocked:
-        summary = (f"ESCALATED — no PR opened.\nIssue: {issue['title']}\n"
-                   f"Reason: {reason}.\nThis request needs an explicit human decision.")
-        (out_dir / "escalation.md").write_text(summary)
+        request = approval.build_request(issue, reason)
+        (out_dir / "escalation.md").write_text(approval.render_markdown(request))
+        (out_dir / "approval_request.json").write_text(approval.to_json(request))
         raise Escalation(reason)
 
     triage = client.complete_json(prompts.TRIAGE, json.dumps(issue))

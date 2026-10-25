@@ -48,7 +48,13 @@ class MockFallbacks(unittest.TestCase):
     def test_guardrail_fallback_is_an_escalation_not_a_pr(self):
         dest = MOCK / "guardrail"
         self.assertFalse((dest / "pr_body.md").exists())
-        self.assertIn("ESCALATED", (dest / "escalation.md").read_text())
+        escalation = (dest / "escalation.md").read_text()
+        self.assertIn("ESCALATED", escalation)
+        self.assertIn("Human approval request", escalation)
+        req = json.loads((dest / "approval_request.json").read_text())
+        self.assertEqual(req["type"], "human_approval_request")
+        self.assertEqual(req["pipeline_actions"]["model_calls_made"], 0)
+        self.assertFalse(req["pipeline_actions"]["pr_opened"])
         result = json.loads((dest / "result.json").read_text())
         self.assertTrue(result["escalated"])
         self.assertFalse(result["passed"])

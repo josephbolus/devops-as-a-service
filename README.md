@@ -36,7 +36,9 @@ teams that don't have DevOps hours to spare.
 5. **PR step** opens a pull request with a summary of what changed and what was checked.
 
 A **deterministic guardrail** runs before any model call: destructive or
-ambiguous issues are escalated with a written risk summary, never auto-fixed.
+ambiguous issues are escalated with a structured human approval request
+(what the pipeline provably did not do, the human's three options, and a
+blank decision record — in markdown and JSON), never auto-fixed.
 Model calls go through one `llm` abstraction pointed at the Meta Model API.
 
 ## Layout

@@ -12,7 +12,7 @@ was generated and verified on Oct 25, 2026, and is pinned by
 |---|---|---|
 | `live/tier1-pr16/` | End state of a **real** run: Meta Model API (via the secure connector) → triage/planner/coder/reviewer → branch → PR #16 opened. `pr_body.md` and `diff.patch` are captured verbatim from GitHub; `pr.json` + `PROVENANCE.md` record the source. Tests 6 → 8 discovered, reviewer approved, diff limited to the two planned files. | LIVE |
 | `mock/tier1/`, `mock/tier2/`, `mock/tier3/` | MockClient end states for all three eval tiers: `pr_body.md`, `result.json` (passed, test counts 6→7 / 6→9 / 6→8, no unexpected files), and `diff.patch` vs the pristine demo repo. | MOCK — say so if shown |
-| `mock/guardrail/` | Mock guardrail end state: `escalation.md` (no PR opened, explicit human decision required) + `result.json` with the escalation reason. | MOCK — the escalation logic is deterministic code, identical in live mode |
+| `mock/guardrail/` | Mock guardrail end state: `escalation.md` (structured human approval request: no PR opened, what the pipeline did NOT do, three human options, blank decision record) + `approval_request.json` (the same request, machine-readable) + `result.json` with the escalation reason. | MOCK — the escalation logic is deterministic code, identical in live mode |
 | `mock/manifest.json` | Machine-readable summary of the four mock runs. | — |
 
 Regenerate the mock half (never touches `live/`):
