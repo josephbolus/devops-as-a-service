@@ -12,6 +12,13 @@ Providers:
 - MockClient: deterministic canned responses keyed by agent name, for
   offline plumbing tests. It proves the pipeline end to end; it is NOT
   the intelligence the judges will see.
+
+Per-role models: each agent role (TRIAGE, PLANNER, CODER, REVIEWER —
+the system prompt's first word, the same convention MockClient uses) can
+be pointed at a different model via `DAAS_MODEL_<ROLE>` env vars, e.g.
+DAAS_MODEL_CODER=<stronger model>. Roles without an override use the
+client's default model. The split is a Day-1 (Oct 27) decision; until
+then every role runs the default.
 """
 import json
 import os
@@ -22,17 +29,44 @@ class LLMError(RuntimeError):
     pass
 
 
+AGENT_ROLES = ("TRIAGE", "PLANNER", "CODER", "REVIEWER")
+
+
+def role_models_from_env(environ=None):
+    """Per-role model overrides from DAAS_MODEL_<ROLE> env vars."""
+    env = os.environ if environ is None else environ
+    out = {}
+    for role in AGENT_ROLES:
+        model = env.get(f"DAAS_MODEL_{role}")
+        if model:
+            out[role] = model
+    return out
+
+
+def resolve_model(system, default, role_models):
+    """Model for this call: the role's override, else the default.
+
+    Role = the system prompt's first word (TRIAGE, PLANNER, ...), the
+    same convention MockClient keys its canned responses by.
+    """
+    words = system.strip().split()
+    role = "".join(ch for ch in words[0] if ch.isalnum()).upper() if words else ""
+    return role_models.get(role, default)
+
+
 class MetaModelClient:
-    def __init__(self, model="muse-spark-1.3", base="https://api.meta.ai/v1"):
+    def __init__(self, model="muse-spark-1.3", base="https://api.meta.ai/v1",
+                 role_models=None):
         self.key = os.environ.get("MODEL_API_KEY") or os.environ.get("META_API_KEY")
         if not self.key:
             raise LLMError("Set MODEL_API_KEY (or META_API_KEY) for the Meta Model API.")
         self.model = model
         self.base = base.rstrip("/")
+        self.role_models = role_models_from_env() if role_models is None else role_models
 
     def complete_json(self, system, user):
         body = json.dumps({
-            "model": self.model,
+            "model": resolve_model(system, self.model, self.role_models),
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user", "content": user},

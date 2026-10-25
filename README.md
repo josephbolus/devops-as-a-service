@@ -9,6 +9,24 @@ sprint window **Oct 26 – Nov 4, 2026**. Entry as submitted: *"DevOps as a
 Service"*, showcasing the multi-agent workflow that checks out the code,
 performs the fix, then opens a PR.
 
+## Who this is for
+
+Small engineering teams — two to ten developers, like the five-engineer
+shop in the demo — whose backlog is full of small, well-defined fixes.
+Each one costs a senior engineer an hour or more of focused time, so the
+small stuff waits for weeks while the expensive people are the bottleneck.
+
+DevOps as a Service clears that backlog: file the issue, and the agents
+return a reviewed, tested pull request. The team's lead spends minutes
+approving instead of hours implementing — and every run is scored (see
+the eval scorecard in `hackathon-demo-repo/`), so the value is measured,
+not asserted. Destructive or ambiguous issues are never auto-fixed; they
+come back as a written escalation for a human decision.
+
+Path to real use: point the workflow at any GitHub repository. After the
+hackathon it becomes a managed service — the same loop, run for client
+teams that don't have DevOps hours to spare.
+
 ## How it works
 
 1. **Triage agent** reads the issue and restates the problem + acceptance criteria.
