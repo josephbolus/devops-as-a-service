@@ -108,6 +108,25 @@ on n=3 seeded issues, one run each — a real but thin margin, kept
 because the rule was registered before the runs, not because the
 split is proven generally better.
 
+## Per-run cost accounting (and what the API does not expose)
+
+Every pipeline run now carries a per-role cost summary
+(`daas/cost.py`, wired into `daas/pipeline.py`): each result has a
+`cost` block, each run writes `cost.json`, and the demo console's
+results card surfaces it. One finding is recorded plainly: **token
+usage is not exposed on the connector path** — the helper returns
+only the parsed reply content, so no `usage` field ever reaches the
+pipeline (the direct client likewise reads only the reply). Costs
+are therefore character-count token **estimates** (~4 chars/token)
+priced at the published rates (spark $1.25/$4.25, wonder $4/$20 per
+1M in/out), labeled estimates in every artifact. Measured live
+(split config, Oct 25): est. **$0.0254 per passed issue**, $0.0762
+for the full seeded set, guardrail $0.00 — full record in
+`eval-scorecard/COST_ACCOUNTING.md` and
+`eval-scorecard/cost-runs.json`, pinned by
+`tests/test_cost_accounting.py`. If a transport ever surfaces real
+`usage`, the accounting prefers it; none does today.
+
 ## Verified live evidence
 
 - Oct 23, 2026: smoke test — `muse-spark-1.3` answered through the
@@ -137,6 +156,9 @@ split is proven generally better.
   or PLANNER roles (never run there).
 - No tool calling, no responses endpoint (`/v1/responses`), no
   fine-tuning, and no image or audio models are used or claimed.
+- No provider-reported token usage is claimed: the connector path
+  does not expose `usage`, so all token and dollar figures in the
+  cost record are labeled character-count estimates.
 - Live Tier 2/3 runs were completed Oct 25 (ahead of their Days 3–4
   slot): live model-performance evidence is now timed passes on all
   three tiers plus PRs #16 (Tier 1), #17 (Tier 2), and #18 (Tier 3),

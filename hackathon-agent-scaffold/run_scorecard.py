@@ -41,6 +41,7 @@ HERE = Path(__file__).parent
 ROOT = HERE.parent
 DEMO_REPO = ROOT / "hackathon-demo-repo"
 LIVE_RUNS = ROOT / "eval-scorecard" / "live-runs.json"
+COST_RUNS = ROOT / "eval-scorecard" / "cost-runs.json"
 LIVE_PRS = [("tier1", "tier1-pr16"), ("tier2", "tier2-pr17"),
             ("tier3", "tier3-pr18")]
 ISSUES = [("tier1", "tier1.json"), ("tier2", "tier2.json"),
@@ -111,6 +112,25 @@ def live_timed_runs():
     return doc["runs"], doc["summary"]
 
 
+def cost_section():
+    """Per-run cost accounting, folded in from the measured record.
+
+    Token counts are character-count estimates (the connector path
+    does not expose API usage — see daas/cost.py); dollars are
+    estimates at published prices. Absent record -> None.
+    """
+    if not COST_RUNS.is_file():
+        return None
+    doc = json.loads(COST_RUNS.read_text())
+    return {"source": "eval-scorecard/cost-runs.json",
+            "method": doc["method"], "summary": doc["summary"],
+            "runs": [{"slug": r["slug"], "issue": r["issue"],
+                      "outcome": r["outcome"],
+                      "total_usd_est": r["cost"]["total_usd_est"],
+                      "per_role": r["cost"]["per_role"]}
+                     for r in doc["runs"]]}
+
+
 def build_scorecard():
     mock_runs = [_mock_row(slug, f) for slug, f in ISSUES]
     work = [r for r in mock_runs if r["slug"] != "guardrail"]
@@ -147,6 +167,7 @@ def build_scorecard():
                 "human_intervention": timed_summary["human_intervention"],
             },
         },
+        "cost": cost_section(),
     }
 
 
@@ -234,6 +255,38 @@ def render_markdown(sc):
         "No live rows are pending: Tier 1/2/3 each have a timed live pass",
         "and a live-opened PR, and the guardrail escalated live.",
         "",
+    ]
+    cost = sc.get("cost")
+    if cost:
+        cs = cost["summary"]
+        lines += [
+            "## Per-run cost — estimates (API usage not exposed on this path)",
+            "",
+            "Token usage is not exposed to the pipeline on the connector",
+            "path (the helper returns only the parsed reply), so token",
+            "counts are character-count ESTIMATES (~4 chars/token) priced",
+            "at the published rates (spark $1.25/$4.25, wonder $4/$20 per",
+            "1M tokens in/out) — see `daas/cost.py` and",
+            "`eval-scorecard/COST_ACCOUNTING.md`. Live split-config runs:",
+            "",
+            "| Issue | Outcome | Est. cost | Per-role (est.) |",
+            "|---|---|---|---|",
+        ]
+        for r in cost["runs"]:
+            roles = ", ".join(
+                f"{role} ${slot['cost_usd_est']:.4f}"
+                for role, slot in sorted(r["per_role"].items())) or "—"
+            lines.append(f"| {r['issue']} | {r['outcome']} | "
+                         f"${r['total_usd_est']:.4f} | {roles} |")
+        lines += [
+            "",
+            f"Total est. cost (3 work tiers + guardrail): "
+            f"**${cs['total_usd_est']:.4f}**; est. cost per passed issue: "
+            f"**${cs['cost_per_passed_issue_usd_est']:.4f}**. The guardrail "
+            f"run cost $0.00 — it escalates before any model call.",
+            "",
+        ]
+    lines += [
         "## What this does and does not prove",
         "",
         "- Mock 3/3 + guardrail escalation proves the loop, the pass criteria,",

@@ -37,7 +37,10 @@ configured). Programmatically: `POST /api/judge/run`, then poll
 - **A closing results card** (`demo_ui.results_card`, also returned as
   `results_card` in every run snapshot): overall pass / fail /
   escalated, pass/fail **per stage**, the test-count delta, total
-  elapsed time, and links — this run's PR (when one was opened), the
+  elapsed time, the run's per-role API cost summary (from the
+  pipeline's own `cost` block — an estimate, labeled as such; mock
+  and guardrail runs show $0.00), and links — this run's PR (when
+  one was opened), the
   three live PRs (#16/#17/#18), the eval scorecard, and the
   generalization record. A failing tests stage or a non-approving
   reviewer is named as failing in the card; an escalated run ends as

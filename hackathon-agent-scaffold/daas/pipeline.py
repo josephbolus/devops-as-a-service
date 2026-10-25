@@ -14,14 +14,55 @@ import sys
 from pathlib import Path
 
 from . import approval
+from . import cost as cost_mod
 from . import guardrail
 from . import prompts
+from .llm import MockClient, resolve_model
 
 
 class Escalation(RuntimeError):
-    def __init__(self, reason):
+    def __init__(self, reason, cost=None):
         super().__init__(reason)
         self.reason = reason
+        # Cost summary of the calls made before escalating — for the
+        # guardrail path this is always the zero summary (the guardrail
+        # runs before any model call, by design).
+        self.cost = cost
+
+
+def _model_for(client, system):
+    """Model that will serve this call, walking wrapper clients.
+
+    MockClient (and subclasses / wrappers around it) report "mock";
+    a client exposing .model/.role_models resolves per-role exactly
+    like the llm layer does; anything else is recorded as "unknown"
+    (priced at the default model's rates by daas.cost, and visible
+    as unknown in the record rather than dressed up as a real model).
+    """
+    obj = client
+    while obj is not None:
+        if isinstance(obj, MockClient):
+            return "mock"
+        model = getattr(obj, "model", None)
+        if model:
+            return resolve_model(system, model,
+                                 getattr(obj, "role_models", None) or {})
+        obj = getattr(obj, "inner", None)
+    return "unknown"
+
+
+def _call(client, system, user, calls_log):
+    """One model call, with its per-role cost record appended.
+
+    Token usage is not exposed by the connector path (see daas/cost.py),
+    so the record is a character-count estimate unless the client ever
+    surfaces real usage — purely observational, like on_event.
+    """
+    response = client.complete_json(system, user)
+    calls_log.append(cost_mod.record_call(
+        cost_mod.role_from_system(system), _model_for(client, system),
+        system, user, response))
+    return response
 
 
 def _repo_tree(repo: Path):
@@ -114,20 +155,21 @@ def run(repo, issue, client, out_dir, on_event=None):
         (out_dir / "approval_request.json").write_text(approval.to_json(request))
         _emit(on_event, "guardrail", {"blocked": True, "reason": reason,
                                       "request": request})
-        raise Escalation(reason)
+        raise Escalation(reason, cost=cost_mod.summarize([]))
     _emit(on_event, "guardrail", {"blocked": False})
 
-    triage = client.complete_json(prompts.TRIAGE, json.dumps(issue))
+    calls_log = []
+    triage = _call(client, prompts.TRIAGE, json.dumps(issue), calls_log)
     _emit(on_event, "triage", triage)
-    plan = client.complete_json(prompts.PLANNER,
-                                json.dumps({"issue": issue, "triage": triage,
-                                            "repo_tree": _repo_tree(repo)}))
+    plan = _call(client, prompts.PLANNER,
+                 json.dumps({"issue": issue, "triage": triage,
+                             "repo_tree": _repo_tree(repo)}), calls_log)
     _emit(on_event, "plan", plan)
     _, _, tests_before = _run_tests(repo)
-    coder = client.complete_json(prompts.CODER,
-                                 json.dumps({"issue": issue, "plan": plan,
-                                             "files": _file_contents(
-                                                 repo, plan.get("expected_files", []))}))
+    coder = _call(client, prompts.CODER,
+                  json.dumps({"issue": issue, "plan": plan,
+                              "files": _file_contents(
+                                  repo, plan.get("expected_files", []))}), calls_log)
     changed = _apply_edits(repo, coder["edits"])
     diff = _diff(repo, changed)
     _emit(on_event, "code", {"changed": changed, "diff": diff})
@@ -136,11 +178,11 @@ def run(repo, issue, client, out_dir, on_event=None):
     _emit(on_event, "tests", {"tests_ok": tests_ok, "tests_before": tests_before,
                               "tests_after": tests_after,
                               "test_log_tail": test_log[-400:]})
-    review = client.complete_json(prompts.REVIEWER,
-                                  json.dumps({"changed": changed, "tests_ok": tests_ok,
-                                              "tests_before": tests_before,
-                                              "tests_after": tests_after,
-                                              "diff": diff}))
+    review = _call(client, prompts.REVIEWER,
+                   json.dumps({"changed": changed, "tests_ok": tests_ok,
+                               "tests_before": tests_before,
+                               "tests_after": tests_after,
+                               "diff": diff}), calls_log)
     _emit(on_event, "review", review)
 
     unexpected = sorted(set(changed) - set(plan.get("expected_files", changed)))
@@ -158,9 +200,13 @@ def run(repo, issue, client, out_dir, on_event=None):
         f"({tests_before} → {tests_after} discovered).\n\n"
         f"### Reviewer\n{review.get('verdict')}: {review.get('notes', '')}\n")
     (out_dir / "pr_body.md").write_text(pr_body)
+    run_cost = cost_mod.summarize(calls_log)
+    (out_dir / "cost.json").write_text(json.dumps(
+        {"summary": run_cost, "calls": calls_log}, indent=2) + "\n")
     result = {"passed": passed, "changed": changed, "tests_ok": tests_ok,
               "tests_before": tests_before, "tests_after": tests_after,
-              "unexpected_files": unexpected, "test_log_tail": test_log[-400:]}
+              "unexpected_files": unexpected, "test_log_tail": test_log[-400:],
+              "cost": run_cost}
     _emit(on_event, "done", {"result": result, "pr_body": pr_body})
     return result
 
@@ -190,7 +236,7 @@ def resume(repo, request, client, out_dir, on_event=None):
     if decision in ("reject", "handle_manually"):
         result = {"status": "closed_manual" if decision == "handle_manually" else "closed_rejected",
                   "decision": decision, "resumed": False, "passed": False,
-                  "model_calls_made": 0}
+                  "model_calls_made": 0, "cost": cost_mod.summarize([])}
         (out_dir / "resume_result.json").write_text(json.dumps(result, indent=2) + "\n")
         _emit(on_event, "done", {"result": result})
         return result
@@ -202,6 +248,6 @@ def resume(repo, request, client, out_dir, on_event=None):
     result = run(repo, rescoped, client, out_dir, on_event=on_event)
     wrapped = {"status": "resumed", "decision": "rescope", "resumed": True,
                "passed": bool(result.get("passed")), "issue": rescoped,
-               "result": result}
+               "result": result, "cost": result.get("cost")}
     (out_dir / "resume_result.json").write_text(json.dumps(wrapped, indent=2) + "\n")
     return wrapped

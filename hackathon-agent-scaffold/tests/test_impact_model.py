@@ -28,7 +28,7 @@ class TestImpactModel(unittest.TestCase):
     def test_honest_labeling(self):
         self.assertIn("This is a model, not a measured result", self.text)
         self.assertIn("No real users yet", self.text)
-        self.assertIn("n=1 live", self.text)
+        self.assertIn("timed 3/3 live eval", self.text)
         self.assertIn("No dollar saving is claimed", self.text)
 
     def test_inputs_are_labeled_and_sourced(self):

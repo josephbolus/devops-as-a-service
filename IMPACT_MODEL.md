@@ -6,12 +6,14 @@ which recomputes every number in the tables below from the stated
 inputs.
 
 **This is a model, not a measured result.** No real users yet. The
-only measured run behind it is n=1 live (PR #16). Every input below
+measured runs behind it are the live eval record (PR #16 first, then
+the timed 3/3 live eval in `eval-scorecard/`). Every input below
 is labeled **measured**, **entry assertion**, or **model
 assumption** — and the last section says exactly how each assumption
-gets replaced by a measurement. No dollar saving is claimed: no
-wage rate and no per-run API cost has been measured, so this model
-stays in hours.
+gets replaced by a measurement. No dollar saving is claimed for
+labour: no wage rate has been measured, so the labour side of this
+model stays in hours. The per-run API cost, by contrast, has now
+been measured (as a labeled estimate) — see the cost section below.
 
 ## Who the model is about
 
@@ -69,9 +71,30 @@ faster than doing the fix by hand still saves time.
 | 20 min | 40 min | 3.33 h |
 | 30 min | 30 min | 2.50 h |
 
+## Per-run API cost (measured estimate, Oct 25, 2026)
+
+The API-cost input this model used to list as unmeasured is now
+measured — as an estimate, labeled as one everywhere it appears.
+Token usage is not exposed on the connector path (the helper
+returns only the parsed reply), so the pipeline prices
+character-count token estimates at the published rates; the full
+record is `eval-scorecard/COST_ACCOUNTING.md` +
+`eval-scorecard/cost-runs.json`, from live split-config runs that
+passed 3/3 seeded tiers:
+
+- **Est. API cost per passed issue: $0.0254.**
+- Against this model's 50 min saved per passed issue, that is an
+  **API cost per senior-hour saved of $0.0305** — three cents of API
+  spend per hour of senior time the model says is returned. No wage
+  rate is assumed for that ratio; it divides dollars actually
+  (estimated-) spent by hours the model claims saved.
+- The guardrail path costs $0.00 per escalation: it runs before any
+  model call.
+
 ## What this model does NOT claim
 
-- No dollar saving is claimed (no wage or API-cost input measured).
+- No dollar saving is claimed for labour (no wage rate measured;
+  the API cost above is spend per fixed issue, not a labour saving).
 - No wait-time reduction is quantified: the README's "waits for
   weeks" backlog delay is real framing, but turning it into a
   number needs queue data this model does not have.
@@ -98,6 +121,13 @@ faster than doing the fix by hand still saves time.
    live guardrail escalation), so the measured seeded-set pass rate
    is 3/3 (n=3, one run each — not yet a backlog rate). No failed
    live run occurred, so failed-run triage time remains unmeasured.
-4. **Re-run this doc's tests.** `tests/test_impact_model.py`
+4. **Measure the per-run API cost.** DONE Oct 25: live runs with
+   pipeline cost capture are recorded in
+   `eval-scorecard/cost-runs.json` (est. $0.0254 per passed issue,
+   character-count estimates — API usage is not exposed on the
+   connector path; see the cost section above). Replacing the
+   estimate with provider-reported usage remains open for any
+   transport that surfaces a `usage` field.
+5. **Re-run this doc's tests.** `tests/test_impact_model.py`
    recomputes the tables from the inputs, so a changed input that
    is not carried through the arithmetic fails the suite.

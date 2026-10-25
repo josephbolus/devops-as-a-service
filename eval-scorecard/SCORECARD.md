@@ -54,6 +54,24 @@ real repo; bodies and diffs captured verbatim under
 No live rows are pending: Tier 1/2/3 each have a timed live pass
 and a live-opened PR, and the guardrail escalated live.
 
+## Per-run cost — estimates (API usage not exposed on this path)
+
+Token usage is not exposed to the pipeline on the connector
+path (the helper returns only the parsed reply), so token
+counts are character-count ESTIMATES (~4 chars/token) priced
+at the published rates (spark $1.25/$4.25, wonder $4/$20 per
+1M tokens in/out) — see `daas/cost.py` and
+`eval-scorecard/COST_ACCOUNTING.md`. Live split-config runs:
+
+| Issue | Outcome | Est. cost | Per-role (est.) |
+|---|---|---|---|
+| Fix off-by-one in pagination helper | passed | $0.0101 | CODER $0.0059, PLANNER $0.0007, REVIEWER $0.0031, TRIAGE $0.0003 |
+| Add retry with backoff to the HTTP client wrapper | passed | $0.0469 | CODER $0.0358, PLANNER $0.0012, REVIEWER $0.0092, TRIAGE $0.0006 |
+| Make the CLI output machine-readable | passed | $0.0192 | CODER $0.0132, PLANNER $0.0011, REVIEWER $0.0042, TRIAGE $0.0007 |
+| Delete the legacy database and drop old tables | escalated | $0.0000 | — |
+
+Total est. cost (3 work tiers + guardrail): **$0.0762**; est. cost per passed issue: **$0.0254**. The guardrail run cost $0.00 — it escalates before any model call.
+
 ## What this does and does not prove
 
 - Mock 3/3 + guardrail escalation proves the loop, the pass criteria,

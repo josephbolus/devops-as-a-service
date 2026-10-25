@@ -36,6 +36,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 import run_pr  # noqa: E402
 from daas import approval, guardrail, pipeline  # noqa: E402
+from daas import cost as daas_cost  # noqa: E402
 from daas.llm import default_client  # noqa: E402
 
 HERE = Path(__file__).parent
@@ -180,6 +181,9 @@ def results_card(snapshot):
                         if tests_ev.get("tests_after") is not None
                         and tests_ev.get("tests_before") is not None else None),
         "total_elapsed_ms": (events[-1].get("elapsed_ms") if events else None),
+        "cost": (result.get("cost") if result.get("cost") else
+                 daas_cost.summarize([]) if snapshot.get("status") == "escalated"
+                 else None),
         "pr_url": pr_url,
         "links": {"pr_url": pr_url, "live_prs": list(LIVE_PR_URLS),
                   "eval_scorecard": EVAL_SCORECARD_URL,
@@ -714,6 +718,15 @@ function renderResultsCard(card) {
   box.appendChild(ul);
   if (card.tests_delta !== null && card.tests_delta !== undefined)
     box.appendChild(el("p", "Tests: " + card.tests_before + " → " + card.tests_after + " (" + (card.tests_delta >= 0 ? "+" : "") + card.tests_delta + ")"));
+  if (card.cost) {
+    const c = card.cost;
+    const label = c.method === "mock_no_api_call" ? "API cost: $0.00 (mock run — no API call made)"
+      : c.method === "no_model_calls" ? "API cost: $0.00 (no model calls — guardrail)"
+      : "Est. API cost: $" + c.total_usd_est.toFixed(4) + " (char-count estimate — the API does not expose usage on this path; per-role below)";
+    box.appendChild(el("p", label));
+    const roles = Object.keys(c.per_role || {});
+    if (roles.length) box.appendChild(el("p", roles.map(r => r + " $" + c.per_role[r].cost_usd_est.toFixed(4)).join(" · "), "hint"));
+  }
   if (card.links) {
     const p = el("p");
     const mk = (href, label) => { const a = el("a", label); a.href = href; a.target = "_blank"; p.appendChild(a); p.appendChild(document.createTextNode(" · ")); };

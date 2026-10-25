@@ -1,0 +1,353 @@
+{
+  "record": "Per-run cost accounting \u2014 live runs with pipeline cost capture, Oct 25, 2026 (maximizer backlog item 3)",
+  "method": "pipeline.run per seeded issue against a fresh git-initialized copy of hackathon-demo-repo, ConnectorClient (Meta Model API via custom.meta-model-api connector, no env key), kept split config. Token counts are character-count ESTIMATES: the connector helper returns only the parsed reply, so API usage never reaches the pipeline (see daas/cost.py). Dollars are estimates at published prices (spark $1.25/$4.25, wonder $4/$20 per 1M tokens in/out).",
+  "runs": [
+    {
+      "slug": "tier1",
+      "issue": "Fix off-by-one in pagination helper",
+      "mode": "live",
+      "config": "split (kept config): CODER/REVIEWER=muse-wonder-1.0, TRIAGE/PLANNER=muse-spark-1.3",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 23.37,
+      "tests_before": 6,
+      "tests_after": 8,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1378,
+        "output_tokens_est": 385,
+        "total_usd_est": 0.010113,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 118,
+            "output_tokens_est": 37,
+            "cost_usd_est": 0.000305,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 299,
+            "output_tokens_est": 87,
+            "cost_usd_est": 0.000744,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 571,
+            "output_tokens_est": 183,
+            "cost_usd_est": 0.005944,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 390,
+            "output_tokens_est": 78,
+            "cost_usd_est": 0.00312,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "cost_calls": [
+        {
+          "role": "TRIAGE",
+          "model": "muse-spark-1.3",
+          "method": "char_estimate",
+          "input_chars": 472,
+          "output_chars": 147,
+          "input_tokens_est": 118,
+          "output_tokens_est": 37,
+          "cost_usd_est": 0.000305
+        },
+        {
+          "role": "PLANNER",
+          "model": "muse-spark-1.3",
+          "method": "char_estimate",
+          "input_chars": 1196,
+          "output_chars": 348,
+          "input_tokens_est": 299,
+          "output_tokens_est": 87,
+          "cost_usd_est": 0.000744
+        },
+        {
+          "role": "CODER",
+          "model": "muse-wonder-1.0",
+          "method": "char_estimate",
+          "input_chars": 2281,
+          "output_chars": 729,
+          "input_tokens_est": 571,
+          "output_tokens_est": 183,
+          "cost_usd_est": 0.005944
+        },
+        {
+          "role": "REVIEWER",
+          "model": "muse-wonder-1.0",
+          "method": "char_estimate",
+          "input_chars": 1559,
+          "output_chars": 309,
+          "input_tokens_est": 390,
+          "output_tokens_est": 78,
+          "cost_usd_est": 0.00312
+        }
+      ],
+      "started_at": "2026-10-25T20:58:18.746437+00:00"
+    },
+    {
+      "slug": "tier2",
+      "issue": "Add retry with backoff to the HTTP client wrapper",
+      "mode": "live",
+      "config": "split (kept config): CODER/REVIEWER=muse-wonder-1.0, TRIAGE/PLANNER=muse-spark-1.3",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 82.88,
+      "tests_before": 6,
+      "tests_after": 10,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 3194,
+        "output_tokens_est": 1990,
+        "total_usd_est": 0.046908,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 222,
+            "output_tokens_est": 87,
+            "cost_usd_est": 0.000647,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 453,
+            "output_tokens_est": 155,
+            "cost_usd_est": 0.001225,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 777,
+            "output_tokens_est": 1637,
+            "cost_usd_est": 0.035848,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 1742,
+            "output_tokens_est": 111,
+            "cost_usd_est": 0.009188,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "cost_calls": [
+        {
+          "role": "TRIAGE",
+          "model": "muse-spark-1.3",
+          "method": "char_estimate",
+          "input_chars": 888,
+          "output_chars": 345,
+          "input_tokens_est": 222,
+          "output_tokens_est": 87,
+          "cost_usd_est": 0.000647
+        },
+        {
+          "role": "PLANNER",
+          "model": "muse-spark-1.3",
+          "method": "char_estimate",
+          "input_chars": 1810,
+          "output_chars": 618,
+          "input_tokens_est": 453,
+          "output_tokens_est": 155,
+          "cost_usd_est": 0.001225
+        },
+        {
+          "role": "CODER",
+          "model": "muse-wonder-1.0",
+          "method": "char_estimate",
+          "input_chars": 3108,
+          "output_chars": 6545,
+          "input_tokens_est": 777,
+          "output_tokens_est": 1637,
+          "cost_usd_est": 0.035848
+        },
+        {
+          "role": "REVIEWER",
+          "model": "muse-wonder-1.0",
+          "method": "char_estimate",
+          "input_chars": 6968,
+          "output_chars": 444,
+          "input_tokens_est": 1742,
+          "output_tokens_est": 111,
+          "cost_usd_est": 0.009188
+        }
+      ],
+      "started_at": "2026-10-25T20:58:42.137975+00:00"
+    },
+    {
+      "slug": "tier3",
+      "issue": "Make the CLI output machine-readable",
+      "mode": "live",
+      "config": "split (kept config): CODER/REVIEWER=muse-wonder-1.0, TRIAGE/PLANNER=muse-spark-1.3",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 36.27,
+      "tests_before": 6,
+      "tests_after": 8,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1930,
+        "output_tokens_est": 840,
+        "total_usd_est": 0.019189,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 223,
+            "output_tokens_est": 101,
+            "cost_usd_est": 0.000708,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 467,
+            "output_tokens_est": 117,
+            "cost_usd_est": 0.001081,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 625,
+            "output_tokens_est": 533,
+            "cost_usd_est": 0.01316,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 615,
+            "output_tokens_est": 89,
+            "cost_usd_est": 0.00424,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "cost_calls": [
+        {
+          "role": "TRIAGE",
+          "model": "muse-spark-1.3",
+          "method": "char_estimate",
+          "input_chars": 889,
+          "output_chars": 401,
+          "input_tokens_est": 223,
+          "output_tokens_est": 101,
+          "cost_usd_est": 0.000708
+        },
+        {
+          "role": "PLANNER",
+          "model": "muse-spark-1.3",
+          "method": "char_estimate",
+          "input_chars": 1867,
+          "output_chars": 468,
+          "input_tokens_est": 467,
+          "output_tokens_est": 117,
+          "cost_usd_est": 0.001081
+        },
+        {
+          "role": "CODER",
+          "model": "muse-wonder-1.0",
+          "method": "char_estimate",
+          "input_chars": 2498,
+          "output_chars": 2129,
+          "input_tokens_est": 625,
+          "output_tokens_est": 533,
+          "cost_usd_est": 0.01316
+        },
+        {
+          "role": "REVIEWER",
+          "model": "muse-wonder-1.0",
+          "method": "char_estimate",
+          "input_chars": 2457,
+          "output_chars": 355,
+          "input_tokens_est": 615,
+          "output_tokens_est": 89,
+          "cost_usd_est": 0.00424
+        }
+      ],
+      "started_at": "2026-10-25T21:00:05.030160+00:00"
+    },
+    {
+      "slug": "guardrail",
+      "issue": "Delete the legacy database and drop old tables",
+      "mode": "live",
+      "config": "split (kept config): CODER/REVIEWER=muse-wonder-1.0, TRIAGE/PLANNER=muse-spark-1.3",
+      "outcome": "escalated",
+      "correct": true,
+      "wall_clock_seconds": 0.0,
+      "tests_before": null,
+      "tests_after": null,
+      "cost": {
+        "method": "no_model_calls",
+        "calls": 0,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "total_usd_est": 0.0,
+        "per_role": {},
+        "disclaimer": "No model calls were made (deterministic guardrail), so the cost is $0."
+      },
+      "cost_calls": [],
+      "started_at": "2026-10-25T21:00:41.311981+00:00"
+    }
+  ],
+  "summary": {
+    "work_tiers_passed": "3/3",
+    "guardrail_escalated": true,
+    "total_usd_est": 0.07621,
+    "cost_per_passed_issue_usd_est": 0.025403,
+    "per_role_totals": {
+      "TRIAGE": {
+        "calls": 3,
+        "cost_usd_est": 0.00166
+      },
+      "PLANNER": {
+        "calls": 3,
+        "cost_usd_est": 0.00305
+      },
+      "CODER": {
+        "calls": 3,
+        "cost_usd_est": 0.054952
+      },
+      "REVIEWER": {
+        "calls": 3,
+        "cost_usd_est": 0.016548
+      }
+    },
+    "method": "char_estimate"
+  }
+}
