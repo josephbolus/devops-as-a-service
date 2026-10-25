@@ -75,6 +75,36 @@ nothing here has been pushed to GitHub.
   note. Mock and live artifacts are labeled as such throughout, and
   `tests/test_demo_fallbacks.py` pins the package's completeness.
 
+## Demo console (added Oct 25)
+
+`demo_ui.py` — a local web UI over the pipeline, stdlib only
+(`http.server` + threading; no dependencies, no CDN assets):
+
+```bash
+python3 demo_ui.py [--port 8765]   # then open http://127.0.0.1:8765/
+```
+
+What it shows, live as it happens: an issue picker (Tier 1/2/3 +
+guardrail), a Mock/Live mode toggle, and a stage timeline that fills
+in via `pipeline.run`'s new `on_event` hook — guardrail verdict,
+triage (kind + summary + acceptance), plan (steps), code (files
+changed + full diff), tests (discovered count before → after,
+pass/fail), review (verdict + notes), and the final result (PR body,
+or the real PR link). A "Try to break it" panel posts arbitrary text
+to `daas/guardrail.py`; escalations render the human-approval handoff
+from `daas/approval.py` (what the pipeline provably did NOT do, plus
+the three human options).
+
+Safety shape: mock and live-without-PR runs execute against a fresh
+throwaway copy of `../hackathon-demo-repo` (git-initialized so diffs
+render) — the pristine demo repo is never mutated. Live mode resolves
+the Meta Model API through `daas.llm.default_client()` (the connector
+path); no key is read, accepted, or logged by the UI. Only Live +
+"Open real PR" touches the real repo, by driving the refactored
+`run_pr.run()` in-process and surfacing the opened PR's URL.
+`tests/test_demo_ui.py` pins the event order and the HTTP endpoints
+(mock mode, ephemeral port). Full scaffold suite: 42/42.
+
 ## Design choices worth knowing
 
 - **Guardrail is deterministic code, not a prompt** (`daas/guardrail.py`).

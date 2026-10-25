@@ -10,6 +10,10 @@ pipeline in place -> on pass, commit the changed files, push the branch,
 and open the PR with the pipeline's pr_body.md. On a failed review or
 failing tests, the branch stays local and no PR is opened (exit 1).
 Guardrail escalation: nothing is touched (exit 2).
+
+The work lives in run() so the demo console (demo_ui.py) can drive the
+same flow in-process, stream stage events via on_event, and read the
+opened PR's URL from the returned dict.
 """
 import argparse
 import json
@@ -35,6 +39,61 @@ def slugify(title):
     return re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")[:40] or "issue"
 
 
+def run(repo, issue, out, base="main", mock=False, on_event=None):
+    """Drive the full branch -> pipeline -> PR flow once.
+
+    Returns {"exit": int, "pr_url": str|None, "result": dict|None,
+    "branch": str}. Exit codes match the CLI: 0 PR opened, 1 not
+    PR-ready / PR creation failed, 2 escalated, 3 dirty target.
+    """
+    repo = Path(repo).resolve()
+    out = Path(out)
+    branch = f"daas/{slugify(issue['title'])}"
+    outcome = {"exit": 0, "pr_url": None, "result": None, "branch": branch}
+
+    dirty = git(repo, "status", "--porcelain", "--", ".").stdout.strip()
+    if dirty:
+        print(f"ABORT: target repo has uncommitted changes:\n{dirty}")
+        outcome["exit"] = 3
+        return outcome
+    git(repo, "checkout", "-b", branch)
+
+    client = default_client(mock=mock)
+    try:
+        result = pipeline.run(repo, issue, client, out, on_event=on_event)
+    except pipeline.Escalation as e:
+        git(repo, "checkout", base)
+        git(repo, "branch", "-D", branch)
+        print(f"ESCALATED: {e.reason} (see {out}/escalation.md)")
+        outcome["exit"] = 2
+        return outcome
+    outcome["result"] = result
+
+    print(json.dumps(result, indent=2))
+    if not result["passed"]:
+        print(f"NOT PR-READY: branch {branch} left local for inspection.")
+        outcome["exit"] = 1
+        return outcome
+
+    for name in result["changed"]:
+        git(repo, "add", "--", name)
+    git(repo, "-c", "user.name=daas-agent", "-c", "user.email=daas-agent@localhost",
+        "commit", "-m", f"daas: {issue['title']}")
+    git(repo, "push", "-u", "origin", branch)
+    body = Path(out, "pr_body.md").read_text()
+    proc = subprocess.run(
+        ["gh", "pr", "create", "--title", issue["title"], "--body", body,
+         "--base", base, "--head", branch],
+        cwd=repo, capture_output=True, text=True)
+    if proc.returncode != 0:
+        print(f"PR creation failed: {proc.stderr.strip()}")
+        outcome["exit"] = 1
+        return outcome
+    outcome["pr_url"] = proc.stdout.strip()
+    print(f"PR OPENED: {outcome['pr_url']}")
+    return outcome
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo", required=True)
@@ -44,45 +103,9 @@ def main():
     ap.add_argument("--mock", action="store_true")
     args = ap.parse_args()
 
-    repo = Path(args.repo).resolve()
     issue = json.loads(Path(args.issue).read_text())
-    branch = f"daas/{slugify(issue['title'])}"
-
-    dirty = git(repo, "status", "--porcelain", "--", ".").stdout.strip()
-    if dirty:
-        print(f"ABORT: target repo has uncommitted changes:\n{dirty}")
-        return 3
-    git(repo, "checkout", "-b", branch)
-
-    client = default_client(mock=args.mock)
-    try:
-        result = pipeline.run(repo, issue, client, args.out)
-    except pipeline.Escalation as e:
-        git(repo, "checkout", args.base)
-        git(repo, "branch", "-D", branch)
-        print(f"ESCALATED: {e.reason} (see {args.out}/escalation.md)")
-        return 2
-
-    print(json.dumps(result, indent=2))
-    if not result["passed"]:
-        print(f"NOT PR-READY: branch {branch} left local for inspection.")
-        return 1
-
-    for name in result["changed"]:
-        git(repo, "add", "--", name)
-    git(repo, "-c", "user.name=daas-agent", "-c", "user.email=daas-agent@localhost",
-        "commit", "-m", f"daas: {issue['title']}")
-    git(repo, "push", "-u", "origin", branch)
-    body = Path(args.out, "pr_body.md").read_text()
-    proc = subprocess.run(
-        ["gh", "pr", "create", "--title", issue["title"], "--body", body,
-         "--base", args.base, "--head", branch],
-        cwd=repo, capture_output=True, text=True)
-    if proc.returncode != 0:
-        print(f"PR creation failed: {proc.stderr.strip()}")
-        return 1
-    print(f"PR OPENED: {proc.stdout.strip()}")
-    return 0
+    outcome = run(args.repo, issue, args.out, base=args.base, mock=args.mock)
+    return outcome["exit"]
 
 
 if __name__ == "__main__":

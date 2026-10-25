@@ -90,8 +90,19 @@ def _run_tests(repo: Path):
     return proc.returncode == 0, log, int(m.group(1)) if m else 0
 
 
-def run(repo, issue, client, out_dir):
-    """issue: dict with title/body. Returns result dict; raises Escalation."""
+def _emit(on_event, stage, data):
+    if on_event is not None:
+        on_event({"stage": stage, "data": data})
+
+
+def run(repo, issue, client, out_dir, on_event=None):
+    """issue: dict with title/body. Returns result dict; raises Escalation.
+
+    on_event, when given, is called with {"stage": ..., "data": {...}}
+    dicts as the run progresses (guardrail/triage/plan/code/tests/
+    review/done) — the demo console renders these live. Purely
+    observational: it never changes the run's behavior.
+    """
     repo = Path(repo)
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -101,25 +112,36 @@ def run(repo, issue, client, out_dir):
         request = approval.build_request(issue, reason)
         (out_dir / "escalation.md").write_text(approval.render_markdown(request))
         (out_dir / "approval_request.json").write_text(approval.to_json(request))
+        _emit(on_event, "guardrail", {"blocked": True, "reason": reason,
+                                      "request": request})
         raise Escalation(reason)
+    _emit(on_event, "guardrail", {"blocked": False})
 
     triage = client.complete_json(prompts.TRIAGE, json.dumps(issue))
+    _emit(on_event, "triage", triage)
     plan = client.complete_json(prompts.PLANNER,
                                 json.dumps({"issue": issue, "triage": triage,
                                             "repo_tree": _repo_tree(repo)}))
+    _emit(on_event, "plan", plan)
     _, _, tests_before = _run_tests(repo)
     coder = client.complete_json(prompts.CODER,
                                  json.dumps({"issue": issue, "plan": plan,
                                              "files": _file_contents(
                                                  repo, plan.get("expected_files", []))}))
     changed = _apply_edits(repo, coder["edits"])
+    diff = _diff(repo, changed)
+    _emit(on_event, "code", {"changed": changed, "diff": diff})
 
     tests_ok, test_log, tests_after = _run_tests(repo)
+    _emit(on_event, "tests", {"tests_ok": tests_ok, "tests_before": tests_before,
+                              "tests_after": tests_after,
+                              "test_log_tail": test_log[-400:]})
     review = client.complete_json(prompts.REVIEWER,
                                   json.dumps({"changed": changed, "tests_ok": tests_ok,
                                               "tests_before": tests_before,
                                               "tests_after": tests_after,
-                                              "diff": _diff(repo, changed)}))
+                                              "diff": diff}))
+    _emit(on_event, "review", review)
 
     unexpected = sorted(set(changed) - set(plan.get("expected_files", changed)))
     test_files_changed = [f for f in changed if "/test" in f or f.startswith("test")]
@@ -136,6 +158,8 @@ def run(repo, issue, client, out_dir):
         f"({tests_before} → {tests_after} discovered).\n\n"
         f"### Reviewer\n{review.get('verdict')}: {review.get('notes', '')}\n")
     (out_dir / "pr_body.md").write_text(pr_body)
-    return {"passed": passed, "changed": changed, "tests_ok": tests_ok,
-            "tests_before": tests_before, "tests_after": tests_after,
-            "unexpected_files": unexpected, "test_log_tail": test_log[-400:]}
+    result = {"passed": passed, "changed": changed, "tests_ok": tests_ok,
+              "tests_before": tests_before, "tests_after": tests_after,
+              "unexpected_files": unexpected, "test_log_tail": test_log[-400:]}
+    _emit(on_event, "done", {"result": result, "pr_body": pr_body})
+    return result
