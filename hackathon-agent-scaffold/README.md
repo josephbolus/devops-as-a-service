@@ -97,6 +97,22 @@ nothing here has been pushed to GitHub.
   measured anchor is n=1 live (PR #16).
   `tests/test_impact_model.py` recomputes every table from the
   stated inputs, so a stale number fails the suite.
+- Meta AI tooling audit added Oct 25 (maximizer iteration 9):
+  repo-root `../META_AI_TOOLING.md` documents the Meta Model API use
+  as judges will see it — `muse-spark-1.3`, `response_format:
+  json_object` on both live transports, the three clients of the one
+  `llm` abstraction (connector / direct / mock, with mock explicitly
+  not tooling evidence), the four schema-pinned role prompts with
+  the exact JSON keys the pipeline consumes, and the per-role model
+  mechanism with the split itself honestly marked undecided (Day-1,
+  Oct 27 decision). `tests/test_meta_tooling.py` pins the doc AND
+  the mechanisms: prompt schemas (`BY_ROLE` = the four agent roles,
+  each prompt opening with its role word and naming its exact keys,
+  coder verbatim + `unittest.TestCase` rules), and — with mocked
+  transports, no API call — both live clients resolving a
+  `DAAS_MODEL_<ROLE>` override before the call (the connector
+  client's routing had never been pinned before). Full scaffold
+  suite: 70/70.
 
 ## Demo console (added Oct 25)
 
