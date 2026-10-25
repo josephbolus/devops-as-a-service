@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "changed": [
+    "app/report.py",
+    "app/cli.py",
+    "app/cli.py",
+    "tests/test_cli_json.py"
+  ],
+  "tests_ok": true,
+  "tests_before": 6,
+  "tests_after": 8,
+  "unexpected_files": [],
+  "test_log_tail": "----------------------------------------------------------------------\nRan 8 tests in 0.001s\n\nOK",
+  "issue": "Make the CLI output machine-readable",
+  "changed_unique": [
+    "app/cli.py",
+    "app/report.py",
+    "tests/test_cli_json.py"
+  ]
+}

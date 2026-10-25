@@ -1,0 +1,36 @@
+diff --git a/hackathon-demo-repo/app/pagination.py b/hackathon-demo-repo/app/pagination.py
+index 66809e7..f47cb04 100644
+--- a/hackathon-demo-repo/app/pagination.py
++++ b/hackathon-demo-repo/app/pagination.py
+@@ -14,4 +14,4 @@ def paginate(items, page, page_size):
+         raise ValueError("page_size must be >= 1")
+     start = (page - 1) * page_size
+     end = start + page_size
+-    return items[start : end - 1]  # BUG: the -1 drops the last item of full pages
++    return items[start:end]
+diff --git a/hackathon-demo-repo/tests/test_pagination_regression.py b/hackathon-demo-repo/tests/test_pagination_regression.py
+new file mode 100644
+index 0000000..8a158d4
+--- /dev/null
++++ b/hackathon-demo-repo/tests/test_pagination_regression.py
+@@ -0,0 +1,20 @@
++"""Regression test for pagination off-by-one."""
++import unittest
++
++from app.pagination import paginate
++
++
++class TestPaginationRegression(unittest.TestCase):
++    def test_full_second_page_returns_ten_items(self):
++        result = paginate(list(range(20)), 2, 10)
++        self.assertEqual(result, list(range(10, 20)))
++        self.assertEqual(len(result), 10)
++
++    def test_full_first_page_returns_ten_items(self):
++        result = paginate(list(range(20)), 1, 10)
++        self.assertEqual(result, list(range(10)))
++        self.assertEqual(len(result), 10)
++
++
++if __name__ == "__main__":
++    unittest.main()

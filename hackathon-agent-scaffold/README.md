@@ -34,6 +34,16 @@ nothing here has been pushed to GitHub.
   all four seed files (parse, exact titles, work issues pass the
   guardrail, guardrail issue blocks). Full scaffold suite: 14/14.
 
+- Demo fallback package added Oct 25 (maximizer iteration 3):
+  `../demo-fallbacks/` holds a walkable end state for every demo
+  beat — mock Tier 1/2/3 PR bodies, results and diffs plus the
+  guardrail escalation (regenerate with
+  `python3 generate_demo_fallbacks.py`), and the captured LIVE
+  Tier-1 end state (PR #16, a real Meta API run: tests 6 → 8,
+  reviewer approved) under `live/tier1-pr16/` with a provenance
+  note. Mock and live artifacts are labeled as such throughout, and
+  `tests/test_demo_fallbacks.py` pins the package's completeness.
+
 ## Design choices worth knowing
 
 - **Guardrail is deterministic code, not a prompt** (`daas/guardrail.py`).

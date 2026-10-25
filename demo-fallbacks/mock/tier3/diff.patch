@@ -1,0 +1,62 @@
+--- a/app/cli.py
++++ b/app/cli.py
+@@ -2,13 +2,15 @@
+ 
+ import sys
+ 
+-from app.report import human_report
++from app.report import human_report, json_report
+ 
+ 
+ def main(argv=None):
+     argv = list(sys.argv[1:] if argv is None else argv)
+-    # Tier-3 seed issue: --json is not implemented yet.
+-    print(human_report())
++    if "--json" in argv:
++        print(json_report())
++    else:
++        print(human_report())
+     return 0
+ 
+ 
+--- a/app/report.py
++++ b/app/report.py
+@@ -21,3 +21,9 @@
+         mark = "OK  " if c["ok"] else "FAIL"
+         lines.append(f"  [{mark}] {c['name']}: {c['latency_ms']} ms")
+     return "\n".join(lines)
++
++
++def json_report(report=REPORT):
++    import json
++
++    return json.dumps(report)
+--- a/tests/test_cli_json.py
++++ b/tests/test_cli_json.py
+@@ -0,0 +1,26 @@
++import io
++import json
++import unittest
++from contextlib import redirect_stdout
++
++from app.cli import main
++from app.report import REPORT
++
++
++class CliJson(unittest.TestCase):
++    def test_json_flag_emits_report_as_json(self):
++        buf = io.StringIO()
++        with redirect_stdout(buf):
++            self.assertEqual(main(['--json']), 0)
++        self.assertEqual(json.loads(buf.getvalue()), REPORT)
++
++    def test_default_output_stays_human(self):
++        buf = io.StringIO()
++        with redirect_stdout(buf):
++            self.assertEqual(main([]), 0)
++        self.assertIn('demo-api', buf.getvalue())
++        self.assertFalse(buf.getvalue().lstrip().startswith('{'))
++
++
++if __name__ == '__main__':
++    unittest.main()

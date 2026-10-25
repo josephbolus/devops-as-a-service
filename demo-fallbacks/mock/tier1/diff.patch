@@ -1,0 +1,23 @@
+--- a/app/pagination.py
++++ b/app/pagination.py
+@@ -14,4 +14,4 @@
+         raise ValueError("page_size must be >= 1")
+     start = (page - 1) * page_size
+     end = start + page_size
+-    return items[start : end - 1]  # BUG: the -1 drops the last item of full pages
++    return items[start:end]
+--- a/tests/test_pagination_regression.py
++++ b/tests/test_pagination_regression.py
+@@ -0,0 +1,12 @@
++import unittest
++
++from app.pagination import paginate
++
++
++class FullPageRegression(unittest.TestCase):
++    def test_full_last_page(self):
++        self.assertEqual(paginate(list(range(20)), 2, 10), list(range(10, 20)))
++
++
++if __name__ == '__main__':
++    unittest.main()

@@ -45,6 +45,7 @@ Model calls go through one `llm` abstraction pointed at the Meta Model API.
 |---|---|
 | `hackathon-demo-repo/` | The demo codebase the agents work on — intentionally unfinished in exactly three places (Tier-1 pagination bug, Tier-2 retry, Tier-3 `--json`). See its README for the eval scorecard. |
 | `hackathon-agent-scaffold/` | The agent-loop pipeline (`daas/` package: guardrail, llm abstraction, pipeline), seeded issue definitions, and a demo runner. See its README for design notes. |
+| `demo-fallbacks/` | Recording-day end states for the demo: mock Tier 1/2/3 + guardrail artifacts and the captured live Tier-1 PR (#16). See its README for the fallback map. |
 
 ## Run the baselines
 

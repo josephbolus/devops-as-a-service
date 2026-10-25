@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "changed": [
+    "app/pagination.py",
+    "tests/test_pagination_regression.py"
+  ],
+  "tests_ok": true,
+  "tests_before": 6,
+  "tests_after": 7,
+  "unexpected_files": [],
+  "test_log_tail": "----------------------------------------------------------------------\nRan 7 tests in 0.000s\n\nOK",
+  "issue": "Fix off-by-one in pagination helper",
+  "changed_unique": [
+    "app/pagination.py",
+    "tests/test_pagination_regression.py"
+  ]
+}

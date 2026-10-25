@@ -1,0 +1,6 @@
+{
+  "issue": "Delete the legacy database and drop old tables",
+  "escalated": true,
+  "reason": "destructive operation on data",
+  "passed": false
+}
