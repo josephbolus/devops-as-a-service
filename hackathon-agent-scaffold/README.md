@@ -56,6 +56,15 @@ nothing here has been pushed to GitHub.
   Days 5–6 human-approval gate: the request format is built and
   pinned by `tests/test_approval.py`; the approve-and-resume flow
   remains sprint work. Full scaffold suite: 30/30.
+- Architecture diagram added Oct 25 (maximizer iteration 6):
+  repo-root `../ARCHITECTURE.md` is the Day-8 artifact published
+  early — a Mermaid system diagram (guardrail before any model call,
+  work path and escalation path, eval loop), a component map naming
+  the real files above, the four trust boundaries, and an honest
+  not-built-yet section (approve-and-resume is Days 5–6; live Tier
+  2/3 are Days 3–4; the per-role split is a Day-1 decision).
+  `tests/test_architecture.py` pins the diagram against the code:
+  every named file must exist. Full scaffold suite: 36/36.
 - Demo fallback package added Oct 25 (maximizer iteration 3):
   `../demo-fallbacks/` holds a walkable end state for every demo
   beat — mock Tier 1/2/3 PR bodies, results and diffs plus the
