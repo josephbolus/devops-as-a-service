@@ -34,6 +34,18 @@ nothing here has been pushed to GitHub.
   all four seed files (parse, exact titles, work issues pass the
   guardrail, guardrail issue blocks). Full scaffold suite: 14/14.
 
+- Eval scorecard runner added Oct 25 (maximizer iteration 4):
+  `run_scorecard.py` publishes the Days 3–4 scorecard early in
+  `../eval-scorecard/` — it runs all four seeded issues in mock mode
+  against fresh demo-repo copies and records the sprint plan's pass
+  criteria (work tiers 3/3, guardrail escalated, zero unexpected
+  files), then folds in the live Tier-1 row parsed from the captured
+  PR #16 artifacts. Mock and live sections are labeled separately:
+  mock is plumbing proof, live is the only model-performance
+  evidence, and live Tier 2/3 + guardrail rows are listed as pending
+  their scheduled sprint days. `tests/test_scorecard.py` pins all of
+  it. Full scaffold suite: 25/25.
+
 - Demo fallback package added Oct 25 (maximizer iteration 3):
   `../demo-fallbacks/` holds a walkable end state for every demo
   beat — mock Tier 1/2/3 PR bodies, results and diffs plus the
@@ -88,7 +100,7 @@ signs up for anything.
    Tier 1/2/3; the real provider still needs real prompts).
 2. GitHub intake: read a live issue via `gh issue view --json`, branch,
    commit, `gh pr create` (Day 0–1, once the repo choice lands).
-3. Eval scorecard runner (Oct 29–30) can reuse `pipeline.run` per issue.
+3. ~~Eval scorecard runner (Oct 29–30) can reuse `pipeline.run` per issue~~ — done early Oct 25 (`run_scorecard.py`, see above); the Oct 29–30 work is now the live Tier 2/3 runs plus regenerating the scorecard with those rows.
 
 ## Separations (unchanged)
 - No RAG prototype code. Option A only.

@@ -34,5 +34,10 @@ No dependencies beyond the Python 3 standard library.
 
 Pass = tests green + PR opened + no unrelated files touched.
 
+Pre-sprint edition published early in `../eval-scorecard/` (mock runs
+3/3 + guardrail escalation, plus the live Tier-1 PR #16 row; live
+Tier 2/3 + guardrail rows pending their sprint days). This table gets
+the sprint's live rows on Oct 29–30.
+
 ## Separations
 - No RAG prototype code — Option A (the submitted idea) only, locked Oct 19–20.
