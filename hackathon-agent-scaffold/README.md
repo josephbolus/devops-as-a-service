@@ -84,6 +84,19 @@ nothing here has been pushed to GitHub.
   in iteration 6). `tests/test_demo_run_of_show.py` pins the stage
   order, timings, and every fallback path's existence. Full
   scaffold suite: 49/49. Still not recorded — no video exists yet.
+- Impact model added Oct 25 (maximizer iteration 8):
+  repo-root `../IMPACT_MODEL.md` is a worked time-saving model for
+  the five-engineer shop — 60 min manual (entry assertion, used as
+  a floor) minus a 10 min review (model assumption) = 50 min saved
+  per passed issue, shown across a 3/5/10-issues-per-week grid
+  (2.50/4.17/8.33 senior hours/week) with a review-time sensitivity
+  table, explicit non-claims (no dollar saving, no wait-time
+  number, no pass-rate adjustment), and a measurement plan
+  (time the review, audit a real backlog, measure the live pass
+  rate). It is labeled a model, not a measured result — the only
+  measured anchor is n=1 live (PR #16).
+  `tests/test_impact_model.py` recomputes every table from the
+  stated inputs, so a stale number fails the suite.
 
 ## Demo console (added Oct 25)
 
