@@ -38,8 +38,8 @@ whether it is resumable).
 
 | Mode | Escalation | Decision | Resumed run | Time |
 |---|---|---|---|---|
-| Mock | guardrail issue escalated, 0 model calls | rescope → Tier 1 issue | passed, tests 6 → 7 | 0.16s resume |
-| Live (connector, split config) | guardrail issue escalated, 0 model calls | rescope → Tier 1 issue | passed, tests 6 → 9 | 38.02s resume |
+| Mock | guardrail issue escalated, 0 model calls | rescope → Tier 1 issue | passed, tests 6 → 7 | 0.28s resume |
+| Live (connector, split config) | guardrail issue escalated, 0 model calls | rescope → Tier 1 issue | passed, tests 6 → 9 | 16.84s resume |
 
 Live role models for the resumed run: TRIAGE/PLANNER
 `muse-spark-1.3`, CODER/REVIEWER `muse-wonder-1.0` (the kept split

@@ -141,7 +141,7 @@ nothing here has been pushed to GitHub.
   "Try to break it" panel. Measured flows in
   `../eval-scorecard/resume-runs.json`: mock rescope passed 6 → 7;
   live rescope through the connector under the split passed 6 → 9
-  in 38.02s. `tests/test_resume.py` pins all of it, including a
+  in 16.84s. `tests/test_resume.py` pins all of it, including a
   counting client proving closed decisions make no model calls.
   Root doc: `../APPROVE_AND_RESUME.md`.
 
