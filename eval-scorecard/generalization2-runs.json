@@ -1,0 +1,107 @@
+{
+  "record": "Generalization eval 2 \u2014 DevOps as a Service, Oct 25, 2026 (maximizer iteration 19: second generalization target)",
+  "method": "pipeline.run (guardrail -> triage -> plan -> code -> tests -> review) against a fresh git-initialized copy of generalization2/ (textkit), ConnectorClient (Meta Model API via custom.meta-model-api connector, no env key), kept split config. The vendored target was created for this run, never previously run, and was not tuned after the run.",
+  "config": "split (kept config): CODER/REVIEWER=muse-wonder-1.0, TRIAGE/PLANNER=muse-spark-1.3",
+  "target": {
+    "codebase": "generalization/",
+    "package": "textkit",
+    "differs_from_seeded_demo_repo": [
+      "package name textkit/ vs the demo repo's app/ and ledgerlite/",
+      "domain: text normalization/tokens/slugs/reading stats vs pagination, HTTP retry, CLI report and ledger amounts",
+      "module layout: normalize/tokens/slug/counts vs pagination/http_client/cli/report",
+      "baseline suite 10 tests (demo repo baseline: 6, ledgerlite: 9)",
+      "no MockClient canned response exists for this issue \u2014 the live models had no scaffold-provided answer"
+    ]
+  },
+  "runs": [
+    {
+      "slug": "generalization2-first-words",
+      "issue": "Fix first_words returning one word too many",
+      "mode": "live-split-generalization2",
+      "target_codebase": "generalization2/ (textkit package)",
+      "outcome": "passed",
+      "correct": true,
+      "tests_before": 10,
+      "tests_after": 15,
+      "files_touched": [
+        "tests/test_tokens_regression.py",
+        "textkit/tokens.py"
+      ],
+      "unexpected_files": [],
+      "wall_clock_seconds": 31.98,
+      "model_calls": 4,
+      "models_by_role": {
+        "TRIAGE": "muse-spark-1.3",
+        "PLANNER": "muse-spark-1.3",
+        "CODER": "muse-wonder-1.0",
+        "REVIEWER": "muse-wonder-1.0"
+      },
+      "tests_ok": true,
+      "reviewer_verdict": "approve",
+      "reviewer_notes": "Checked diff is limited to first_words off-by-one fix in textkit/tokens.py (words[:n+1] to words[:n]) plus new regression test file; no unrelated changes. Tests pass (10 before, 15 after) and regression tests cover exact n, n=1, n==len, n<=0, and n>len/empty cases.",
+      "pr_produced": true,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1904,
+        "output_tokens_est": 591,
+        "total_usd_est": 0.014396,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 216,
+            "output_tokens_est": 90,
+            "cost_usd_est": 0.000652,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 454,
+            "output_tokens_est": 113,
+            "cost_usd_est": 0.001048,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 719,
+            "output_tokens_est": 313,
+            "cost_usd_est": 0.009136,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 515,
+            "output_tokens_est": 75,
+            "cost_usd_est": 0.00356,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "pr_body": "## first_words in textkit/tokens.py returns one word too many instead of exactly the first n words.\n\nCloses: Fix first_words returning one word too many\n\n### Plan\n- Inspect textkit/tokens.py first_words implementation to locate off-by-one slice\n- Fix word slicing to return exactly first n words while preserving n<=0 and over-length behavior\n- Create tests/test_tokens_regression.py covering first_words('alpha beta gamma delta', 2) == 'alpha beta' plus edge cases\n- Run regression test and existing tests to verify fix\n\n### Files changed\n- textkit/tokens.py\n- tests/test_tokens_regression.py\n\n### Tests\nAll tests pass (10 \u2192 15 discovered).\n\n### Reviewer\napprove: Checked diff is limited to first_words off-by-one fix in textkit/tokens.py (words[:n+1] to words[:n]) plus new regression test file; no unrelated changes. Tests pass (10 before, 15 after) and regression tests cover exact n, n=1, n==len, n<=0, and n>len/empty cases.\n",
+      "diff": "diff --git a/textkit/tokens.py b/textkit/tokens.py\nindex ddfaf6d..0deea27 100644\n--- a/textkit/tokens.py\n+++ b/textkit/tokens.py\n@@ -18,7 +18,7 @@ def first_words(text, n):\n     if n <= 0:\n         return \"\"\n     words = text.split()\n-    return \" \".join(words[: n + 1])  # BUG: returns n+1 words, must be words[:n]\n+    return \" \".join(words[:n])\n \n \n def word_frequencies(words):\n\n--- new file: tests/test_tokens_regression.py ---\n+\"\"\"Regression tests for first_words off-by-one fix.\"\"\"\n+import unittest\n+\n+from textkit.tokens import first_words\n+\n+\n+class TestFirstWordsRegression(unittest.TestCase):\n+    def test_exact_count_returns_exactly_n_words(self):\n+        self.assertEqual(first_words('alpha beta gamma delta', 2), 'alpha beta')\n+\n+    def test_first_one_word(self):\n+        self.assertEqual(first_words('alpha beta gamma delta', 1), 'alpha')\n+\n+    def test_all_words_when_n_equals_length(self):\n+        self.assertEqual(first_words('alpha beta gamma delta', 4), 'alpha beta gamma delta')\n+\n+    def test_non_positive_n_returns_empty(self):\n+        self.assertEqual(first_words('alpha beta gamma delta', 0), '')\n+        self.assertEqual(first_words('alpha beta gamma delta', -1), '')\n+\n+    def test_fewer_words_than_n_returns_all(self):\n+        self.assertEqual(first_words('alpha beta', 5), 'alpha beta')\n+        self.assertEqual(first_words('', 3), '')\n+\n+\n+if __name__ == '__main__':\n+    unittest.main()\n",
+      "started_at": "2026-10-25T22:56:32.320166+00:00"
+    }
+  ],
+  "summary": {
+    "passed": true,
+    "outcome": "passed",
+    "tests_before": 10,
+    "tests_after": 15,
+    "test_growth": 5,
+    "wall_clock_seconds": 31.98,
+    "files_touched": [
+      "tests/test_tokens_regression.py",
+      "textkit/tokens.py"
+    ],
+    "unexpected_files": []
+  }
+}

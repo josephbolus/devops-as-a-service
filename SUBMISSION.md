@@ -39,14 +39,16 @@ issue, and live runs opened PRs #16, #17, and #18. The result repeats:
 the combined live record across three attempts per issue is 9/9 work
 tiers (`REPEATABILITY.md`), and the pipeline also passed live on a
 second codebase it had never seen (ledgerlite, tests 9 → 13;
-`eval-scorecard/GENERALIZATION.md`). The worked impact model
+`eval-scorecard/GENERALIZATION.md`), and on a third unseen codebase
+(textkit, tests 10 → 15; `eval-scorecard/GENERALIZATION2.md`). The worked impact model
 (`IMPACT_MODEL.md`, every input labeled measured / asserted / assumed)
 gives 50 min saved per passed issue and 216.7 senior hours per year at
 the middle volume, at an estimated API cost of $0.0254 per passed
 issue — $0.0305 per senior-hour saved (`eval-scorecard/COST_ACCOUNTING.md`;
 character-count estimate, not billing data, because the API does not
 expose usage on the connector path). Honest limits: n=3 seeded issues
-(three attempts each) plus n=1 generalization issue, no real users
+(three attempts each) plus two generalization issues (n=1 each, on
+two different unseen codebases), no real users
 yet, and review time is still the model's 10-minute assumption.
 
 - Eval scorecard: `eval-scorecard/SCORECARD.md`
@@ -94,8 +96,8 @@ HTTP: work issues 3/3 pass, the guardrail stop ends escalated
   live rescope under the split passed 6 → 9 in 16.84s
   (`eval-scorecard/resume-runs.json`).
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 150/150, demo repo 6/6, generalization
-  package 9/9, all stdlib-only.
+- Suites at drafting: scaffold 156/156, demo repo 6/6, generalization
+  package 9/9, generalization2 package 10/10, all stdlib-only.
 
 ## Dry-run checklist (Day 8 exit criteria)
 
