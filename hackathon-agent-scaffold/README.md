@@ -39,12 +39,14 @@ nothing here has been pushed to GitHub.
   `../eval-scorecard/` — it runs all four seeded issues in mock mode
   against fresh demo-repo copies and records the sprint plan's pass
   criteria (work tiers 3/3, guardrail escalated, zero unexpected
-  files), then folds in the live Tier-1 row parsed from the captured
-  PR #16 artifacts. Mock and live sections are labeled separately:
-  mock is plumbing proof, live is the only model-performance
-  evidence, and live Tier 2/3 + guardrail rows are listed as pending
-  their scheduled sprint days. `tests/test_scorecard.py` pins all of
-  it. Full scaffold suite: 25/25.
+  files), then folds in the live section from measured records.
+  Mock and live sections are labeled separately: mock is plumbing
+  proof, live is the only model-performance evidence. Updated Oct 25
+  (live-eval iteration): the live section is now complete — timed
+  live runs 3/3 + guardrail escalation from
+  `../eval-scorecard/live-runs.json`, plus the PR rows parsed from
+  the captured PR #16/#17/#18 artifacts; no live rows pending.
+  `tests/test_scorecard.py` pins all of it.
 
 - Human-approval handoff added Oct 25 (maximizer iteration 5):
   `daas/approval.py` turns a guardrail escalation into a structured
@@ -61,8 +63,9 @@ nothing here has been pushed to GitHub.
   early — a Mermaid system diagram (guardrail before any model call,
   work path and escalation path, eval loop), a component map naming
   the real files above, the four trust boundaries, and an honest
-  not-built-yet section (approve-and-resume is Days 5–6; live Tier
-  2/3 are Days 3–4; the per-role split is a Day-1 decision).
+  not-built-yet section (approve-and-resume is Days 5–6; the
+  per-role split is a Day-1 decision; live Tier 2/3 completed
+  Oct 25, ahead of their Days 3–4 slot).
   `tests/test_architecture.py` pins the diagram against the code:
   every named file must exist. Full scaffold suite: 36/36.
 - Demo fallback package added Oct 25 (maximizer iteration 3):
@@ -188,7 +191,7 @@ signs up for anything.
    Tier 1/2/3; the real provider still needs real prompts).
 2. GitHub intake: read a live issue via `gh issue view --json`, branch,
    commit, `gh pr create` (Day 0–1, once the repo choice lands).
-3. ~~Eval scorecard runner (Oct 29–30) can reuse `pipeline.run` per issue~~ — done early Oct 25 (`run_scorecard.py`, see above); the Oct 29–30 work is now the live Tier 2/3 runs plus regenerating the scorecard with those rows.
+3. ~~Eval scorecard runner (Oct 29–30) can reuse `pipeline.run` per issue~~ — done early Oct 25 (`run_scorecard.py`, see above); the live Tier 2/3 + guardrail runs were also completed Oct 25 and the scorecard regenerated with those rows (timed 3/3 + PRs #16/#17/#18).
 
 ## Separations (unchanged)
 - No RAG prototype code. Option A only.

@@ -1,0 +1,118 @@
+diff --git a/hackathon-demo-repo/app/http_client.py b/hackathon-demo-repo/app/http_client.py
+index e49ef8d..b56f1b6 100644
+--- a/hackathon-demo-repo/app/http_client.py
++++ b/hackathon-demo-repo/app/http_client.py
+@@ -6,6 +6,7 @@
+ only, never 4xx.
+ """
+ 
++import time
+ import urllib.request
+ import urllib.error
+ 
+@@ -17,10 +18,25 @@ def __init__(self, status, message=""):
+ 
+ 
+ def get(url, opener=None):
+-    """GET `url` and return the response body as text. Single attempt."""
++    """GET `url` and return the response body as text with retry."""
+     opener = opener or urllib.request.urlopen
+-    try:
+-        with opener(url) as resp:
+-            return resp.read().decode("utf-8")
+-    except urllib.error.HTTPError as e:
+-        raise HttpError(e.code, str(e)) from e
++    delay = 0.1
++    for attempt in range(4):
++        try:
++            with opener(url) as resp:
++                return resp.read().decode("utf-8")
++        except urllib.error.HTTPError as e:
++            code = getattr(e, "code", None)
++            if code is not None and 500 <= code <= 599:
++                if attempt >= 3:
++                    raise HttpError(code, str(e)) from e
++                time.sleep(delay)
++                delay *= 2
++                continue
++            raise HttpError(code, str(e)) from e
++        except OSError:
++            if attempt >= 3:
++                raise
++            time.sleep(delay)
++            delay *= 2
++            continue
+diff --git a/hackathon-demo-repo/tests/test_http_client_regression.py b/hackathon-demo-repo/tests/test_http_client_regression.py
+new file mode 100644
+index 0000000..a1cf5dd
+--- /dev/null
++++ b/hackathon-demo-repo/tests/test_http_client_regression.py
+@@ -0,0 +1,68 @@
++import unittest
++from unittest.mock import call, patch
++import urllib.error
++
++from app.http_client import HttpError, get
++
++
++class FakeResponse:
++    def __init__(self, body=b"ok"):
++        self._body = body
++
++    def __enter__(self):
++        return self
++
++    def __exit__(self, *args):
++        return False
++
++    def read(self):
++        return self._body
++
++
++def make_http_error(code):
++    return urllib.error.HTTPError("http://example.com/", code, f"HTTP {code}", {}, None)
++
++
++class TestHttpClientRetry(unittest.TestCase):
++    def test_5xx_then_success_returns_body(self):
++        err = make_http_error(500)
++        calls = []
++
++        def opener(url):
++            calls.append(url)
++            if len(calls) == 1:
++                raise err
++            return FakeResponse(b"hello")
++
++        with patch("app.http_client.time.sleep") as mock_sleep:
++            result = get("http://example.com/", opener=opener)
++        self.assertEqual(result, "hello")
++        self.assertEqual(len(calls), 2)
++        mock_sleep.assert_called_once_with(0.1)
++
++    def test_persistent_5xx_raises_after_4_attempts(self):
++        calls = []
++
++        def opener(url):
++            calls.append(url)
++            raise make_http_error(503)
++
++        with patch("app.http_client.time.sleep") as mock_sleep:
++            with self.assertRaises(HttpError):
++                get("http://example.com/", opener=opener)
++        self.assertEqual(len(calls), 4)
++        self.assertEqual(mock_sleep.call_args_list, [call(0.1), call(0.2), call(0.4)])
++
++    def test_4xx_raises_after_single_attempt(self):
++        calls = []
++
++        def opener(url):
++            calls.append(url)
++            raise make_http_error(404)
++
++        with patch("app.http_client.time.sleep") as mock_sleep:
++            with self.assertRaises(HttpError) as ctx:
++                get("http://example.com/", opener=opener)
++        self.assertEqual(ctx.exception.status, 404)
++        self.assertEqual(len(calls), 1)
++        mock_sleep.assert_not_called()

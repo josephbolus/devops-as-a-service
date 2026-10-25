@@ -92,10 +92,12 @@ faster than doing the fix by hand still saves time.
 2. **Audit a real backlog.** Count the small, well-defined issues
    filed by one real five-engineer team over 2 weeks; that count
    replaces the B grid with a point.
-3. **Measure the live pass rate.** The Days 3–4 live Tier 2/3 runs
-   (and the regenerated `eval-scorecard/SCORECARD.md`) give the
-   first multi-issue live pass rate; apply it to the per-issue
-   saving and record any failed-run triage time alongside it.
+3. **Measure the live pass rate.** DONE Oct 25, ahead of the
+   Days 3–4 slot: the timed live runs in
+   `eval-scorecard/live-runs.json` passed 3/3 seeded tiers (plus a
+   live guardrail escalation), so the measured seeded-set pass rate
+   is 3/3 (n=3, one run each — not yet a backlog rate). No failed
+   live run occurred, so failed-run triage time remains unmeasured.
 4. **Re-run this doc's tests.** `tests/test_impact_model.py`
    recomputes the tables from the inputs, so a changed input that
    is not carried through the arithmetic fails the suite.

@@ -87,6 +87,8 @@ is not decided in this document. Until then every role runs
   split is a mechanism, not a result.
 - No tool calling, no responses endpoint (`/v1/responses`), no
   fine-tuning, and no image or audio models are used or claimed.
-- Live Tier 2/3 runs are Days 3–4 sprint work; the only live
-  model-performance evidence so far is the Tier-1 run (PR #16).
+- Live Tier 2/3 runs were completed Oct 25 (ahead of their Days 3–4
+  slot): live model-performance evidence is now timed passes on all
+  three tiers plus PRs #16 (Tier 1), #17 (Tier 2), and #18 (Tier 3).
+  The per-role split comparison has not been run yet.
 - `MockClient` runs prove plumbing only — never model performance.

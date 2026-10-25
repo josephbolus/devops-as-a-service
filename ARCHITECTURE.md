@@ -91,8 +91,10 @@ decision record — as `escalation.md` plus machine-readable
   recording a decision and the pipeline resuming from it — is Days 5–6
   sprint work. The request format above is built and test-pinned; the
   resume flow is not claimed here.
-- **Live Tier 2/3 runs** are Days 3–4 sprint work; the scorecard's live
-  section carries the Tier-1 row (PR #16) and labels the rest pending.
+- **Live Tier 2/3 runs** were Days 3–4 sprint work, completed early
+  on Oct 25: the scorecard's live section carries timed live passes
+  for all three tiers plus the live guardrail escalation, and
+  live-opened PRs #16/#17/#18.
 - The **per-role model split** is a Day-1 (Oct 27) decision; the
   override mechanism exists and is tested, the split itself is not
   decided in this document.
