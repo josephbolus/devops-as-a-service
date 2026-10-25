@@ -35,6 +35,30 @@ class PipelineEndToEnd(unittest.TestCase):
         self.assertEqual(len(paginate(list(range(20)), 2, 10)), 10)
         self.assertIn("All tests pass", (self.out / "pr_body.md").read_text())
 
+    def _run_issue(self, name):
+        issue = json.loads((Path(__file__).parent.parent / "issues" / name).read_text())
+        return pipeline.run(self.repo, issue, MockClient(), self.out)
+
+    def test_tier2_retry_comes_out(self):
+        result = self._run_issue("tier2.json")
+        self.assertTrue(result["tests_ok"], result["test_log_tail"])
+        self.assertTrue(result["passed"], result)
+        self.assertEqual(result["unexpected_files"], [])
+        self.assertEqual(sorted(set(result["changed"])),
+                         ["app/http_client.py", "tests/test_http_retry.py"])
+        text = (self.repo / "app" / "http_client.py").read_text()
+        self.assertIn("max_retries=3", text)
+        self.assertIn("backoff_base", text)
+
+    def test_tier3_json_flag_comes_out(self):
+        result = self._run_issue("tier3.json")
+        self.assertTrue(result["tests_ok"], result["test_log_tail"])
+        self.assertTrue(result["passed"], result)
+        self.assertEqual(result["unexpected_files"], [])
+        self.assertEqual(sorted(set(result["changed"])),
+                         ["app/cli.py", "app/report.py", "tests/test_cli_json.py"])
+        self.assertIn("--json", (self.repo / "app" / "cli.py").read_text())
+
     def test_guardrail_escalates_and_touches_nothing(self):
         before = (self.repo / "app" / "pagination.py").read_text()
         issue = json.loads((Path(__file__).parent.parent / "issues" / "guardrail.json").read_text())

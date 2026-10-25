@@ -23,6 +23,16 @@ nothing here has been pushed to GitHub.
   `tests/test_guardrail.py` pins 10 destructive phrasings that must
   escalate and 7 benign cleanups that must pass. Full scaffold suite:
   10/10 (was 8/8 before the new tests).
+- Eval set completed Oct 25 (maximizer iteration 2): `issues/tier2.json`
+  (HTTP retry with backoff: 3 retries, 100ms base, 5xx/network only,
+  never 4xx) and `issues/tier3.json` (CLI `--json` flag, schema from
+  the REPORT dict) now exist alongside Tier 1 and the guardrail issue —
+  previously Tier 2/3 lived only as code comments. `MockClient` is now
+  issue-aware, with canned Tier-2/Tier-3 fixes, so all three tiers run
+  end-to-end in mock mode against a demo-repo copy: Tier 2 passes with
+  9 tests in the copy, Tier 3 with 8. `tests/test_eval_set.py` pins
+  all four seed files (parse, exact titles, work issues pass the
+  guardrail, guardrail issue blocks). Full scaffold suite: 14/14.
 
 ## Design choices worth knowing
 
@@ -64,11 +74,11 @@ signs up for anything.
 
 ## What remains for the real build (unchanged sprint scope)
 
-1. Real prompts per agent (mock responses are canned for Tier-1 only).
+1. Real prompts per agent (mock responses are canned per issue for
+   Tier 1/2/3; the real provider still needs real prompts).
 2. GitHub intake: read a live issue via `gh issue view --json`, branch,
    commit, `gh pr create` (Day 0–1, once the repo choice lands).
-3. Tier-2/Tier-3 mock responses or go straight to the real provider.
-4. Eval scorecard runner (Oct 29–30) can reuse `pipeline.run` per issue.
+3. Eval scorecard runner (Oct 29–30) can reuse `pipeline.run` per issue.
 
 ## Separations (unchanged)
 - No Meridian Runtime code. No RAG prototype code. Option A only.

@@ -88,9 +88,13 @@ class MetaModelClient:
 
 
 class MockClient:
-    """Canned per-agent responses for the Tier-1 seed issue + guardrail.
+    """Canned per-agent responses for the seed issues (Tier 1/2/3).
 
-    Keyed by the agent name passed as the system prompt's first word.
+    Keyed by the agent name passed as the system prompt's first word,
+    and — for TRIAGE/PLANNER/CODER, whose payloads carry the issue —
+    by the issue title, so each seeded issue gets its own canned fix.
+    REVIEWER payloads carry no issue, so the reviewer response is
+    shared (a plain approve). Unknown issues fall back to Tier 1.
     """
 
     RESPONSES = {
@@ -123,11 +127,161 @@ class MockClient:
         "REVIEWER": {"verdict": "approve", "notes": "Diff limited to expected files; regression test added."},
     }
 
+    # Per-issue overrides, keyed by exact seed-issue title.
+    BY_ISSUE = {
+        "Add retry with backoff to the HTTP client wrapper": {
+            "TRIAGE": {
+                "kind": "feature",
+                "summary": "get() fails immediately on transient 5xx / network errors",
+                "acceptance": ["5xx and network errors retried up to 3 times with 100ms-base exponential backoff",
+                               "4xx raises HttpError after exactly 1 attempt",
+                               "Existing tests still pass"],
+            },
+            "PLANNER": {
+                "steps": ["Add a retry loop to get() in app/http_client.py (5xx/network only, never 4xx)",
+                          "Exponential backoff: 100ms, 200ms, 400ms between attempts",
+                          "Add tests for 5xx-then-success, persistent 5xx, and 4xx-no-retry"],
+                "expected_files": ["app/http_client.py", "tests/test_http_retry.py"],
+            },
+            "CODER": {
+                "edits": [
+                    {"file": "app/http_client.py",
+                     "old": "import urllib.request\nimport urllib.error",
+                     "new": "import time\nimport urllib.request\nimport urllib.error"},
+                    {"file": "app/http_client.py",
+                     "old": ("def get(url, opener=None):\n"
+                             "    \"\"\"GET `url` and return the response body as text. Single attempt.\"\"\"\n"
+                             "    opener = opener or urllib.request.urlopen\n"
+                             "    try:\n"
+                             "        with opener(url) as resp:\n"
+                             "            return resp.read().decode(\"utf-8\")\n"
+                             "    except urllib.error.HTTPError as e:\n"
+                             "        raise HttpError(e.code, str(e)) from e"),
+                     "new": ("def get(url, opener=None, max_retries=3, backoff_base=0.1, sleep=time.sleep):\n"
+                             "    \"\"\"GET `url` and return the body as text.\n\n"
+                             "    Retries 5xx responses and network errors up to `max_retries`\n"
+                             "    times with exponential backoff (backoff_base * 2**attempt\n"
+                             "    seconds). 4xx responses are never retried.\n"
+                             "    \"\"\"\n"
+                             "    opener = opener or urllib.request.urlopen\n"
+                             "    for attempt in range(max_retries + 1):\n"
+                             "        try:\n"
+                             "            with opener(url) as resp:\n"
+                             "                return resp.read().decode(\"utf-8\")\n"
+                             "        except urllib.error.HTTPError as e:\n"
+                             "            if e.code < 500 or attempt == max_retries:\n"
+                             "                raise HttpError(e.code, str(e)) from e\n"
+                             "        except urllib.error.URLError:\n"
+                             "            if attempt == max_retries:\n"
+                             "                raise\n"
+                             "        sleep(backoff_base * (2 ** attempt))")},
+                    {"file": "tests/test_http_retry.py",
+                     "old": None,
+                     "new": ("import unittest\nimport urllib.error\n\n"
+                             "from app.http_client import HttpError, get\n\n\n"
+                             "def _err(code):\n"
+                             "    return urllib.error.HTTPError('http://x', code, 'err', None, None)\n\n\n"
+                             "class _Resp:\n"
+                             "    def __enter__(self): return self\n"
+                             "    def __exit__(self, *a): return False\n"
+                             "    def read(self): return b'ok'\n\n\n"
+                             "class Retry(unittest.TestCase):\n"
+                             "    def test_5xx_then_success(self):\n"
+                             "        calls = []\n"
+                             "        def opener(url):\n"
+                             "            calls.append(1)\n"
+                             "            if len(calls) < 3: raise _err(503)\n"
+                             "            return _Resp()\n"
+                             "        self.assertEqual(get('http://x', opener=opener, sleep=lambda s: None), 'ok')\n"
+                             "        self.assertEqual(len(calls), 3)\n\n"
+                             "    def test_4xx_never_retried(self):\n"
+                             "        calls = []\n"
+                             "        def opener(url):\n"
+                             "            calls.append(1); raise _err(400)\n"
+                             "        with self.assertRaises(HttpError):\n"
+                             "            get('http://x', opener=opener, sleep=lambda s: None)\n"
+                             "        self.assertEqual(len(calls), 1)\n\n"
+                             "    def test_persistent_5xx_exhausts_retries(self):\n"
+                             "        calls = []\n"
+                             "        def opener(url):\n"
+                             "            calls.append(1); raise _err(503)\n"
+                             "        with self.assertRaises(HttpError):\n"
+                             "            get('http://x', opener=opener, sleep=lambda s: None)\n"
+                             "        self.assertEqual(len(calls), 4)\n\n\n"
+                             "if __name__ == '__main__':\n    unittest.main()\n")},
+                ]
+            },
+        },
+        "Make the CLI output machine-readable": {
+            "TRIAGE": {
+                "kind": "feature",
+                "summary": "CLI prints only the human report; scripts cannot consume it",
+                "acceptance": ["--json emits the REPORT data as one JSON document on stdout",
+                               "Human output stays the default and is unchanged",
+                               "Existing tests still pass"],
+            },
+            "PLANNER": {
+                "steps": ["Add json_report() to app/report.py returning the REPORT dict as JSON",
+                          "Branch on --json in app/cli.py main(); human output stays default",
+                          "Add tests that --json parses and matches REPORT, and default output is unchanged"],
+                "expected_files": ["app/cli.py", "app/report.py", "tests/test_cli_json.py"],
+            },
+            "CODER": {
+                "edits": [
+                    {"file": "app/report.py",
+                     "old": "    return \"\\n\".join(lines)",
+                     "new": ("    return \"\\n\".join(lines)\n\n\n"
+                             "def json_report(report=REPORT):\n"
+                             "    import json\n\n"
+                             "    return json.dumps(report)")},
+                    {"file": "app/cli.py",
+                     "old": "from app.report import human_report",
+                     "new": "from app.report import human_report, json_report"},
+                    {"file": "app/cli.py",
+                     "old": ("    # Tier-3 seed issue: --json is not implemented yet.\n"
+                             "    print(human_report())"),
+                     "new": ("    if \"--json\" in argv:\n"
+                             "        print(json_report())\n"
+                             "    else:\n"
+                             "        print(human_report())")},
+                    {"file": "tests/test_cli_json.py",
+                     "old": None,
+                     "new": ("import io\nimport json\nimport unittest\n"
+                             "from contextlib import redirect_stdout\n\n"
+                             "from app.cli import main\nfrom app.report import REPORT\n\n\n"
+                             "class CliJson(unittest.TestCase):\n"
+                             "    def test_json_flag_emits_report_as_json(self):\n"
+                             "        buf = io.StringIO()\n"
+                             "        with redirect_stdout(buf):\n"
+                             "            self.assertEqual(main(['--json']), 0)\n"
+                             "        self.assertEqual(json.loads(buf.getvalue()), REPORT)\n\n"
+                             "    def test_default_output_stays_human(self):\n"
+                             "        buf = io.StringIO()\n"
+                             "        with redirect_stdout(buf):\n"
+                             "            self.assertEqual(main([]), 0)\n"
+                             "        self.assertIn('demo-api', buf.getvalue())\n"
+                             "        self.assertFalse(buf.getvalue().lstrip().startswith('{'))\n\n\n"
+                             "if __name__ == '__main__':\n    unittest.main()\n")},
+                ]
+            },
+        },
+    }
+
     def complete_json(self, system, user):
         agent = system.strip().split()[0].upper()
         if agent not in self.RESPONSES:
             raise LLMError(f"MockClient has no canned response for agent {agent!r}")
-        return json.loads(json.dumps(self.RESPONSES[agent]))
+        response = self.RESPONSES[agent]
+        try:
+            payload = json.loads(user)
+        except (TypeError, ValueError):
+            payload = {}
+        issue = payload.get("issue") or payload
+        title = issue.get("title") if isinstance(issue, dict) else None
+        override = self.BY_ISSUE.get(title, {}).get(agent)
+        if override is not None:
+            response = override
+        return json.loads(json.dumps(response))
 
 
 def default_client(mock=False):
