@@ -1,11 +1,7 @@
-"""Human-approval handoff for guardrail escalations.
+"""Human-approval handoff for guardrail escalations, plus resume.
 
 When the deterministic guardrail blocks an issue, the pipeline does not
-just refuse: it hands a human a structured approval request. This is a
-loop-sized slice of the Days 5-6 human-approval gate (sprint plan,
-Oct 31-Nov 1) pulled forward on Oct 25 (maximizer iteration 5): the
-request format exists and is test-pinned now, while the approve-and-
-resume flow remains sprint work.
+just refuse: it hands a human a structured approval request.
 
 The request records, in machine-readable form and as a walkable
 markdown artifact (the demo's trust beat):
@@ -14,8 +10,20 @@ markdown artifact (the demo's trust beat):
   changed, no PR opened) - the safety claim is checkable, not asserted,
 - the three decisions a human can actually make, and
 - a blank decision record to fill in, so the outcome is auditable.
+
+Approve-and-resume (backlog item 3, completed Oct 25): ``record_decision``
+validates and records a human decision on a request. Only ``rescope``
+can resume, and only with an explicit, narrower replacement issue
+attached; that replacement re-enters ``pipeline.run`` and therefore
+re-runs the deterministic guardrail before any model call - a rescoped
+issue that is still destructive escalates again. ``reject`` and
+``handle_manually`` close the request and never run agents.
 """
+import copy
 import json
+
+DECISIONS = ("reject", "rescope", "handle_manually")
+_STATUS_FOR = {"reject": "closed_rejected", "handle_manually": "closed_manual", "rescope": "approved_rescope"}
 
 OPTIONS = [
     {
@@ -52,6 +60,7 @@ def build_request(issue, reason):
             "pr_opened": False,
         },
         "human_options": OPTIONS,
+        "rescoped_issue": None,
         "decision_record": {
             "decision": None,
             "decided_by": None,
@@ -59,6 +68,35 @@ def build_request(issue, reason):
             "notes": None,
         },
     }
+
+
+def record_decision(request, decision, decided_by, decided_at,
+                    notes=None, rescoped_issue=None):
+    """Return a new request with a validated human decision recorded.
+
+    Pure: the input request is not mutated. Raises ValueError on an
+    unknown decision, a missing decider/timestamp, or a rescope
+    without a concrete replacement issue (title required).
+    """
+    if decision not in DECISIONS:
+        raise ValueError(f"decision must be one of {DECISIONS}, got {decision!r}")
+    if not str(decided_by or "").strip():
+        raise ValueError("decided_by is required")
+    if not str(decided_at or "").strip():
+        raise ValueError("decided_at is required")
+    if decision == "rescope":
+        if not isinstance(rescoped_issue, dict) or not str(rescoped_issue.get("title") or "").strip():
+            raise ValueError("rescope requires a rescoped_issue with a title")
+    out = copy.deepcopy(request)
+    out["status"] = _STATUS_FOR[decision]
+    out["rescoped_issue"] = copy.deepcopy(rescoped_issue) if decision == "rescope" else None
+    out["decision_record"] = {
+        "decision": decision,
+        "decided_by": decided_by,
+        "decided_at": decided_at,
+        "notes": notes,
+    }
+    return out
 
 
 def render_markdown(request):
@@ -85,16 +123,32 @@ def render_markdown(request):
     ]
     for i, opt in enumerate(request["human_options"], 1):
         lines.append(f"{i}. **{opt['label']}** - {opt['effect']}")
-    lines += [
-        "",
-        "### Decision record (fill in)",
-        "",
-        "- Decision:",
-        "- Decided by:",
-        "- Decided at:",
-        "- Notes:",
-        "",
-    ]
+    record = request.get("decision_record") or {}
+    if record.get("decision"):
+        lines += [
+            "",
+            "### Decision record",
+            "",
+            f"- Decision: {record['decision']}",
+            f"- Decided by: {record.get('decided_by') or ''}",
+            f"- Decided at: {record.get('decided_at') or ''}",
+            f"- Notes: {record.get('notes') or ''}",
+        ]
+        rescoped = request.get("rescoped_issue")
+        if rescoped:
+            lines += ["", f"Rescoped issue: {rescoped.get('title','')}"]
+        lines.append("")
+    else:
+        lines += [
+            "",
+            "### Decision record (fill in)",
+            "",
+            "- Decision:",
+            "- Decided by:",
+            "- Decided at:",
+            "- Notes:",
+            "",
+        ]
     return "\n".join(lines)
 
 

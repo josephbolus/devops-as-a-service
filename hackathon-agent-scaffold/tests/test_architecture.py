@@ -28,6 +28,7 @@ class TestArchitectureDoc(unittest.TestCase):
             "daas/pipeline.py",
             "daas/prompts.py",
             "run_pr.py",
+            "run_resume.py",
             "run_scorecard.py",
             "generate_demo_fallbacks.py",
             "ConnectorClient",
@@ -45,6 +46,7 @@ class TestArchitectureDoc(unittest.TestCase):
             "daas/pipeline.py",
             "daas/prompts.py",
             "run_pr.py",
+            "run_resume.py",
             "run_scorecard.py",
             "generate_demo_fallbacks.py",
         ):
@@ -57,8 +59,10 @@ class TestArchitectureDoc(unittest.TestCase):
 
     def test_honest_status_section(self):
         self.assertIn("What is not built yet", self.text)
+        # approve-and-resume was a Days 5-6 gap; it is now recorded as
+        # completed in the honest-status section, not claimed as a gap.
         self.assertIn("approve-and-resume flow", self.text)
-        self.assertIn("Days 5", self.text)
+        self.assertIn("completed", self.text)
 
     def test_root_readme_links_it(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")

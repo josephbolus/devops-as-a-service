@@ -57,7 +57,8 @@ nothing here has been pushed to GitHub.
   and a blank decision record. This is a loop-sized slice of the
   Days 5–6 human-approval gate: the request format is built and
   pinned by `tests/test_approval.py`; the approve-and-resume flow
-  remains sprint work. Full scaffold suite: 30/30.
+  was then completed Oct 25 (iteration 12, see below). Full
+  scaffold suite at that iteration: 30/30.
 - Architecture diagram added Oct 25 (maximizer iteration 6):
   repo-root `../ARCHITECTURE.md` is the Day-8 artifact published
   early — a Mermaid system diagram (guardrail before any model call,
@@ -128,6 +129,21 @@ nothing here has been pushed to GitHub.
   `../META_AI_TOOLING.md` with its costs. `tests/test_split_eval.py`
   pins the rule and the record. The demo run-of-show pre-flight now
   sets the split env vars for live runs.
+- Approve-and-resume completed Oct 25 (maximizer iteration 12,
+  backlog item 3 — the former Days 5–6 milestone): `approval.py`
+  gains `record_decision` (validated, non-mutating, auditable);
+  `pipeline.py` gains `resume` — reject / handle-manually close with
+  zero model calls, rescope re-enters `run()` with the attached
+  narrower issue so the guardrail re-checks it (a still-destructive
+  rescope re-escalates, also with zero model calls). Interfaces:
+  `run_resume.py` CLI, the `resume` stage event, and the demo
+  console's `POST /api/approval/decide` + decision buttons in the
+  "Try to break it" panel. Measured flows in
+  `../eval-scorecard/resume-runs.json`: mock rescope passed 6 → 7;
+  live rescope through the connector under the split passed 6 → 9
+  in 38.02s. `tests/test_resume.py` pins all of it, including a
+  counting client proving closed decisions make no model calls.
+  Root doc: `../APPROVE_AND_RESUME.md`.
 
 ## Demo console (added Oct 25)
 

@@ -163,3 +163,45 @@ def run(repo, issue, client, out_dir, on_event=None):
               "unexpected_files": unexpected, "test_log_tail": test_log[-400:]}
     _emit(on_event, "done", {"result": result, "pr_body": pr_body})
     return result
+
+
+def resume(repo, request, client, out_dir, on_event=None):
+    """Resume an escalated issue from its recorded human decision.
+
+    - No decision recorded: ValueError (nothing runs).
+    - reject / handle_manually: closes the request, writes
+      resume_result.json, returns a closed result; no model call is
+      made and no file is touched (client is never invoked).
+    - rescope: re-enters run() with the attached rescoped_issue, so
+      the deterministic guardrail re-checks the new issue before any
+      model call; a still-destructive rescope escalates again
+      (Escalation propagates, with a fresh approval request written).
+    """
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    if not isinstance(request, dict) or request.get("type") != "human_approval_request":
+        raise ValueError("resume requires a human_approval_request")
+    record = request.get("decision_record") or {}
+    decision = record.get("decision")
+    if not decision:
+        raise ValueError("no human decision recorded on this approval request")
+    _emit(on_event, "resume", {"decision": decision,
+                               "decided_by": record.get("decided_by")})
+    if decision in ("reject", "handle_manually"):
+        result = {"status": "closed_manual" if decision == "handle_manually" else "closed_rejected",
+                  "decision": decision, "resumed": False, "passed": False,
+                  "model_calls_made": 0}
+        (out_dir / "resume_result.json").write_text(json.dumps(result, indent=2) + "\n")
+        _emit(on_event, "done", {"result": result})
+        return result
+    if decision != "rescope":
+        raise ValueError(f"unknown decision {decision!r}")
+    rescoped = request.get("rescoped_issue")
+    if not isinstance(rescoped, dict) or not rescoped.get("title"):
+        raise ValueError("rescope decision has no rescoped_issue attached")
+    result = run(repo, rescoped, client, out_dir, on_event=on_event)
+    wrapped = {"status": "resumed", "decision": "rescope", "resumed": True,
+               "passed": bool(result.get("passed")), "issue": rescoped,
+               "result": result}
+    (out_dir / "resume_result.json").write_text(json.dumps(wrapped, indent=2) + "\n")
+    return wrapped

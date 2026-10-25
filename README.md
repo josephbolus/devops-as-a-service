@@ -41,6 +41,11 @@ A **deterministic guardrail** runs before any model call: destructive or
 ambiguous issues are escalated with a structured human approval request
 (what the pipeline provably did not do, the human's three options, and a
 blank decision record — in markdown and JSON), never auto-fixed.
+**Approve-and-resume** completes the gate: a human records a validated
+decision, reject / handle-manually close with zero model calls, and
+re-scope — the only resumable decision — re-enters the pipeline with a
+narrower issue that re-runs the guardrail (see `APPROVE_AND_RESUME.md`;
+measured mock + live flows in `eval-scorecard/resume-runs.json`).
 Model calls go through one `llm` abstraction pointed at the Meta Model API.
 
 ## Layout
@@ -54,6 +59,7 @@ Model calls go through one `llm` abstraction pointed at the Meta Model API.
 | `ARCHITECTURE.md` | The Day-8 architecture artifact, published early: system diagram (guardrail before any model call, two paths, trust boundaries), a component map naming the real files, and an honest not-built-yet section. Pinned by `tests/test_architecture.py`. |
 | `DEMO_RUN_OF_SHOW.md` | The Nov 2 recording run-of-show: timed beats (2:30–3:00) mapped to the demo console's stage timeline, pre-flight rehearsal in Mock mode, fallback decision thresholds pointing at `demo-fallbacks/`, and the two-take rehearsal log. Pinned by `tests/test_demo_run_of_show.py`. Not yet recorded — no video exists yet. |
 | `IMPACT_MODEL.md` | A worked time-saving model for the five-engineer shop (50 min saved per passed issue at the stated inputs; 2.50–8.33 senior hours/week across the volume grid), with every input labeled measured, entry assertion, or model assumption, a review-time sensitivity table, explicit non-claims (no dollars, no wait-time, no pass-rate adjustment), and the measurement plan that replaces each assumption. A model, not a measured result — pinned by `tests/test_impact_model.py`, which recomputes its tables. |
+| `APPROVE_AND_RESUME.md` | The completed human gate (former Days 5–6): validated decision recording, reject/handle-manually closing with zero model calls (counting-client pinned), rescope as the only resumable path with the guardrail re-checked, via `pipeline.resume`, the `run_resume.py` CLI, and the demo console's decision endpoint. Measured Oct 25: mock rescope passed 6 → 7; live rescope (connector, split config) passed 6 → 9 in 38.02s. Pinned by `tests/test_resume.py`. |
 | `META_AI_TOOLING.md` | How the entry uses the Meta Model API: `muse-spark-1.3` via one `llm` abstraction (connector / direct / mock clients, mock never counted as tooling evidence), four schema-pinned role prompts with the exact JSON keys the pipeline consumes, and the per-role model mechanism (`DAAS_MODEL_<ROLE>`, resolved before the call on both live transports) — with the split experiment run Oct 25 and its decision recorded (keep the split: CODER/REVIEWER on `muse-wonder-1.0`, decided on test growth +10 vs +9 after a pass-count tie; record in `eval-scorecard/split-runs.json`, pinned by `tests/test_split_eval.py`) and a not-claimed section. Pinned by `tests/test_meta_tooling.py`, which also proves both live transports' routing with mocked transports (no API call). |
 
 ## Run the baselines

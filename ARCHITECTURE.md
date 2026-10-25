@@ -13,6 +13,8 @@ flowchart TD
     A[GitHub issue<br/>title + body] --> B{Deterministic guardrail<br/>daas/guardrail.py check}
     B -- destructive or ambiguous --> C[Human approval request<br/>daas/approval.py<br/>escalation.md + approval_request.json]
     C --> D[Human decides:<br/>reject / re-scope / handle manually]
+    D -- re-scope with narrower issue --> B
+    D -- reject / handle manually --> X[Closed<br/>agents never run it]
     B -- passes --> E[Triage agent<br/>restate problem + acceptance criteria]
     E --> F[Planner agent<br/>steps + expected files]
     F --> G[Coder agent<br/>edits + regression test]
@@ -57,12 +59,25 @@ options (reject / re-scope / handle manually), and a blank, auditable
 decision record — as `escalation.md` plus machine-readable
 `approval_request.json`.
 
+**Approve-and-resume (completed Oct 25, former Days 5–6).**
+`approval.record_decision` validates and records the human's decision
+without mutating the original request; `pipeline.resume` (and the
+`run_resume.py` CLI, plus the demo console's `/api/approval/decide`
+endpoint) acts on it. Reject and handle-manually close the request
+with zero model calls. Re-scope is the only resumable decision and
+only with an explicit narrower issue attached — which re-enters the
+diagram at the guardrail, so a still-destructive rescope escalates
+again. Measured mock + live flows and the safeguards are in
+`APPROVE_AND_RESUME.md` / `eval-scorecard/resume-runs.json`, pinned by
+`tests/test_resume.py`.
+
 ## Components
 
 | Component | File | Responsibility |
 |---|---|---|
 | Guardrail | `hackathon-agent-scaffold/daas/guardrail.py` | Deterministic destructive/ambiguous-issue check (`check(title, body)`); runs before any model call. |
-| Approval request | `hackathon-agent-scaffold/daas/approval.py` | `build_request` / `render_markdown` / `to_json`: the structured human handoff for an escalation. |
+| Approval request | `hackathon-agent-scaffold/daas/approval.py` | `build_request` / `render_markdown` / `to_json`: the structured human handoff for an escalation; `record_decision`: the validated, auditable human decision. |
+| Approve-and-resume | `hackathon-agent-scaffold/run_resume.py` | CLI over `pipeline.resume`: acts on a recorded decision — closes reject/handle-manually with no run, or resumes a rescoped issue through the guardrail again. |
 | LLM abstraction | `hackathon-agent-scaffold/daas/llm.py` | All model calls, JSON only. `ConnectorClient` (live, via the secure connector), `MetaModelClient` (direct API), `MockClient` (offline tests, labeled). Per-role models via `DAAS_MODEL_<ROLE>` env vars; every role defaults to `muse-spark-1.3`. |
 | Pipeline | `hackathon-agent-scaffold/daas/pipeline.py` | `run(repo, issue, client, out_dir)`: guardrail → agents → edits → tests → review → PR body, plus the unexpected-files and live-coverage checks. |
 | Prompts | `hackathon-agent-scaffold/daas/prompts.py` | Schema-pinned per-role prompts (triage, planner, coder, reviewer). |
@@ -87,10 +102,12 @@ decision record — as `escalation.md` plus machine-readable
 
 ## What is not built yet (honest status)
 
-- The **approve-and-resume flow** behind the approval request — a human
-  recording a decision and the pipeline resuming from it — is Days 5–6
-  sprint work. The request format above is built and test-pinned; the
-  resume flow is not claimed here.
+- The **demo video** — nothing is recorded yet; recording is Joseph's
+  Nov 2 work. Every artifact the recording needs exists; the recording
+  itself is not claimed here.
+- The **approve-and-resume flow** (former Days 5–6 item) was completed
+  Oct 25: see `APPROVE_AND_RESUME.md`. It is built, test-pinned, and
+  measured in mock and live flows — no longer a gap.
 - **Live Tier 2/3 runs** were Days 3–4 sprint work, completed early
   on Oct 25: the scorecard's live section carries timed live passes
   for all three tiers plus the live guardrail escalation, and

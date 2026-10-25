@@ -170,6 +170,21 @@ def run_snapshot(record):
             "result": record["result"], "error": record["error"]}
 
 
+def decide_approval(request, decision, decided_by, decided_at,
+                    notes=None, rescoped_issue=None):
+    """Record a human decision on an escalation handoff (console wiring
+    for approve-and-resume). Pure validation/recording via
+    daas.approval.record_decision; the actual resume runs through
+    pipeline.resume / run_resume.py. Returns the decided request plus
+    whether it is resumable."""
+    decided = approval.record_decision(request, decision, decided_by,
+                                       decided_at, notes=notes,
+                                       rescoped_issue=rescoped_issue)
+    return {"request": decided, "will_resume": decision == "rescope",
+            "rescoped_issue": decided.get("rescoped_issue"),
+            "markdown": approval.render_markdown(decided)}
+
+
 def guardrail_verdict(title, body):
     """Run text through the deterministic guardrail; build the handoff
     a human would receive when it escalates."""
@@ -239,6 +254,19 @@ class Handler(BaseHTTPRequestHandler):
                 open_pr = False  # a real PR only makes sense live
             record = start_run(issue_id, mode, open_pr)
             self._send_json(200, {"run_id": record["id"]})
+        elif self.path == "/api/approval/decide":
+            try:
+                result = decide_approval(
+                    payload.get("request") or {},
+                    str(payload.get("decision", "")),
+                    str(payload.get("decided_by", "")),
+                    str(payload.get("decided_at", "")),
+                    notes=payload.get("notes"),
+                    rescoped_issue=payload.get("rescoped_issue"))
+            except ValueError as e:
+                self._send_json(400, {"error": str(e)})
+                return
+            self._send_json(200, result)
         elif self.path == "/api/guardrail":
             title = str(payload.get("title", ""))
             body = str(payload.get("body", ""))
@@ -569,6 +597,23 @@ $("breakBtn").onclick = async () => {
   data.handoff.human_options.forEach(o => ul.appendChild(el("li", o.label + " — " + o.effect)));
   box.appendChild(ul);
   box.appendChild(el("pre", data.handoff_markdown));
+  // Approve-and-resume: record a human decision on this handoff.
+  const dec = el("div");
+  const note = el("p", "Record a decision: reject / handle manually close this with no agent run; re-scope attaches the Tier 1 issue as the narrower replacement and marks it resumable via pipeline.resume.", "hint");
+  dec.appendChild(note);
+  ["reject","handle_manually","rescope"].forEach(d => {
+    const b = el("button", d);
+    b.style.marginRight = "8px";
+    b.onclick = async () => {
+      const payload = {request: data.handoff, decision: d, decided_by: "Demo operator", decided_at: new Date().toISOString(),
+        rescoped_issue: d === "rescope" ? {title: "Fix off-by-one in pagination helper", body: "paginate() returns one item short on full pages."} : null};
+      const r = await (await fetch("/api/approval/decide", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(payload)})).json();
+      const out = el("pre", r.error ? ("Error: " + r.error) : JSON.stringify(r.request.decision_record, null, 2) + "\nwill_resume: " + r.will_resume);
+      dec.appendChild(out);
+    };
+    dec.appendChild(b);
+  });
+  box.appendChild(dec);
 };
 
 loadIssues();
