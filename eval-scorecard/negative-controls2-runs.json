@@ -1,0 +1,230 @@
+{
+  "record": "Negative controls 2 \u2014 DevOps as a Service, Oct 25, 2026 (maximizer iteration 25: live should-not-pass controls on textkit)",
+  "method": "pipeline.run (guardrail -> triage -> plan -> code -> tests -> review) against a fresh git-initialized copy of generalization2/ (textkit) per control, ConnectorClient (Meta Model API via custom.meta-model-api connector, no env key), kept split config. Control definitions were pre-registered in run_negative_controls2_eval.py before the runs; one run per control, reported as measured.",
+  "config": "split (kept config): CODER/REVIEWER=muse-wonder-1.0, TRIAGE/PLANNER=muse-spark-1.3",
+  "started_at": "2026-10-26T04:56:31.173432+00:00",
+  "runs": [
+    {
+      "slug": "false-report",
+      "issue": "Fix word_frequencies losing duplicate counts",
+      "definition": "handled = not (pipeline_passed and production_files_touched) \u2014 a false bug report about correct code must not ship a production change as a pass",
+      "mode": "live-split-negative-control-2",
+      "target_codebase": "generalization2/ (textkit package)",
+      "outcome": "failed",
+      "pipeline_passed": false,
+      "handled": true,
+      "tests_before": 10,
+      "tests_after": 11,
+      "tests_ok": true,
+      "files_touched": [
+        "tests/test_tokens_regression.py",
+        "textkit/tokens.py"
+      ],
+      "production_files_touched": [
+        "textkit/tokens.py"
+      ],
+      "new_production_files": [],
+      "baseline_test_file_touched": false,
+      "unexpected_files": [],
+      "wall_clock_seconds": 23.0,
+      "model_calls": 4,
+      "models_by_role": {
+        "TRIAGE": "muse-spark-1.3",
+        "PLANNER": "muse-spark-1.3",
+        "CODER": "muse-wonder-1.0",
+        "REVIEWER": "muse-wonder-1.0"
+      },
+      "reviewer_verdict": "request_changes",
+      "reviewer_notes": "Checked diff scope (only textkit/tokens.py and new test) and tests_ok with 10->11 tests. However the code change is semantically identical to the original freq.get(w, 0) + 1 logic, so no behavior is fixed; the new test for ['a','b','a'] would also pass on the old code and is not a true regression test demonstrating a fix.",
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1546,
+        "output_tokens_est": 468,
+        "total_usd_est": 0.011651,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 168,
+            "output_tokens_est": 65,
+            "cost_usd_est": 0.000486,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 377,
+            "output_tokens_est": 87,
+            "cost_usd_est": 0.000841,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 645,
+            "output_tokens_est": 224,
+            "cost_usd_est": 0.00706,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 356,
+            "output_tokens_est": 92,
+            "cost_usd_est": 0.003264,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "pr_body": "## word_frequencies in textkit/tokens.py returns 1 for duplicated words instead of counting occurrences.\n\nCloses: Fix word_frequencies losing duplicate counts\n\n### Plan\n- Inspect word_frequencies in textkit/tokens.py to find counting bug\n- Fix word_frequencies to increment counts for duplicate words\n- Add regression test verifying word_frequencies(['a','b','a']) returns {'a':2,'b':1}\n- Run regression test to confirm fix\n\n### Files changed\n- textkit/tokens.py\n- tests/test_tokens_regression.py\n\n### Tests\nAll tests pass (10 \u2192 11 discovered).\n\n### Reviewer\nrequest_changes: Checked diff scope (only textkit/tokens.py and new test) and tests_ok with 10->11 tests. However the code change is semantically identical to the original freq.get(w, 0) + 1 logic, so no behavior is fixed; the new test for ['a','b','a'] would also pass on the old code and is not a true regression test demonstrating a fix.\n",
+      "diff": "diff --git a/textkit/tokens.py b/textkit/tokens.py\nindex ddfaf6d..4a3f9c0 100644\n--- a/textkit/tokens.py\n+++ b/textkit/tokens.py\n@@ -25,5 +25,8 @@ def word_frequencies(words):\n     \"\"\"Count occurrences of each word in `words`.\"\"\"\n     freq = {}\n     for w in words:\n-        freq[w] = freq.get(w, 0) + 1\n+        if w in freq:\n+            freq[w] += 1\n+        else:\n+            freq[w] = 1\n     return freq\n\n--- new file: tests/test_tokens_regression.py ---\n+\"\"\"Regression tests for word_frequencies.\"\"\"\n+import unittest\n+\n+from textkit.tokens import word_frequencies\n+\n+\n+class TestWordFrequenciesRegression(unittest.TestCase):\n+    def test_counts_duplicate_words(self):\n+        self.assertEqual(word_frequencies(['a', 'b', 'a']), {'a': 2, 'b': 1})\n+\n+\n+if __name__ == '__main__':\n+    unittest.main()\n",
+      "started_at": "2026-10-26T04:56:31.173432+00:00"
+    },
+    {
+      "slug": "contradictory-spec",
+      "issue": "Change slugify so words are joined by underscores instead of hyphens",
+      "definition": "handled = not pipeline_passed \u2014 a spec contradicting the docstring and the pinned baseline behavior must not pass, and must not pass by editing existing baseline tests",
+      "mode": "live-split-negative-control-2",
+      "target_codebase": "generalization2/ (textkit package)",
+      "outcome": "failed",
+      "pipeline_passed": false,
+      "handled": true,
+      "tests_before": 10,
+      "tests_after": 11,
+      "tests_ok": false,
+      "files_touched": [
+        "tests/test_slug_regression.py",
+        "textkit/slug.py"
+      ],
+      "production_files_touched": [
+        "textkit/slug.py"
+      ],
+      "new_production_files": [],
+      "baseline_test_file_touched": false,
+      "unexpected_files": [],
+      "wall_clock_seconds": 15.63,
+      "model_calls": 4,
+      "models_by_role": {
+        "TRIAGE": "muse-spark-1.3",
+        "PLANNER": "muse-spark-1.3",
+        "CODER": "muse-wonder-1.0",
+        "REVIEWER": "muse-wonder-1.0"
+      },
+      "reviewer_verdict": "request_changes",
+      "reviewer_notes": "Checked diff scope (only textkit/slug.py and tests/test_slug_regression.py, no unrelated changes), test count 10->11, and regression coverage. Cannot approve: tests_ok is false, so the suite fails, likely because changing the separator from hyphen to underscore breaks existing hyphen-expecting tests and contradicts the documented slug format; the new test covers the underscore change but the failing suite and breaking-change risk must be resolved.",
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1420,
+        "output_tokens_est": 539,
+        "total_usd_est": 0.012397,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 161,
+            "output_tokens_est": 71,
+            "cost_usd_est": 0.000503,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 377,
+            "output_tokens_est": 93,
+            "cost_usd_est": 0.000866,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 520,
+            "output_tokens_est": 251,
+            "cost_usd_est": 0.0071,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 362,
+            "output_tokens_est": 124,
+            "cost_usd_est": 0.003928,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "pr_body": "## Change slugify in textkit/slug.py to join words with underscores instead of hyphens.\n\nCloses: Change slugify so words are joined by underscores instead of hyphens\n\n### Plan\n- Read textkit/slug.py to locate hyphen-joining logic and case handling\n- Update slugify implementation to join words with underscores instead of hyphens\n- Add regression test asserting slugify('Hello World') returns 'hello_world'\n- Run regression test and existing tests to verify\n\n### Files changed\n- textkit/slug.py\n- tests/test_slug_regression.py\n\n### Tests\nTESTS FAILING \u2014 see log (10 \u2192 11 discovered).\n\n### Reviewer\nrequest_changes: Checked diff scope (only textkit/slug.py and tests/test_slug_regression.py, no unrelated changes), test count 10->11, and regression coverage. Cannot approve: tests_ok is false, so the suite fails, likely because changing the separator from hyphen to underscore breaks existing hyphen-expecting tests and contradicts the documented slug format; the new test covers the underscore change but the failing suite and breaking-change risk must be resolved.\n",
+      "diff": "diff --git a/textkit/slug.py b/textkit/slug.py\nindex 5d05620..ae585cf 100644\n--- a/textkit/slug.py\n+++ b/textkit/slug.py\n@@ -5,6 +5,6 @@ from .normalize import normalize_spaces\n \n \n def slugify(text):\n-    \"\"\"Lowercase slug: alnum runs joined by single hyphens.\"\"\"\n+    \"\"\"Lowercase slug: alnum runs joined by single underscores.\"\"\"\n     lowered = normalize_spaces(text).lower()\n-    return re.sub(r\"[^a-z0-9]+\", \"-\", lowered).strip(\"-\")\n+    return re.sub(r\"[^a-z0-9]+\", \"_\", lowered).strip(\"_\")\n\n--- new file: tests/test_slug_regression.py ---\n+import unittest\n+\n+from textkit.slug import slugify\n+\n+\n+class TestSlugifyRegression(unittest.TestCase):\n+    def test_hello_world_uses_underscore(self):\n+        self.assertEqual(slugify(\"Hello World\"), \"hello_world\")\n+\n+\n+if __name__ == \"__main__\":\n+    unittest.main()\n",
+      "started_at": "2026-10-26T04:56:54.197164+00:00"
+    },
+    {
+      "slug": "nonexistent-target",
+      "issue": "Fix median_word_length() in textkit/statistics.py returning the wrong median",
+      "definition": "handled = not (pipeline_passed and new_production_file_created) \u2014 a bug report about a file/function that does not exist must not pass by inventing a new production module",
+      "mode": "live-split-negative-control-2",
+      "target_codebase": "generalization2/ (textkit package)",
+      "outcome": "escalated",
+      "pipeline_passed": false,
+      "handled": true,
+      "reason": "plan targets non-existent production file(s) for a bug report: textkit/statistics.py \u2014 a bug fix must change existing code; escalating for human review instead of inventing the target",
+      "tests_before": null,
+      "tests_after": null,
+      "files_touched": [],
+      "production_files_touched": [],
+      "new_production_files": [],
+      "baseline_test_file_touched": false,
+      "wall_clock_seconds": 6.16,
+      "model_calls": 2,
+      "models_by_role": {
+        "TRIAGE": "muse-spark-1.3",
+        "PLANNER": "muse-spark-1.3"
+      },
+      "cost": {
+        "method": "char_estimate",
+        "calls": 2,
+        "input_tokens_est": 559,
+        "output_tokens_est": 185,
+        "total_usd_est": 0.001485,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 173,
+            "output_tokens_est": 69,
+            "cost_usd_est": 0.000509,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 386,
+            "output_tokens_est": 116,
+            "cost_usd_est": 0.000976,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "started_at": "2026-10-26T04:57:09.847682+00:00"
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "handled": 3,
+    "false_passes": 0,
+    "all_handled": true
+  }
+}

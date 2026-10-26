@@ -129,9 +129,18 @@ Video status: not yet recorded.
   the repo escalates before the coder runs (features exempt); the
   same control re-ran live and escalated in 14.14s after 2 model
   calls (`eval-scorecard/PLAN_GATE.md`,
-  `negative-controls-recheck.json`).
+  `negative-controls-recheck.json`). The same three control shapes
+  then ran live on a second codebase (textkit;
+  `eval-scorecard/NEGATIVE_CONTROLS2.md`): 3/3 handled — false report
+  and contradictory spec failed via reviewer request_changes (no
+  baseline-test tampering), and the non-existent-target control
+  escalated via the plan gate in 6.16s after 2 model calls, no file
+  created — the gate generalizes beyond the codebase that motivated
+  it. Honest caveat: on both codebases the false-report control still
+  reached the coder and was stopped by the reviewer, not a
+  deterministic gate.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 204/204, demo repo 6/6, generalization
+- Suites at drafting: scaffold 210/210, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 
