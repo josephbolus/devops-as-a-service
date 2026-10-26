@@ -24,14 +24,55 @@ muse-wonder-1.0; TRIAGE and PLANNER run the default.
 """
 import json
 import os
+import re
 import subprocess
 import sys
+import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
 
 class LLMError(RuntimeError):
     pass
+
+
+# --- Provider-transient retry (iteration 22) ---------------------------------
+# Measured motivation: the Oct 25 Judge Mode live tour lost its Tier 2
+# run when the REVIEWER call failed with a provider HTTP 503
+# (`service_overloaded`) and the client raised immediately — one
+# transient provider blip killed an otherwise-passing run (its tests
+# stage had already passed 6 -> 11). Live clients now retry TRANSIENT
+# failures only (HTTP 429/500/502/503/504, overload / rate-limit /
+# timeout markers) with exponential backoff, up to `max_attempts`
+# total attempts. Auth and other 4xx failures are never retried:
+# retrying an invalid key or a malformed request cannot help and
+# would only hide the real error. Each client records `retry_stats`
+# ({calls, retries, transient_failures}) so a run can report whether
+# a retry actually fired — no silent recovery.
+TRANSIENT_HTTP_CODES = {429, 500, 502, 503, 504}
+NON_TRANSIENT_MARKERS = ("invalid_api_key", "invalid api key",
+                         "unauthorized", "forbidden", "invalid_api")
+TRANSIENT_MARKERS = ("service_overloaded", "overloaded", "temporarily",
+                     "rate limit", "rate_limit", "too many requests",
+                     "timed out", "timeout", "try again")
+
+
+def is_transient_error(text, code=None):
+    """True only for provider-transient failures worth retrying."""
+    low = (text or "").lower()
+    if any(m in low for m in NON_TRANSIENT_MARKERS):
+        return False
+    if code is not None:
+        return code in TRANSIENT_HTTP_CODES
+    for m in re.findall(r"\bhttp\s+(\d{3})\b", low):
+        if int(m) in TRANSIENT_HTTP_CODES:
+            return True
+    return any(m in low for m in TRANSIENT_MARKERS)
+
+
+def _backoff(sleeper, base, attempt):
+    sleeper(base * (2 ** attempt))
 
 
 AGENT_ROLES = ("TRIAGE", "PLANNER", "CODER", "REVIEWER")
@@ -61,13 +102,18 @@ def resolve_model(system, default, role_models):
 
 class MetaModelClient:
     def __init__(self, model="muse-spark-1.3", base="https://api.meta.ai/v1",
-                 role_models=None):
+                 role_models=None, max_attempts=3, backoff_base=1.0,
+                 sleeper=None):
         self.key = os.environ.get("MODEL_API_KEY") or os.environ.get("META_API_KEY")
         if not self.key:
             raise LLMError("Set MODEL_API_KEY (or META_API_KEY) for the Meta Model API.")
         self.model = model
         self.base = base.rstrip("/")
         self.role_models = role_models_from_env() if role_models is None else role_models
+        self.max_attempts = max(1, int(max_attempts))
+        self.backoff_base = float(backoff_base)
+        self.sleeper = sleeper if sleeper is not None else time.sleep
+        self.retry_stats = {"calls": 0, "retries": 0, "transient_failures": 0}
 
     def complete_json(self, system, user):
         body = json.dumps({
@@ -78,18 +124,40 @@ class MetaModelClient:
             ],
             "response_format": {"type": "json_object"},
         }).encode()
-        req = urllib.request.Request(
-            self.base + "/chat/completions",
-            data=body,
-            headers={
-                "Authorization": "Bearer " + self.key,
-                "Content-Type": "application/json",
-            },
-        )
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            data = json.loads(resp.read())
-        text = data["choices"][0]["message"]["content"]
-        return json.loads(text)
+        last_error = None
+        for attempt in range(self.max_attempts):
+            self.retry_stats["calls"] += 1
+            req = urllib.request.Request(
+                self.base + "/chat/completions",
+                data=body,
+                headers={
+                    "Authorization": "Bearer " + self.key,
+                    "Content-Type": "application/json",
+                },
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=120) as resp:
+                    data = json.loads(resp.read())
+                text = data["choices"][0]["message"]["content"]
+                return json.loads(text)
+            except urllib.error.HTTPError as e:
+                try:
+                    detail = e.read().decode("utf-8", "replace")[:300]
+                except Exception:
+                    detail = str(e)
+                last_error = LLMError(
+                    f"Meta Model API HTTP {e.code}: {detail}")
+                transient = is_transient_error(detail, code=e.code)
+            except urllib.error.URLError as e:
+                last_error = LLMError(f"Meta Model API network error: {e}")
+                transient = is_transient_error(str(e))
+            if transient:
+                self.retry_stats["transient_failures"] += 1
+            if not transient or attempt == self.max_attempts - 1:
+                raise last_error
+            self.retry_stats["retries"] += 1
+            _backoff(self.sleeper, self.backoff_base, attempt)
+        raise last_error  # pragma: no cover - loop always returns/raises
 
 
 class MockClient:
@@ -301,11 +369,16 @@ class ConnectorClient:
     HELPER = (Path.home() / "workspace" / "custom-connectors"
               / "custom.meta-model-api" / "bin" / "meta_api.py")
 
-    def __init__(self, model="muse-spark-1.3", role_models=None):
+    def __init__(self, model="muse-spark-1.3", role_models=None,
+                 max_attempts=3, backoff_base=1.0, sleeper=None):
         if not self.HELPER.is_file():
             raise LLMError(f"Connector helper not found at {self.HELPER}")
         self.model = model
         self.role_models = role_models_from_env() if role_models is None else role_models
+        self.max_attempts = max(1, int(max_attempts))
+        self.backoff_base = float(backoff_base)
+        self.sleeper = sleeper if sleeper is not None else time.sleep
+        self.retry_stats = {"calls": 0, "retries": 0, "transient_failures": 0}
 
     def complete_json(self, system, user):
         payload = json.dumps({
@@ -313,12 +386,24 @@ class ConnectorClient:
             "system": system,
             "user": user,
         })
-        proc = subprocess.run(
-            [sys.executable, str(self.HELPER), "complete"],
-            input=payload, capture_output=True, text=True, timeout=240)
-        if proc.returncode != 0:
-            raise LLMError(f"Connector call failed: {proc.stderr.strip()[:300]}")
-        return json.loads(proc.stdout)
+        last_error = None
+        for attempt in range(self.max_attempts):
+            self.retry_stats["calls"] += 1
+            proc = subprocess.run(
+                [sys.executable, str(self.HELPER), "complete"],
+                input=payload, capture_output=True, text=True, timeout=240)
+            if proc.returncode == 0:
+                return json.loads(proc.stdout)
+            detail = proc.stderr.strip()[:300]
+            last_error = LLMError(f"Connector call failed: {detail}")
+            transient = is_transient_error(detail)
+            if transient:
+                self.retry_stats["transient_failures"] += 1
+            if not transient or attempt == self.max_attempts - 1:
+                raise last_error
+            self.retry_stats["retries"] += 1
+            _backoff(self.sleeper, self.backoff_base, attempt)
+        raise last_error  # pragma: no cover - loop always returns/raises
 
 
 def default_client(mock=False):

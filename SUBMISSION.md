@@ -67,6 +67,14 @@ CODER/REVIEWER on `muse-wonder-1.0`, TRIAGE/PLANNER on
 `muse-spark-1.3` — pass counts tied 4/4 with the uniform configuration,
 test growth won +10 vs +9, at 209.14s vs 94.65s wall clock. The cost is
 recorded, not hidden. Record: `eval-scorecard/split-runs.json`.
+Provider-transient resilience: after the live tour's Tier 2 run was
+lost to a provider HTTP 503, both live clients gained transient-only
+retry (HTTP 429/500/502/503/504, exponential backoff, max 3 attempts;
+auth/4xx never retried; per-client `retry_stats` recorded) — recovery
+pinned against simulated 503s, and Tier 2 re-validated live under the
+retrying client: passed 6 → 10, reviewer approve, retries=0 (the
+provider did not blip that run, so no live retry is claimed;
+`eval-scorecard/RETRY.md`, `eval-scorecard/retry-runs.json`).
 
 ## Demo (25%)
 
@@ -103,7 +111,7 @@ Video status: not yet recorded.
   live rescope under the split passed 6 → 9 in 16.84s
   (`eval-scorecard/resume-runs.json`).
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 171/171, demo repo 6/6, generalization
+- Suites at drafting: scaffold 184/184, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, all stdlib-only.
 
 ## Dry-run checklist (Day 8 exit criteria)

@@ -145,6 +145,29 @@ for the full seeded set, guardrail $0.00 — full record in
   as `muse-wonder-1.0` and TRIAGE/PLANNER as `muse-spark-1.3`,
   plus the guardrail escalation at 0 model calls.
 
+## Provider-transient retry (Oct 25, iteration 22)
+
+Measured motivation: the Judge Mode live tour's Tier 2 run was lost
+when its REVIEWER call failed with a provider HTTP 503
+(`service_overloaded`, "The backend is temporarily overloaded") and
+the client raised immediately — its tests stage had already passed
+6 → 11 (`eval-scorecard/JUDGE_LIVE_TOUR.md`). Both live clients in
+`daas/llm.py` now retry transient failures only — HTTP
+429/500/502/503/504 and overload / rate-limit / timeout markers —
+with exponential backoff (1s, 2s; `max_attempts=3` total), via
+`is_transient_error()`. Auth failures (`invalid_api_key`, 401/403)
+and other 4xx errors are never retried. Each client records
+`retry_stats` ({calls, retries, transient_failures}) so a run
+reports whether a retry actually fired — no silent recovery.
+Pinned by `tests/test_retry.py` (mocked transports, no live call:
+connector and direct clients each recover after two 503s, fail
+immediately on auth/400, and exhaust honestly after 3 attempts).
+Live validation under the retrying client is recorded in
+`eval-scorecard/RETRY.md` + `retry-runs.json`. Honest limit: the
+retry logic is proven against simulated 503s; whether a retry
+fired in the live validation run is whatever `retry_stats` in that
+record says — if it says zero, no live retry is claimed.
+
 ## What is NOT claimed
 
 - `muse-wonder-1.0` is proven live only in the CODER and REVIEWER

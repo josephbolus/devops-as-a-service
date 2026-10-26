@@ -1,0 +1,92 @@
+{
+  "record": "Retry validation \u2014 DevOps as a Service, Oct 25, 2026 (maximizer iteration 22: provider-transient retry)",
+  "method": "pipeline.run (guardrail -> triage -> plan -> code -> tests -> review) against a fresh git-initialized copy of hackathon-demo-repo, retrying ConnectorClient (Meta Model API via custom.meta-model-api connector, no env key), kept split config, Tier 2 seeded issue \u2014 the issue whose Judge Mode live-tour run was lost to a provider HTTP 503. One run, reported as measured.",
+  "config": "split (kept config) via custom.meta-model-api connector, no env key: CODER/REVIEWER=muse-wonder-1.0, TRIAGE/PLANNER=muse-spark-1.3; retrying ConnectorClient (max_attempts=3, transient-only)",
+  "runs": [
+    {
+      "slug": "tier2-retry-validation",
+      "issue": "Add retry with backoff to the HTTP client wrapper",
+      "mode": "live-split-retry-validation",
+      "outcome": "passed",
+      "tests_before": 6,
+      "tests_after": 10,
+      "files_touched": [
+        "app/http_client.py",
+        "tests/test_http_client_regression.py"
+      ],
+      "unexpected_files": [],
+      "wall_clock_seconds": 105.41,
+      "model_calls": 4,
+      "models_by_role": {
+        "TRIAGE": "muse-spark-1.3",
+        "PLANNER": "muse-spark-1.3",
+        "CODER": "muse-wonder-1.0",
+        "REVIEWER": "muse-wonder-1.0"
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "tests_ok": true,
+      "reviewer_verdict": "approve",
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 3220,
+        "output_tokens_est": 2005,
+        "total_usd_est": 0.046965,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 222,
+            "output_tokens_est": 93,
+            "cost_usd_est": 0.000673,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 459,
+            "output_tokens_est": 170,
+            "cost_usd_est": 0.001296,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 792,
+            "output_tokens_est": 1631,
+            "cost_usd_est": 0.035788,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 1747,
+            "output_tokens_est": 111,
+            "cost_usd_est": 0.009208,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "started_at": "2026-10-26T01:57:40.827036+00:00"
+    }
+  ],
+  "summary": {
+    "passed": true,
+    "outcome": "passed",
+    "tests_before": 6,
+    "tests_after": 10,
+    "test_growth": 4,
+    "wall_clock_seconds": 105.41,
+    "retries": 0,
+    "transient_failures": 0
+  }
+}
