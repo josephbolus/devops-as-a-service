@@ -115,7 +115,7 @@ def build_record():
             per_role_models.setdefault(role, set()).update(blk.get("models", []))
     per_role_models = {k: sorted(v) for k, v in sorted(per_role_models.items())}
     return {
-        "record": Expansion batch 2 -- spec issues #6/#7/#12 live under "
+        "record": "Expansion batch 2 -- spec issues #6/#7/#12 live under "
                   "the all-frontier contest configuration, Oct 26, 2026 "
                   "(maximizer iteration 36, issue-expansion directive)",
         "method": "ConnectorClient only (Meta Model API via the "
