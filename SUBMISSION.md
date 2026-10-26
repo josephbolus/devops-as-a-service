@@ -102,7 +102,16 @@ passed live with every role on `muse-spark-1.1` — Tier 1
 6 → 10, Tier 2 6 → 9, Tier 3 6 → 9, guardrail escalated, growth
 +10, 77.67s, est. $0.0245 total (char estimate; spark-1.1 priced
 at spark-1.3 rates) (`eval-scorecard/SPARK11.md`,
-`eval-scorecard/spark11-runs.json`).
+`eval-scorecard/spark11-runs.json`). The spark-1.2 configuration
+has now been replicated (iteration 30): a second live pass with
+every role on `muse-spark-1.2` passed 3/3 + guardrail again —
+Tier 1 6 → 11, Tier 2 6 → 10, Tier 3 6 → 11, growth +14,
+114.74s, est. $0.0262 total — so its two-pass growth is +20 and
++14 (mean +17.0): the original +20 did not repeat exactly and
+reads as the high end of variance, stated in
+`eval-scorecard/SPARK12_REPLICATE.md` and
+`eval-scorecard/spark12-replicate-runs.json`. The kept split is
+still NOT re-decided on these passes.
 
 ## Demo (25%)
 
@@ -194,7 +203,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 249/249, demo repo 6/6, generalization
+- Suites at drafting: scaffold 254/254, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

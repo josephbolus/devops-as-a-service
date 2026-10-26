@@ -210,6 +210,18 @@ published price in `daas/cost.py`). Every probed spark model has
 now served all four production roles live; the kept split is still
 not re-decided on these single passes.
 
+Spark-1.2 replicate record (`eval-scorecard/SPARK12_REPLICATE.md` +
+`spark12-replicate-runs.json`, maximizer iteration 30): the
+identical spark-1.2 all-roles configuration from iteration 28 ran
+live a second time and passed 3/3 + guardrail again (Tier 1
+6 → 11, Tier 2 6 → 10, Tier 3 6 → 11, growth +14, 114.74s, est.
+$0.0262 total at spark-1.3 rates). Two-pass spark-1.2 growth is
+therefore +20 and +14 (mean +17.0, range +14 to +20): the original
++20 did not repeat exactly — it reads as the high end of variance,
+with spark-1.2 growth still above the +9/+10 band of the other
+configurations on both passes. Neither pass re-decides the kept
+split.
+
 ## What is NOT claimed
 
 - `muse-wonder-1.0` is proven live only in the CODER and REVIEWER
@@ -218,8 +230,9 @@ not re-decided on these single passes.
   backlog, and no such claim is made.
 - The contributor variants are not proven, and Wonder is not
   claimed in the TRIAGE or PLANNER roles (never run there). Spark
-  1.2 and 1.1 are each proven on one pass of the seeded set only —
-  no repeatability or unseeded-issue claim is made for them.
+  1.2 is proven on two passes of the seeded set and spark 1.1 on
+  one pass only — no unseeded-issue claim is made for either, and
+  spark 1.1 has no repeatability claim.
 - No tool calling, no responses endpoint (`/v1/responses`), no
   fine-tuning, and no image or audio models are used or claimed.
 - No provider-reported token usage is claimed: the connector path
