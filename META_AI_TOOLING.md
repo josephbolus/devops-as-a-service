@@ -258,11 +258,24 @@ all four production roles live. Probes this iteration:
 404 `model_not_found` — no stronger frontier model is available
 through the connector today.
 
+Frontier replicate record (`eval-scorecard/FRONTIER_REPLICATE.md` +
+`frontier-replicate-runs.json`, maximizer iteration 32): the
+identical all-frontier configuration ran live a second time and
+passed 3/3 + guardrail again (Tier 1 6 → 8, Tier 2 6 → 11, Tier 3
+6 → 8, growth +9, 171.57s, est. $0.1112 total — $0.0371 per passed
+issue; fallbacks 0, retries 0, `muse-wonder-1.0` recorded on every
+role's calls). Two-pass all-frontier growth is therefore +10 and
++9 (mean +9.5, range +9 to +10), two-pass mean est. cost per
+passed issue $0.0373 — still the highest per-issue cost of any
+configuration measured. The contest configuration is no longer a
+single-pass record.
+
 ## What is NOT claimed
 
 - `muse-wonder-1.0` is proven live in all four roles on the
-  seeded set (split runs for CODER/REVIEWER; the iteration-31
-  all-frontier pass for every role, one pass). The split's +1-test
+  seeded set (split runs for CODER/REVIEWER; the iteration-31/32
+  all-frontier passes for every role, two passes, both 3/3 +
+  guardrail). The split's +1-test
   margin and the frontier pass's tied +10 growth do not prove it
   better on unseeded issues or a real backlog, and no such claim
   is made.

@@ -121,7 +121,14 @@ highest per-issue cost measured, stated not hidden), spark-1.3
 configured only as availability fallback (fallbacks 0)
 (`eval-scorecard/FRONTIER.md`, `eval-scorecard/frontier-runs.json`).
 `muse-wonder-1.1` was probed and returned 404 — wonder-1.0 is the
-strongest frontier model available through the connector.
+strongest frontier model available through the connector. The
+all-frontier configuration has since been replicated (iteration
+32): a second identical live pass passed 3/3 + guardrail again —
+Tier 1 6 → 8, Tier 2 6 → 11, Tier 3 6 → 8, growth +9, 171.57s,
+est. $0.1112 total — so two-pass frontier growth is +10 and +9
+(mean +9.5) at a two-pass mean est. $0.0373 per passed issue
+(`eval-scorecard/FRONTIER_REPLICATE.md`,
+`eval-scorecard/frontier-replicate-runs.json`).
 
 ## Demo (25%)
 
@@ -213,7 +220,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 259/259, demo repo 6/6, generalization
+- Suites at drafting: scaffold 264/264, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 
