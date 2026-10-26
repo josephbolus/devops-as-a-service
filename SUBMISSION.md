@@ -166,7 +166,17 @@ Tier 1 6 → 11, Tier 2 6 → 10, Tier 3 6 → 11, growth +14,
 reads as the high end of variance, stated in
 `eval-scorecard/SPARK12_REPLICATE.md` and
 `eval-scorecard/spark12-replicate-runs.json`. The kept split is
-still NOT re-decided on these passes. CONTEST CONFIGURATION
+still NOT re-decided on these passes. The spark-1.1 configuration
+has now also been replicated (iteration 43): a second live pass
+with every role on `muse-spark-1.1` passed 3/3 + guardrail again
+at the current 24-test baseline — Tier 1 24 → 29, Tier 2 24 → 29,
+Tier 3 24 → 27, growth +13, 83.98s, est. $0.0260 total (char
+estimate; spark-1.1 priced at spark-1.3 rates) — so its two-pass
+growth is +10 (iteration 29, at the 6-test baseline) and +13
+(mean +11.5), and every probed Meta model now has at least two
+live pipeline passes (`eval-scorecard/SPARK11_REPLICATE.md`,
+`eval-scorecard/spark11-replicate-runs.json`). The contest
+configuration is NOT re-decided on these passes. CONTEST CONFIGURATION
 (Oct 26, Joseph's directive): all four roles now run on the Meta
 frontier model `muse-wonder-1.0` for contest runs — measured
 live on the full seeded set: Tier 1 6 → 8, Tier 2 6 → 12,
@@ -324,7 +334,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 326/326, demo repo 24/24, generalization
+- Suites at drafting: scaffold 331/331, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

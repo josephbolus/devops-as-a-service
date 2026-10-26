@@ -61,7 +61,7 @@ class TestSubmissionDraft(unittest.TestCase):
         for token in ("3/3", "94.65s", "6 → 9", "6 → 10", "6 → 8",
                       "#16", "#17", "#18", "50 min saved",
                       "216.7", "+10 vs +9", "209.14s", "16.84s",
-                      "326/326"):
+                      "331/331"):
             self.assertIn(token, self.text, token)
 
     def test_current_evidence_included(self):
@@ -84,7 +84,9 @@ class TestSubmissionDraft(unittest.TestCase):
                       "SPARK11.md", "spark11-runs.json",
                       "muse-spark-1.1", "77.67s",
                       "SPARK12_REPLICATE.md", "spark12-replicate-runs.json",
-                      "114.74s", "FRONTIER.md", "frontier-runs.json",
+                      "114.74s", "SPARK11_REPLICATE.md",
+                      "spark11-replicate-runs.json", "83.98s", "24 → 29",
+                      "FRONTIER.md", "frontier-runs.json",
                       "142.52s", "$0.0375", "FRONTIER_REPLICATE.md",
                       "frontier-replicate-runs.json", "171.57s",
                       "FRONTIER_GENERALIZATION.md",

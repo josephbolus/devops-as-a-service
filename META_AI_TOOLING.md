@@ -244,6 +244,19 @@ with spark-1.2 growth still above the +9/+10 band of the other
 configurations on both passes. Neither pass re-decides the kept
 split.
 
+Spark-1.1 replicate record (`eval-scorecard/SPARK11_REPLICATE.md` +
+`spark11-replicate-runs.json`, maximizer iteration 43): the
+identical spark-1.1 all-roles configuration from iteration 29 ran
+live a second time and passed 3/3 + guardrail again — at the
+current 24-test demo baseline (Tier 1 24 → 29, Tier 2 24 → 29,
+Tier 3 24 → 27, growth +13, 83.98s, est. $0.0260 total at
+spark-1.3 rates). Two-pass spark-1.1 growth is therefore +10
+(iteration 29, at the 6-test baseline) and +13 (mean +11.5);
+absolute counts are not compared across the baseline change.
+Every probed Meta model now has at least two live pipeline
+passes. Neither pass re-decides the contest configuration
+(all-frontier since iteration 31).
+
 Frontier live record (`eval-scorecard/FRONTIER.md` +
 `frontier-runs.json`, maximizer iteration 31): per Joseph's Oct 26
 directive, the full seeded set ran live with EVERY role on
