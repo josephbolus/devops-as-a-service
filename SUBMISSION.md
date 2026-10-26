@@ -8,7 +8,9 @@ remains Joseph's go in the main chat. Deadline: Nov 4, 2026, 9:00 PM ET.
 Honest gaps in this draft, by design:
 
 - **Demo video: not yet recorded — no video exists yet.** The video URL
-  field below is a placeholder. Recording is Joseph's Nov 2 work; the
+  field below is a placeholder. Recording is Joseph's Thu Oct 29 work
+  (moved off Nov 2, his Philippines departure day; Nov 2 morning is
+  emergency-retake only); the
   run-of-show (`DEMO_RUN_OF_SHOW.md`) and fallback package
   (`demo-fallbacks/`) are ready for it.
 - Everything else in this draft is measured or test-pinned in the repo
@@ -21,7 +23,7 @@ Honest gaps in this draft, by design:
 - **Tagline:** One GitHub issue in → a tested pull request out — and when
   an issue is destructive, the agents stop and ask a human instead.
 - **Repository:** https://github.com/josephbolus/devops-as-a-service
-- **Demo video URL:** [TO BE ADDED after the Nov 2 recording — no video
+- **Demo video URL:** [TO BE ADDED after the Oct 29 recording — no video
   exists yet]
 
 ## Description (Impact — 30%)
@@ -126,5 +128,5 @@ Video status: not yet recorded.
   `*.key`; tracked files contain no key values
 - [x] Branches: `main` plus the three `daas/*` branches, each backing an
   open live PR (#16/#17/#18) — not stray branches
-- [ ] Demo video recorded (Nov 2, Joseph) and URL pasted above
+- [ ] Demo video recorded (Thu Oct 29, Joseph) and URL pasted above
 - [ ] Final submission sent (Nov 4, Joseph's go only)
