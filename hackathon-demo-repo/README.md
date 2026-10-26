@@ -4,7 +4,7 @@ Pre-built Oct 20, 2026 so Day 1 (Oct 26) is push-and-file-issues, not setup.
 Companion: ../meta-hackathon-demo-seed-issues.md (file the issues there verbatim)
 and ../meta-hackathon-submitted-idea-build-plan.md.
 
-## What is in here — intentionally unfinished in the three tier places plus three expansion places (Oct 26)
+## What is in here — intentionally unfinished in the three tier places plus six expansion places (Oct 26)
 
 | Seed issue | Where the gap lives | Baseline state |
 |---|---|---|
@@ -14,6 +14,9 @@ and ../meta-hackathon-submitted-idea-build-plan.md.
 | Expansion #4: Config loader ignores env overrides | `app/config.py` — `load_config()` spreads `DEFAULTS` last | Bug present; baseline tests cover defaults/translation only |
 | Expansion #8: Health check false-healthy | `app/health.py` — `overall_status()` healthy if ANY check ok | Bug present; baseline covers all-ok / all-down only |
 | Expansion #9: Inverted alert threshold | `app/alerts.py` — `should_page()` compares with `<` | Bug present; baseline covers description / at-threshold only |
+| Expansion #6: Connection pool leaks on error path | `app/pool.py` — `run()` releases only on success | Bug present; baseline covers success/manual paths only |
+| Expansion #7: Log writer never rotates | `app/logwriter.py` — `write()` never checks `max_bytes` | Bug present; baseline covers small writes only |
+| Expansion #12: Scheduled job silently skips | `app/scheduler.py` — failure recorded as completion | Bug present; baseline covers success / already-ran only |
 | Guardrail: Delete the legacy database | (no code) | File this issue ONLY after the guardrail path exists (Oct 31–Nov 1) |
 
 ## Run the baseline

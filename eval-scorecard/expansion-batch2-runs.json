@@ -1,0 +1,234 @@
+{
+  "record": "Expansion batch 2 -- spec issues #6/#7/#12 live under the all-frontier contest configuration, Oct 26, 2026 (maximizer iteration 36, issue-expansion directive)",
+  "method": "ConnectorClient only (Meta Model API via the custom.meta-model-api connector, no env key). pipeline.run per expansion issue against a fresh git-initialized copy of hackathon-demo-repo (18-test baseline: 6 original + 12 expansion baseline tests, all passing with the seeded defects present). Costs are character estimates at wonder's published prices ($4/$20 per 1M in/out, daas/cost.py).",
+  "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+  "model": "muse-wonder-1.0",
+  "fallback_model": "muse-spark-1.3",
+  "per_role_models": {
+    "CODER": [
+      "muse-wonder-1.0"
+    ],
+    "PLANNER": [
+      "muse-wonder-1.0"
+    ],
+    "REVIEWER": [
+      "muse-wonder-1.0"
+    ],
+    "TRIAGE": [
+      "muse-wonder-1.0"
+    ]
+  },
+  "runs": [
+    {
+      "slug": "connection-pool",
+      "family": "#6 database connection-pool leak",
+      "issue": "Connection pool leaks connections on the error path",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 26.49,
+      "tests_before": 18,
+      "tests_after": 22,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2862,
+        "output_tokens_est": 996,
+        "total_usd_est": 0.031368,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 283,
+            "output_tokens_est": 113,
+            "cost_usd_est": 0.003392,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 585,
+            "output_tokens_est": 206,
+            "cost_usd_est": 0.00646,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 1132,
+            "output_tokens_est": 573,
+            "cost_usd_est": 0.015988,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 862,
+            "output_tokens_est": 104,
+            "cost_usd_est": 0.005528,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-26T13:57:28.931205+00:00"
+    },
+    {
+      "slug": "log-rotation",
+      "family": "#7 resource exhaustion (disk / log rotation)",
+      "issue": "Log writer never rotates and fills the disk",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 30.12,
+      "tests_before": 18,
+      "tests_after": 21,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2919,
+        "output_tokens_est": 1163,
+        "total_usd_est": 0.034936,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 307,
+            "output_tokens_est": 152,
+            "cost_usd_est": 0.004268,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 648,
+            "output_tokens_est": 234,
+            "cost_usd_est": 0.007272,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 1056,
+            "output_tokens_est": 664,
+            "cost_usd_est": 0.017504,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 908,
+            "output_tokens_est": 113,
+            "cost_usd_est": 0.005892,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-26T13:57:55.467030+00:00"
+    },
+    {
+      "slug": "scheduled-job",
+      "family": "#12 scheduled job silently skips",
+      "issue": "Nightly job silently skips after a transient failure",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 21.48,
+      "tests_before": 18,
+      "tests_after": 21,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2748,
+        "output_tokens_est": 966,
+        "total_usd_est": 0.030312,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 293,
+            "output_tokens_est": 145,
+            "cost_usd_est": 0.004072,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 627,
+            "output_tokens_est": 162,
+            "cost_usd_est": 0.005748,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 1003,
+            "output_tokens_est": 566,
+            "cost_usd_est": 0.015332,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 825,
+            "output_tokens_est": 93,
+            "cost_usd_est": 0.00516,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-26T13:58:25.607231+00:00"
+    }
+  ],
+  "summary": {
+    "issues_passed": "3/3",
+    "test_growth": 10,
+    "total_wall_clock_seconds": 78.09,
+    "total_usd_est": 0.096616,
+    "cost_per_passed_issue": 0.032205
+  }
+}

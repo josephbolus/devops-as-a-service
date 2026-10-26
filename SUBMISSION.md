@@ -62,8 +62,16 @@ dependency is down, and an inverted alert threshold — and all three
 passed live under the all-frontier contest configuration
 (12 → 17, 12 → 16, 12 → 15; growth +12; 60.85s; est. $0.0259 per
 passed issue, char estimate) (`eval-scorecard/EXPANSION_BATCH1.md`,
-`eval-scorecard/expansion-batch1-runs.json`). The work set is now
-6 seeded issues, with 6 more scenario families from the spec still
+`eval-scorecard/expansion-batch1-runs.json`). Expansion batch 2
+added three more families the same way — a database connection
+pool leaking connections on the error path, a log writer that
+never rotates and fills the disk, and a nightly job that silently
+skips after a transient failure while reporting success — and all
+three passed live under the same contest configuration
+(18 → 22, 18 → 21, 18 → 21; growth +10; 78.09s; est. $0.0322 per
+passed issue, char estimate) (`eval-scorecard/EXPANSION_BATCH2.md`,
+`eval-scorecard/expansion-batch2-runs.json`). The work set is now
+9 seeded issues, with 3 more scenario families from the spec still
 to seed. (`eval-scorecard/FRONTIER_GENERALIZATION.md`,
 `eval-scorecard/frontier-generalization-runs.json`) — so the
 contest configuration's record is not seeded-set-only either. The worked impact model
@@ -73,7 +81,7 @@ the middle volume, at an estimated API cost of $0.0254 per passed
 issue — $0.0305 per senior-hour saved (`eval-scorecard/COST_ACCOUNTING.md`;
 character-count estimate, not billing data, because the API does not
 expose usage on the connector path). Honest limits: n=3 original seeded issues
-(three attempts each) plus 3 expansion issues (one live pass each) plus three generalization issues on three
+(three attempts each) plus 6 expansion issues (one live pass each) plus three generalization issues on three
 different unseen codebases (the gradebook issue has since been run
 under two configurations — split and all-frontier — and passed
 under both), no real users
@@ -252,7 +260,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 284/284, demo repo 12/12, generalization
+- Suites at drafting: scaffold 290/290, demo repo 18/18, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

@@ -61,7 +61,7 @@ class TestSubmissionDraft(unittest.TestCase):
         for token in ("3/3", "94.65s", "6 → 9", "6 → 10", "6 → 8",
                       "#16", "#17", "#18", "50 min saved",
                       "216.7", "+10 vs +9", "209.14s", "16.84s",
-                      "284/284"):
+                      "290/290"):
             self.assertIn(token, self.text, token)
 
     def test_current_evidence_included(self):
@@ -93,7 +93,10 @@ class TestSubmissionDraft(unittest.TestCase):
                       "frontier-judge-live-tour.json", "134.23s",
                       "$0.1103", "EXPANSION_BATCH1.md",
                       "expansion-batch1-runs.json", "60.85s",
-                      "$0.0259", "12/12"):
+                      "$0.0259", "18/18",
+                      "EXPANSION_BATCH2.md",
+                      "expansion-batch2-runs.json", "78.09s",
+                      "$0.0322"):
             self.assertIn(token, self.text, token)
         self.assertNotIn("one run each", self.text)
 
