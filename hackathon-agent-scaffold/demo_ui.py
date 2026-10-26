@@ -114,6 +114,17 @@ def caption_for_event(event):
         return (f"Judge Mode: The full test suite ran and {verdict}: "
                 f"{d.get('tests_before')} → {d.get('tests_after')} discovered "
                 f"tests ({delta:+d}). A new test only counts if the count grows.")
+    if stage == "regression_gate":
+        if not d.get("applicable"):
+            return ("Judge Mode: A deterministic regression gate checked "
+                    "whether the new tests fail on the original code; it "
+                    "was not applicable to this change shape.")
+        verdict = "failed on the original code, as a real regression test must" \
+            if d.get("passed") else \
+            "PASSED on the original code too — so they prove nothing, and this run cannot pass"
+        return (f"Judge Mode: A deterministic regression gate — plain code, "
+                f"not a model — re-ran the new tests against the original "
+                f"production code. The suite {verdict}.")
     if stage == "review":
         return (f"Judge Mode: An independent reviewer agent read the actual "
                 f"diff and returned '{d.get('verdict', '?')}'. The pipeline "

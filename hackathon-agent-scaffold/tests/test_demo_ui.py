@@ -48,7 +48,7 @@ class OnEventOrder(unittest.TestCase):
         self.assertTrue(result["passed"], result)
         stages = [e["stage"] for e in events]
         self.assertEqual(stages, ["guardrail", "triage", "plan", "code",
-                                  "tests", "review", "done"])
+                                  "tests", "regression_gate", "review", "done"])
         by_stage = {e["stage"]: e["data"] for e in events}
         self.assertEqual(by_stage["triage"]["kind"], "bug")
         self.assertEqual(by_stage["code"]["changed"],

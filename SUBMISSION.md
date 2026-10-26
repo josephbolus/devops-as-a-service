@@ -136,11 +136,23 @@ Video status: not yet recorded.
   baseline-test tampering), and the non-existent-target control
   escalated via the plan gate in 6.16s after 2 model calls, no file
   created — the gate generalizes beyond the codebase that motivated
-  it. Honest caveat: on both codebases the false-report control still
-  reached the coder and was stopped by the reviewer, not a
-  deterministic gate.
+  it. At that point the false-report shape was still stopped only
+  by the reviewer; that caveat is now closed by a second
+  deterministic gate (iteration 26): the regression gate in
+  `daas/pipeline.py` restores the changed production files to
+  baseline after the coder runs, re-runs the suite with the coder's
+  tests in place, and a run may pass only if that suite FAILS on the
+  baseline — a regression test that passes on unfixed code proves
+  nothing. Measured live on textkit
+  (`eval-scorecard/REGRESSION_GATE.md`): the genuine first_words bug
+  passed 10 → 14 with the gate verified (suite fails on baseline),
+  and the false-report control was blocked by the gate
+  deterministically (its 13 tests pass on baseline too), in
+  `eval-scorecard/regression-gate-runs.json`. The reviewer receives
+  the gate result as context and cited it; the block itself is
+  computed in code, not by the reviewer.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 210/210, demo repo 6/6, generalization
+- Suites at drafting: scaffold 218/218, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

@@ -1,0 +1,177 @@
+{
+  "record": "Regression gate eval \u2014 DevOps as a Service, Oct 25, 2026 (maximizer iteration 26: live positive + false-report controls on textkit)",
+  "method": "pipeline.run (with the iteration-26 regression gate) against a fresh git-initialized copy of generalization2/ (textkit) per control, ConnectorClient (Meta Model API via custom.meta-model-api connector, no env key), kept split config. Control definitions were pre-registered in run_regression_gate_eval.py before the runs; one run per control.",
+  "config": "split (kept config): CODER/REVIEWER=muse-wonder-1.0, TRIAGE/PLANNER=muse-spark-1.3",
+  "started_at": "2026-10-26T05:58:54.499932+00:00",
+  "runs": [
+    {
+      "slug": "positive-genuine-bug",
+      "issue": "Fix first_words returning one word too many",
+      "definition": "expected: pipeline_passed AND gate applicable AND suite fails on baseline (gate verified)",
+      "mode": "live-split-regression-gate",
+      "target_codebase": "generalization2/ (textkit package)",
+      "outcome": "passed",
+      "pipeline_passed": true,
+      "handled": true,
+      "tests_before": 10,
+      "tests_after": 14,
+      "tests_ok": true,
+      "files_touched": [
+        "tests/test_tokens_regression.py",
+        "textkit/tokens.py"
+      ],
+      "unexpected_files": [],
+      "regression_gate": {
+        "applicable": true,
+        "passed": true,
+        "tests_ok_on_baseline": false,
+        "tests_on_baseline": 14,
+        "reason": "suite fails on baseline production code, so the new tests demonstrate the claimed change"
+      },
+      "wall_clock_seconds": 20.48,
+      "model_calls": 4,
+      "models_by_role": {
+        "TRIAGE": "muse-spark-1.3",
+        "PLANNER": "muse-spark-1.3",
+        "CODER": "muse-wonder-1.0",
+        "REVIEWER": "muse-wonder-1.0"
+      },
+      "reviewer_verdict": "approve",
+      "reviewer_notes": "Checked diff: single-line fix in textkit/tokens.py (words[:n+1] to words[:n]) with no unrelated changes; tests pass (10 to 14) and regression_gate passed with suite failing on baseline; new tests in tests/test_tokens_regression.py cover exact count, n=1, non-positive, and fewer-than-n cases.",
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1880,
+        "output_tokens_est": 525,
+        "total_usd_est": 0.013137,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 216,
+            "output_tokens_est": 94,
+            "cost_usd_est": 0.000669,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 454,
+            "output_tokens_est": 99,
+            "cost_usd_est": 0.000988,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 706,
+            "output_tokens_est": 250,
+            "cost_usd_est": 0.007824,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 504,
+            "output_tokens_est": 82,
+            "cost_usd_est": 0.003656,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "started_at": "2026-10-26T05:58:54.499932+00:00"
+    },
+    {
+      "slug": "false-report",
+      "issue": "Fix word_frequencies losing duplicate counts",
+      "definition": "expected: NOT pipeline_passed AND gate blocks it deterministically (gate applicable, suite passes on baseline, gate passed == False)",
+      "mode": "live-split-regression-gate",
+      "target_codebase": "generalization2/ (textkit package)",
+      "outcome": "failed",
+      "pipeline_passed": false,
+      "handled": true,
+      "tests_before": 10,
+      "tests_after": 13,
+      "tests_ok": true,
+      "files_touched": [
+        "tests/test_tokens_regression.py",
+        "textkit/tokens.py"
+      ],
+      "unexpected_files": [],
+      "regression_gate": {
+        "applicable": true,
+        "passed": false,
+        "tests_ok_on_baseline": true,
+        "tests_on_baseline": 13,
+        "reason": "suite passes on baseline production code, so the new tests do not demonstrate any change \u2014 the claimed bug is not reproduced by them"
+      },
+      "wall_clock_seconds": 29.54,
+      "model_calls": 4,
+      "models_by_role": {
+        "TRIAGE": "muse-spark-1.3",
+        "PLANNER": "muse-spark-1.3",
+        "CODER": "muse-wonder-1.0",
+        "REVIEWER": "muse-wonder-1.0"
+      },
+      "reviewer_verdict": "request_changes",
+      "reviewer_notes": "Checked diff scope and tests: tests pass (13 after vs 10 before) and changes are limited to textkit/tokens.py and tests/test_tokens_regression.py, but regression gate failed - suite also passes on baseline (13 tests), so new tests do not reproduce the claimed bug. The production change from freq.get(w,0)+1 to if/else is functionally equivalent/no-op, so no fix is demonstrated; a regression test that fails on baseline and passes after a real fix is missing.",
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1672,
+        "output_tokens_est": 562,
+        "total_usd_est": 0.014123,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 168,
+            "output_tokens_est": 57,
+            "cost_usd_est": 0.000452,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 368,
+            "output_tokens_est": 91,
+            "cost_usd_est": 0.000847,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 649,
+            "output_tokens_est": 288,
+            "cost_usd_est": 0.008356,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 487,
+            "output_tokens_est": 126,
+            "cost_usd_est": 0.004468,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "started_at": "2026-10-26T05:59:15.002759+00:00"
+    }
+  ],
+  "summary": {
+    "total": 2,
+    "handled": 2,
+    "all_handled": true
+  }
+}

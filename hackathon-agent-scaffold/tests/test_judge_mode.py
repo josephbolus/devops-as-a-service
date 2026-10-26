@@ -136,7 +136,12 @@ class JudgeRunOverHttp(unittest.TestCase):
         snap = _poll(self.port, started["run_id"])
         self.assertEqual(snap["status"], "done", snap)
         self.assertTrue(snap["judge_mode"])
-        self.assertEqual([e["stage"] for e in snap["events"]], demo_ui.JUDGE_STAGES)
+        # Events include the deterministic regression_gate stage
+        # (iteration 26) between tests and review; the results card
+        # still summarises the seven JUDGE_STAGES.
+        self.assertEqual([e["stage"] for e in snap["events"]],
+                         ["guardrail", "triage", "plan", "code", "tests",
+                          "regression_gate", "review", "done"])
         # Captions + timings travel with each event.
         for e in snap["events"]:
             self.assertTrue(e["caption"].startswith("Judge Mode:"), e)

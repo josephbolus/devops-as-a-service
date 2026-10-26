@@ -135,6 +135,71 @@ def _is_test_file(name):
     return "/test" in name or name.startswith("test")
 
 
+def _purge_pycache(repo: Path):
+    for cache in sorted(repo.rglob("__pycache__"), reverse=True):
+        if ".git" not in cache.parts:
+            import shutil
+            shutil.rmtree(cache, ignore_errors=True)
+
+
+def _snapshot(repo: Path, files):
+    out = {}
+    for name in files:
+        if name in out:
+            continue
+        path = repo / name
+        out[name] = path.read_text() if path.is_file() else None
+    return out
+
+
+def _restore(repo: Path, snapshot):
+    for name, text in snapshot.items():
+        path = repo / name
+        if text is None:
+            path.unlink(missing_ok=True)
+        else:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text)
+    _purge_pycache(repo)
+
+
+def regression_gate(repo, baseline, after, changed):
+    """Deterministic regression verification (maximizer iteration 26).
+
+    Added after iterations 24-25 measured that a FALSE bug report was
+    stopped only by the reviewer on two codebases: the coder's new
+    tests asserted behaviour the baseline already had, so they passed
+    on the unfixed code too. A regression test that passes on the
+    baseline proves nothing about the claimed bug. This gate restores
+    the changed PRODUCTION files to their baseline contents (test
+    files stay as the coder left them), re-runs the suite, and
+    restores the fix. Applicable only when both production and test
+    files changed; the run may pass only if the suite FAILS on the
+    baseline. Purely deterministic — no model call is involved.
+    """
+    test_files = sorted({f for f in changed if _is_test_file(f)})
+    prod_files = sorted({f for f in changed if not _is_test_file(f)})
+    if not test_files or not prod_files:
+        return {"applicable": False, "passed": True,
+                "tests_ok_on_baseline": None, "tests_on_baseline": None,
+                "reason": "no production+test change pair to verify"}
+    prod_baseline = {f: baseline.get(f) for f in prod_files}
+    prod_after = {f: after.get(f) for f in prod_files}
+    try:
+        _restore(repo, prod_baseline)
+        ok, _log, count = _run_tests(repo)
+    finally:
+        _restore(repo, prod_after)
+    return {"applicable": True, "passed": not ok,
+            "tests_ok_on_baseline": ok, "tests_on_baseline": count,
+            "reason": ("suite fails on baseline production code, so the "
+                       "new tests demonstrate the claimed change"
+                       if not ok else
+                       "suite passes on baseline production code, so the "
+                       "new tests do not demonstrate any change — the "
+                       "claimed bug is not reproduced by them")}
+
+
 def invented_production_files(plan, repo_tree, triage):
     """Planned non-test files that do not exist in the repo.
 
@@ -211,7 +276,9 @@ def run(repo, issue, client, out_dir, on_event=None):
                   json.dumps({"issue": issue, "plan": plan,
                               "files": _file_contents(
                                   repo, plan.get("expected_files", []))}), calls_log)
+    baseline_snapshot = _snapshot(repo, [e["file"] for e in coder["edits"]])
     changed = _apply_edits(repo, coder["edits"])
+    after_snapshot = _snapshot(repo, changed)
     diff = _diff(repo, changed)
     _emit(on_event, "code", {"changed": changed, "diff": diff})
 
@@ -219,10 +286,13 @@ def run(repo, issue, client, out_dir, on_event=None):
     _emit(on_event, "tests", {"tests_ok": tests_ok, "tests_before": tests_before,
                               "tests_after": tests_after,
                               "test_log_tail": test_log[-400:]})
+    gate = regression_gate(repo, baseline_snapshot, after_snapshot, changed)
+    _emit(on_event, "regression_gate", gate)
     review = _call(client, prompts.REVIEWER,
                    json.dumps({"changed": changed, "tests_ok": tests_ok,
                                "tests_before": tests_before,
                                "tests_after": tests_after,
+                               "regression_gate": gate,
                                "diff": diff}), calls_log)
     _emit(on_event, "review", review)
 
@@ -231,7 +301,8 @@ def run(repo, issue, client, out_dir, on_event=None):
     # A changed test file only counts as coverage if tests actually ran:
     # the discovered-test count must grow past the pre-fix baseline.
     coverage_live = not test_files_changed or tests_after > tests_before
-    passed = tests_ok and coverage_live and review.get("verdict") == "approve" and not unexpected
+    passed = (tests_ok and coverage_live and gate["passed"]
+              and review.get("verdict") == "approve" and not unexpected)
     pr_body = (
         f"## {triage['summary']}\n\n"
         f"Closes: {issue['title']}\n\n"
@@ -239,6 +310,9 @@ def run(repo, issue, client, out_dir, on_event=None):
         f"### Files changed\n" + "\n".join(f"- {f}" for f in changed) + "\n\n"
         f"### Tests\n{'All tests pass' if tests_ok else 'TESTS FAILING — see log'} "
         f"({tests_before} → {tests_after} discovered).\n\n"
+        f"### Regression gate\n"
+        f"{'Verified: ' if gate['applicable'] else 'Not applicable: '}"
+        f"{gate['reason']}.\n\n"
         f"### Reviewer\n{review.get('verdict')}: {review.get('notes', '')}\n")
     (out_dir / "pr_body.md").write_text(pr_body)
     run_cost = cost_mod.summarize(calls_log)
@@ -247,6 +321,7 @@ def run(repo, issue, client, out_dir, on_event=None):
     result = {"passed": passed, "changed": changed, "tests_ok": tests_ok,
               "tests_before": tests_before, "tests_after": tests_after,
               "unexpected_files": unexpected, "test_log_tail": test_log[-400:],
+              "regression_gate": gate,
               "cost": run_cost}
     _emit(on_event, "done", {"result": result, "pr_body": pr_body})
     return result
