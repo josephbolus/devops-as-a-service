@@ -47,15 +47,25 @@ fourth unseen codebase (gradebook, tests 12 → 18;
 `eval-scorecard/GENERALIZATION3.md`) whose issue carried two defects in
 two production modules — the first live fix spanning two production
 files, verified by an independent probe (8/8) rather than the
-pipeline's own tests alone. The worked impact model
+pipeline's own tests alone. That gradebook target has now also been
+passed under the all-frontier contest configuration (every role on
+`muse-wonder-1.0`): tests 12 → 18, 32.87s, reviewer approve, no
+unexpected files, the independent probe passed 8/8 again, est.
+$0.0340 (char estimate at wonder prices; the split's pass on the
+same target was 42.41s at est. $0.0248)
+(`eval-scorecard/FRONTIER_GENERALIZATION.md`,
+`eval-scorecard/frontier-generalization-runs.json`) — so the
+contest configuration's record is not seeded-set-only either. The worked impact model
 (`IMPACT_MODEL.md`, every input labeled measured / asserted / assumed)
 gives 50 min saved per passed issue and 216.7 senior hours per year at
 the middle volume, at an estimated API cost of $0.0254 per passed
 issue — $0.0305 per senior-hour saved (`eval-scorecard/COST_ACCOUNTING.md`;
 character-count estimate, not billing data, because the API does not
 expose usage on the connector path). Honest limits: n=3 seeded issues
-(three attempts each) plus three generalization issues (n=1 each, on
-three different unseen codebases), no real users
+(three attempts each) plus three generalization issues on three
+different unseen codebases (the gradebook issue has since been run
+under two configurations — split and all-frontier — and passed
+under both), no real users
 yet, and review time is still the model's 10-minute assumption.
 
 - Eval scorecard: `eval-scorecard/SCORECARD.md`
@@ -128,7 +138,12 @@ Tier 1 6 → 8, Tier 2 6 → 11, Tier 3 6 → 8, growth +9, 171.57s,
 est. $0.1112 total — so two-pass frontier growth is +10 and +9
 (mean +9.5) at a two-pass mean est. $0.0373 per passed issue
 (`eval-scorecard/FRONTIER_REPLICATE.md`,
-`eval-scorecard/frontier-replicate-runs.json`).
+`eval-scorecard/frontier-replicate-runs.json`). The contest
+configuration has also passed live outside the seeded set: on the
+unseen gradebook codebase it passed 12 → 18 in 32.87s with the
+independent probe at 8/8 and `muse-wonder-1.0` recorded on every
+role's calls (fallbacks 0; `eval-scorecard/FRONTIER_GENERALIZATION.md`,
+`eval-scorecard/frontier-generalization-runs.json`).
 
 ## Demo (25%)
 
@@ -220,7 +235,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 264/264, demo repo 6/6, generalization
+- Suites at drafting: scaffold 270/270, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

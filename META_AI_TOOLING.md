@@ -270,12 +270,29 @@ passed issue $0.0373 — still the highest per-issue cost of any
 configuration measured. The contest configuration is no longer a
 single-pass record.
 
+Frontier generalization record (`eval-scorecard/FRONTIER_GENERALIZATION.md` +
+`frontier-generalization-runs.json`, maximizer iteration 33): the
+all-frontier contest configuration ran live on the unseen gradebook
+codebase (generalization3/, 12-test baseline, two defects in two
+production modules — every earlier generalization pass used the
+split, and every earlier frontier pass used only the seeded set)
+and passed: tests 12 → 18 (growth +6, matching the split's pass on
+the same target), 32.87s, reviewer approve, no unexpected files,
+the independent 8-check probe passed 8/8, est. $0.0340 (char
+estimate at wonder prices; the split's pass on this target was
+est. $0.0248 in 42.41s). Per-role cost records show
+`muse-wonder-1.0` on every call; fallbacks 0, retries 0. The
+contest configuration's record is no longer seeded-set-only.
+
 ## What is NOT claimed
 
 - `muse-wonder-1.0` is proven live in all four roles on the
   seeded set (split runs for CODER/REVIEWER; the iteration-31/32
   all-frontier passes for every role, two passes, both 3/3 +
-  guardrail). The split's +1-test
+  guardrail) and, under the all-frontier configuration, on one
+  unseen codebase (iteration 33: gradebook, 12 → 18, probe 8/8 —
+  one run on a synthetic target, not a new-codebase or real-team
+  claim). The split's +1-test
   margin and the frontier pass's tied +10 growth do not prove it
   better on unseeded issues or a real backlog, and no such claim
   is made.
