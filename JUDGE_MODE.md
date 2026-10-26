@@ -85,10 +85,29 @@ muse-wonder-1.0). Record: `eval-scorecard/JUDGE_LIVE.md` +
 run of one seeded issue through the console path — it proves the
 self-guided path works with real models, and opens no PR.
 
+## Live tour (Oct 25, iteration 21)
+
+The live proof now covers **every** tour stop.
+`hackathon-agent-scaffold/run_judge_live_tour.py` exercised the same
+one-click endpoint over real HTTP with `mode: "live"` for all four
+seeded issues under the kept split config. Measured: Tier 1
+**pass** (tests 6 → 8, 51.57s, est. $0.0112), Tier 3 **pass**
+(6 → 10, 43.24s, est. $0.0229), the guardrail stop **escalated**
+with zero model calls — and Tier 2 **did not complete**: its tests
+stage passed (6 → 11) before the reviewer call failed with a
+provider HTTP 503 (`service_overloaded`), and its results card
+reported fail/error with the review stage pending rather than a
+pass. The tour is recorded as measured (2/3 work issues) in
+`eval-scorecard/JUDGE_LIVE_TOUR.md` + `judge-live-tour.json`,
+pinned by `tests/test_judge_live_tour.py`; it was not re-run for a
+cleaner record.
+
 ## Pinned by tests
 
 `tests/test_judge_tour.py` pins the tour record (summary recomputed
 from the per-run rows; the doc must agree with the record).
+`tests/test_judge_live_tour.py` pins the live tour record the same
+way, including the Tier 2 503 failure row.
 `tests/test_judge_mode.py` (8 tests): a caption exists and is
 event-derived for every stage (including blocked-guardrail and
 failing-tests variants), the results card's pass/fail/delta/link

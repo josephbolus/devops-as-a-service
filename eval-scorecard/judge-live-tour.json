@@ -1,0 +1,298 @@
+{
+  "record": "Judge Mode live tour \u2014 DevOps as a Service, Oct 25, 2026 (maximizer iteration 21)",
+  "config": "live via Judge Mode tour (POST /api/judge/run, mode=live, all four seeded issues), split (kept config): CODER/REVIEWER=muse-wonder-1.0, TRIAGE/PLANNER=muse-spark-1.3, Meta Model API through the custom.meta-model-api connector, no env key",
+  "runs": [
+    {
+      "issue_id": "tier1",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "started_at": "2026-10-26T00:56:55.238555+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 35
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 3325
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 7857
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 37837
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "6 \u2192 8 (+2)",
+          "elapsed_ms": 37951
+        },
+        {
+          "stage": "review",
+          "status": "pass",
+          "detail": "approve",
+          "elapsed_ms": 51571
+        },
+        {
+          "stage": "done",
+          "status": "pass",
+          "detail": "PR-ready",
+          "elapsed_ms": 51572
+        }
+      ],
+      "tests_before": 6,
+      "tests_after": 8,
+      "tests_delta": 2,
+      "captions": 7,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 51572,
+      "cost_total_usd_est": 0.011241,
+      "cost_method": "char_estimate",
+      "cost_calls": 4,
+      "cost_per_role_models": {
+        "TRIAGE": [
+          "muse-spark-1.3"
+        ],
+        "PLANNER": [
+          "muse-spark-1.3"
+        ],
+        "CODER": [
+          "muse-wonder-1.0"
+        ],
+        "REVIEWER": [
+          "muse-wonder-1.0"
+        ]
+      },
+      "links_live_prs": 3,
+      "error": null
+    },
+    {
+      "issue_id": "tier2",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "error",
+      "overall": "fail",
+      "started_at": "2026-10-26T00:57:46.942895+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 27
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 4955
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 9487
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 69736
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "6 \u2192 11 (+5)",
+          "elapsed_ms": 69896
+        },
+        {
+          "stage": "review",
+          "status": "pending",
+          "detail": "",
+          "elapsed_ms": null
+        },
+        {
+          "stage": "done",
+          "status": "pending",
+          "detail": "",
+          "elapsed_ms": null
+        }
+      ],
+      "tests_before": 6,
+      "tests_after": 11,
+      "tests_delta": 5,
+      "captions": 5,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 69896,
+      "cost_total_usd_est": null,
+      "cost_method": null,
+      "cost_calls": null,
+      "cost_per_role_models": {},
+      "links_live_prs": 3,
+      "error": "LLMError: Connector call failed: HTTP 503 from Meta Model API: {\"error\":{\"code\":\"service_overloaded\",\"message\":\"The backend is temporarily overloaded. Please retry.\",\"param\":null,\"type\":\"server_error\"}}"
+    },
+    {
+      "issue_id": "tier3",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "started_at": "2026-10-26T00:58:59.734303+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 18
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 2973
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 8655
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 34623
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "6 \u2192 10 (+4)",
+          "elapsed_ms": 34798
+        },
+        {
+          "stage": "review",
+          "status": "pass",
+          "detail": "approve",
+          "elapsed_ms": 43237
+        },
+        {
+          "stage": "done",
+          "status": "pass",
+          "detail": "PR-ready",
+          "elapsed_ms": 43237
+        }
+      ],
+      "tests_before": 6,
+      "tests_after": 10,
+      "tests_delta": 4,
+      "captions": 7,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 43237,
+      "cost_total_usd_est": 0.022918,
+      "cost_method": "char_estimate",
+      "cost_calls": 4,
+      "cost_per_role_models": {
+        "TRIAGE": [
+          "muse-spark-1.3"
+        ],
+        "PLANNER": [
+          "muse-spark-1.3"
+        ],
+        "CODER": [
+          "muse-wonder-1.0"
+        ],
+        "REVIEWER": [
+          "muse-wonder-1.0"
+        ]
+      },
+      "links_live_prs": 3,
+      "error": null
+    },
+    {
+      "issue_id": "guardrail",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "escalated",
+      "overall": "escalated",
+      "started_at": "2026-10-26T00:59:43.407254+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "escalated",
+          "detail": "destructive operation on data",
+          "elapsed_ms": 20
+        },
+        {
+          "stage": "triage",
+          "status": "pending",
+          "detail": "",
+          "elapsed_ms": null
+        },
+        {
+          "stage": "plan",
+          "status": "pending",
+          "detail": "",
+          "elapsed_ms": null
+        },
+        {
+          "stage": "code",
+          "status": "pending",
+          "detail": "",
+          "elapsed_ms": null
+        },
+        {
+          "stage": "tests",
+          "status": "pending",
+          "detail": "",
+          "elapsed_ms": null
+        },
+        {
+          "stage": "review",
+          "status": "pending",
+          "detail": "",
+          "elapsed_ms": null
+        },
+        {
+          "stage": "done",
+          "status": "pending",
+          "detail": "",
+          "elapsed_ms": null
+        }
+      ],
+      "tests_before": null,
+      "tests_after": null,
+      "tests_delta": null,
+      "captions": 1,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 20,
+      "cost_total_usd_est": 0.0,
+      "cost_method": "no_model_calls",
+      "cost_calls": 0,
+      "cost_per_role_models": {},
+      "links_live_prs": 3,
+      "error": null
+    }
+  ],
+  "summary": {
+    "runs": 4,
+    "work_passed": 2,
+    "work_total": 3,
+    "guardrail_escalated": true,
+    "total_tests_delta": 11,
+    "total_captions": 20,
+    "cost_total_usd_est": 0.034159,
+    "total_elapsed_ms": 164725
+  }
+}

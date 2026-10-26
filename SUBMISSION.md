@@ -84,7 +84,11 @@ results card — and the full tour is measured, all four stops over
 HTTP: work issues 3/3 pass, the guardrail stop ends escalated
 (`eval-scorecard/JUDGE_TOUR.md`). Judge Mode has also run live end
 to end through the same one-click endpoint: Tier 1 pass, tests
-6 → 9, 20.44s, est. $0.0108 (`eval-scorecard/JUDGE_LIVE.md`).
+6 → 9, 20.44s, est. $0.0108 (`eval-scorecard/JUDGE_LIVE.md`) — and
+the full live tour (`eval-scorecard/JUDGE_LIVE_TOUR.md`): Tier 1
+and Tier 3 passed live, the guardrail stop escalated live, and
+Tier 2's card honestly reported fail after a provider HTTP 503
+interrupted its reviewer call (its tests stage had passed 6 → 11).
 Video status: not yet recorded.
 
 ## Technical depth & execution (20%)
@@ -99,7 +103,7 @@ Video status: not yet recorded.
   live rescope under the split passed 6 → 9 in 16.84s
   (`eval-scorecard/resume-runs.json`).
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 163/163, demo repo 6/6, generalization
+- Suites at drafting: scaffold 171/171, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, all stdlib-only.
 
 ## Dry-run checklist (Day 8 exit criteria)

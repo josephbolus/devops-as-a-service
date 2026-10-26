@@ -61,7 +61,7 @@ class TestSubmissionDraft(unittest.TestCase):
         for token in ("3/3", "94.65s", "6 → 9", "6 → 10", "6 → 8",
                       "#16", "#17", "#18", "50 min saved",
                       "216.7", "+10 vs +9", "209.14s", "16.84s",
-                      "163/163"):
+                      "171/171"):
             self.assertIn(token, self.text, token)
 
     def test_current_evidence_included(self):
@@ -69,6 +69,7 @@ class TestSubmissionDraft(unittest.TestCase):
         # record, not the stale Day-8 snapshot.
         for token in ("9/9", "9 → 13", "10 → 15", "$0.0254", "Judge Mode",
                       "JUDGE_TOUR.md", "JUDGE_LIVE.md", "$0.0108",
+                      "JUDGE_LIVE_TOUR.md", "503",
                       "GENERALIZATION.md", "GENERALIZATION2.md"):
             self.assertIn(token, self.text, token)
         self.assertNotIn("one run each", self.text)
