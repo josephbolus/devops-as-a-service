@@ -111,7 +111,17 @@ Tier 1 6 → 11, Tier 2 6 → 10, Tier 3 6 → 11, growth +14,
 reads as the high end of variance, stated in
 `eval-scorecard/SPARK12_REPLICATE.md` and
 `eval-scorecard/spark12-replicate-runs.json`. The kept split is
-still NOT re-decided on these passes.
+still NOT re-decided on these passes. CONTEST CONFIGURATION
+(Oct 26, Joseph's directive): all four roles now run on the Meta
+frontier model `muse-wonder-1.0` for contest runs — measured
+live on the full seeded set: Tier 1 6 → 8, Tier 2 6 → 12,
+Tier 3 6 → 8, guardrail escalated, growth +10, 142.52s, est.
+$0.1124 total ($0.0375 per passed issue at wonder prices — the
+highest per-issue cost measured, stated not hidden), spark-1.3
+configured only as availability fallback (fallbacks 0)
+(`eval-scorecard/FRONTIER.md`, `eval-scorecard/frontier-runs.json`).
+`muse-wonder-1.1` was probed and returned 404 — wonder-1.0 is the
+strongest frontier model available through the connector.
 
 ## Demo (25%)
 
@@ -203,7 +213,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 254/254, demo repo 6/6, generalization
+- Suites at drafting: scaffold 259/259, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

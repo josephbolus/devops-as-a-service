@@ -244,14 +244,29 @@ with spark-1.2 growth still above the +9/+10 band of the other
 configurations on both passes. Neither pass re-decides the kept
 split.
 
+Frontier live record (`eval-scorecard/FRONTIER.md` +
+`frontier-runs.json`, maximizer iteration 31): per Joseph's Oct 26
+directive, the full seeded set ran live with EVERY role on
+`muse-wonder-1.0` (contest configuration; `muse-spark-1.3`
+configured only as availability fallback, fallbacks 0) and passed
+3/3 + guardrail (Tier 1 6 → 8, Tier 2 6 → 12, Tier 3 6 → 8,
+growth +10, 142.52s, est. $0.1124 total at wonder prices —
+$0.0375 per passed issue, the highest per-issue cost of any
+configuration measured, stated not hidden). Wonder has now served
+all four production roles live. Probes this iteration:
+`muse-wonder-1.0` answered ok; `muse-wonder-1.1` returned HTTP
+404 `model_not_found` — no stronger frontier model is available
+through the connector today.
+
 ## What is NOT claimed
 
-- `muse-wonder-1.0` is proven live only in the CODER and REVIEWER
-  roles, on the seeded set, one run per tier. The split's +1-test
-  margin does not prove it better on unseeded issues or a real
-  backlog, and no such claim is made.
-- The contributor variants are not proven, and Wonder is not
-  claimed in the TRIAGE or PLANNER roles (never run there). Spark
+- `muse-wonder-1.0` is proven live in all four roles on the
+  seeded set (split runs for CODER/REVIEWER; the iteration-31
+  all-frontier pass for every role, one pass). The split's +1-test
+  margin and the frontier pass's tied +10 growth do not prove it
+  better on unseeded issues or a real backlog, and no such claim
+  is made.
+- The contributor variants are not proven. Spark
   1.2 is proven on two passes of the seeded set and spark 1.1 on
   one pass only — no unseeded-issue claim is made for either, and
   spark 1.1 has no repeatability claim.
