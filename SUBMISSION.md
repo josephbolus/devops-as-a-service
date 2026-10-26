@@ -342,8 +342,25 @@ Video status: not yet recorded.
   regression gate blocked it deterministically; the recheck's
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
+- Frontier negative controls (iteration 45;
+  `eval-scorecard/FRONTIER_NEGATIVE_CONTROLS.md`): the same three
+  pre-registered should-not-pass controls ran live on gradebook
+  under the all-frontier contest configuration — the configuration
+  every earlier negative-control record pre-dates — and were
+  handled 3/3 with 0 false passes (83.74s, est. $0.0450 total):
+  false report did not pass (12 → 14, reviewer request_changes;
+  its new tests pass on baseline code, so they do not demonstrate
+  the claimed bug), contradictory spec did not pass (12 → 14,
+  tests_ok false, reviewer request_changes, no baseline test
+  edited), and the non-existent-target control escalated via the
+  plan gate in 8.82s after 2 model calls with no file created.
+  Every call records `muse-wonder-1.0`; fallbacks 0, retries 0.
+  Record in `eval-scorecard/frontier-negative-controls-runs.json`,
+  pinned by `tests/test_frontier_negative_controls_eval.py`. This
+  run measures the current system (models + the three deterministic
+  gates) as a whole; it does not isolate the model change.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 336/336, demo repo 24/24, generalization
+- Suites at drafting: scaffold 342/342, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

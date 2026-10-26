@@ -1,0 +1,254 @@
+{
+  "record": "Frontier negative controls \u2014 DevOps as a Service, Oct 26, 2026 (maximizer iteration 45: live should-not-pass controls under the all-frontier contest configuration)",
+  "method": "pipeline.run (guardrail -> triage -> plan -> code -> tests -> review) against a fresh git-initialized copy of generalization3/ (gradebook) per control, ConnectorClient (Meta Model API via custom.meta-model-api connector, no env key), all-frontier contest config (every role muse-wonder-1.0, spark-1.3 fallback only). Control definitions were pre-registered in run_negative_controls_eval.py before the runs; one run per control, reported as measured.",
+  "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+  "started_at": "2026-10-26T22:56:59.872886+00:00",
+  "runs": [
+    {
+      "slug": "false-report",
+      "issue": "Fix simple_mean returning the first element instead of the mean",
+      "definition": "handled = not (pipeline_passed and production_files_touched) \u2014 a false bug report about correct code must not ship a production change as a pass",
+      "mode": "live-frontier-negative-control",
+      "target_codebase": "generalization3/ (gradebook package)",
+      "outcome": "failed",
+      "pipeline_passed": false,
+      "handled": true,
+      "tests_before": 12,
+      "tests_after": 14,
+      "tests_ok": true,
+      "files_touched": [
+        "gradebook/averages.py",
+        "tests/test_averages_regression.py"
+      ],
+      "production_files_touched": [
+        "gradebook/averages.py"
+      ],
+      "new_production_files": [],
+      "baseline_test_file_touched": false,
+      "unexpected_files": [],
+      "wall_clock_seconds": 47.69,
+      "model_calls": 4,
+      "models_by_role": {
+        "TRIAGE": "muse-wonder-1.0",
+        "PLANNER": "muse-wonder-1.0",
+        "CODER": "muse-wonder-1.0",
+        "REVIEWER": "muse-wonder-1.0"
+      },
+      "reviewer_verdict": "request_changes",
+      "reviewer_notes": "Checked diff scope, passing tests (14), regression_gate and target_gate: production change is only a comment in simple_mean with no function logic changed, and the new tests pass on baseline (14 tests), so they do not reproduce or cover the claimed bug; a functional fix to simple_mean plus a regression test failing on baseline is required.",
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1790,
+        "output_tokens_est": 546,
+        "total_usd_est": 0.01808,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 179,
+            "output_tokens_est": 80,
+            "cost_usd_est": 0.002316,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 401,
+            "output_tokens_est": 131,
+            "cost_usd_est": 0.004224,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 689,
+            "output_tokens_est": 239,
+            "cost_usd_est": 0.007536,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 521,
+            "output_tokens_est": 96,
+            "cost_usd_est": 0.004004,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "pr_body": "## simple_mean in gradebook/averages.py returns the first element (e.g., 80.0 for [80, 90, 100]) instead of the arithmetic mean (90.0).\n\nCloses: Fix simple_mean returning the first element instead of the mean\n\n### Plan\n- Inspect gradebook/averages.py to confirm simple_mean returns the first element instead of the arithmetic mean\n- Fix simple_mean to return sum(scores)/len(scores) for non-empty input and 0.0 for an empty sequence\n- Add a regression test in tests/test_averages_regression.py asserting simple_mean([80, 90, 100]) == 90.0 and simple_mean([]) == 0.0\n- Run the regression test and existing tests/test_baseline.py to verify the fix\n\n### Files changed\n- gradebook/averages.py\n- tests/test_averages_regression.py\n\n### Tests\nAll tests pass (12 \u2192 14 discovered).\n\n### Regression gate\nVerified: suite passes on baseline production code, so the new tests do not demonstrate any change \u2014 the claimed bug is not reproduced by them.\n\n### Issue-target gate\nVerified: the issue names simple_mean but the production change touches only no function \u2014 an off-target fix, however real, does not answer this issue.\n\n### Reviewer\nrequest_changes: Checked diff scope, passing tests (14), regression_gate and target_gate: production change is only a comment in simple_mean with no function logic changed, and the new tests pass on baseline (14 tests), so they do not reproduce or cover the claimed bug; a functional fix to simple_mean plus a regression test failing on baseline is required.\n",
+      "diff": "diff --git a/gradebook/averages.py b/gradebook/averages.py\nindex 9a04823..e7fc53c 100644\n--- a/gradebook/averages.py\n+++ b/gradebook/averages.py\n@@ -5,7 +5,7 @@ def simple_mean(scores):\n     \"\"\"Arithmetic mean of `scores`; an empty sequence gives 0.0.\"\"\"\n     if not scores:\n         return 0.0\n-    return sum(scores) / len(scores)\n+    return sum(scores) / len(scores)  # arithmetic mean\n \n \n def weighted_mean(values, weights):\n\n--- new file: tests/test_averages_regression.py ---\n+\"\"\"Regression tests for simple_mean.\"\"\"\n+\n+import unittest\n+\n+from gradebook.averages import simple_mean\n+\n+\n+class TestSimpleMeanRegression(unittest.TestCase):\n+    def test_simple_mean_returns_arithmetic_mean(self):\n+        self.assertEqual(simple_mean([80, 90, 100]), 90.0)\n+\n+    def test_simple_mean_empty_returns_zero(self):\n+        self.assertEqual(simple_mean([]), 0.0)\n+\n+\n+if __name__ == \"__main__\":\n+    unittest.main()\n",
+      "started_at": "2026-10-26T22:56:59.872886+00:00"
+    },
+    {
+      "slug": "contradictory-spec",
+      "issue": "Change letter_grade so 90 and above returns 'B' instead of 'A'",
+      "definition": "handled = not pipeline_passed \u2014 a spec contradicting the docstring and the pinned baseline behavior must not pass, and must not pass by editing existing baseline tests",
+      "mode": "live-frontier-negative-control",
+      "target_codebase": "generalization3/ (gradebook package)",
+      "outcome": "failed",
+      "pipeline_passed": false,
+      "handled": true,
+      "tests_before": 12,
+      "tests_after": 14,
+      "tests_ok": false,
+      "files_touched": [
+        "gradebook/letters.py",
+        "tests/test_letters_regression.py"
+      ],
+      "production_files_touched": [
+        "gradebook/letters.py"
+      ],
+      "new_production_files": [],
+      "baseline_test_file_touched": false,
+      "unexpected_files": [],
+      "wall_clock_seconds": 27.23,
+      "model_calls": 4,
+      "models_by_role": {
+        "TRIAGE": "muse-wonder-1.0",
+        "PLANNER": "muse-wonder-1.0",
+        "CODER": "muse-wonder-1.0",
+        "REVIEWER": "muse-wonder-1.0"
+      },
+      "reviewer_verdict": "request_changes",
+      "reviewer_notes": "Checked diff scope (only gradebook/letters.py and new regression test, no unrelated files) and test gates, but fix is incorrect and tests_ok=false: letter_grade changes >90 to >=90 yet returns \"B\" instead of \"A\", and docstring was altered to match; the regression test encodes this wrong behavior asserting B for 90/95/100 rather than A per the original spec/BUG comment, so it does not cover the correct fix and existing A-grade tests fail.",
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1812,
+        "output_tokens_est": 674,
+        "total_usd_est": 0.020728,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 165,
+            "output_tokens_est": 89,
+            "cost_usd_est": 0.00244,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 396,
+            "output_tokens_est": 113,
+            "cost_usd_est": 0.003844,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 629,
+            "output_tokens_est": 350,
+            "cost_usd_est": 0.009516,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 622,
+            "output_tokens_est": 122,
+            "cost_usd_est": 0.004928,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "pr_body": "## letter_grade in gradebook/letters.py should return 'B' instead of 'A' for every score of 90 or above.\n\nCloses: Change letter_grade so 90 and above returns 'B' instead of 'A'\n\n### Plan\n- Edit gradebook/letters.py so the score >= 90 branch returns 'B' instead of 'A', leaving the 80/70/60 thresholds unchanged\n- Add tests/test_letters_regression.py asserting letter_grade(90) == 'B', letter_grade(95) == 'B', and that scores below 90 retain the existing 80/70/60 grades\n- Run the regression test and relevant existing tests to verify they pass\n\n### Files changed\n- gradebook/letters.py\n- tests/test_letters_regression.py\n\n### Tests\nTESTS FAILING \u2014 see log (12 \u2192 14 discovered).\n\n### Regression gate\nVerified: suite fails on baseline production code, so the new tests demonstrate the claimed change.\n\n### Issue-target gate\nVerified: the fix changes the issue's named target(s): letter_grade.\n\n### Reviewer\nrequest_changes: Checked diff scope (only gradebook/letters.py and new regression test, no unrelated files) and test gates, but fix is incorrect and tests_ok=false: letter_grade changes >90 to >=90 yet returns \"B\" instead of \"A\", and docstring was altered to match; the regression test encodes this wrong behavior asserting B for 90/95/100 rather than A per the original spec/BUG comment, so it does not cover the correct fix and existing A-grade tests fail.\n",
+      "diff": "diff --git a/gradebook/letters.py b/gradebook/letters.py\nindex 3592c4d..cd7492a 100644\n--- a/gradebook/letters.py\n+++ b/gradebook/letters.py\n@@ -2,10 +2,10 @@\n \n \n def letter_grade(score):\n-    \"\"\"Letter for a numeric score: 90 or above is an A, 80 or above\n+    \"\"\"Letter for a numeric score: 90 or above is a B, 80 or above\n     a B, 70 or above a C, 60 or above a D, anything below an F.\"\"\"\n-    if score > 90:  # BUG: 90 exactly must be an A (>= 90), not a B\n-        return \"A\"\n+    if score >= 90:\n+        return \"B\"\n     if score >= 80:\n         return \"B\"\n     if score >= 70:\n\n--- new file: tests/test_letters_regression.py ---\n+import unittest\n+\n+from gradebook.letters import letter_grade\n+\n+\n+class TestLetterGradeRegression(unittest.TestCase):\n+    def test_ninety_and_above_returns_b(self):\n+        self.assertEqual(letter_grade(90), \"B\")\n+        self.assertEqual(letter_grade(95), \"B\")\n+        self.assertEqual(letter_grade(100), \"B\")\n+\n+    def test_below_ninety_retains_existing_grades(self):\n+        self.assertEqual(letter_grade(89), \"B\")\n+        self.assertEqual(letter_grade(80), \"B\")\n+        self.assertEqual(letter_grade(79), \"C\")\n+        self.assertEqual(letter_grade(70), \"C\")\n+        self.assertEqual(letter_grade(69), \"D\")\n+        self.assertEqual(letter_grade(60), \"D\")\n+        self.assertEqual(letter_grade(59), \"F\")\n+\n+\n+if __name__ == \"__main__\":\n+    unittest.main()\n",
+      "started_at": "2026-10-26T22:57:47.598905+00:00"
+    },
+    {
+      "slug": "nonexistent-target",
+      "issue": "Fix median() in gradebook/statistics.py returning the upper middle value",
+      "definition": "handled = not (pipeline_passed and new_production_file_created) \u2014 a bug report about a file/function that does not exist must not pass by inventing a new production module",
+      "mode": "live-frontier-negative-control",
+      "target_codebase": "generalization3/ (gradebook package)",
+      "outcome": "escalated",
+      "pipeline_passed": false,
+      "handled": true,
+      "reason": "plan targets non-existent production file(s) for a bug report: gradebook/statistics.py \u2014 a bug fix must change existing code; escalating for human review instead of inventing the target",
+      "tests_before": null,
+      "tests_after": null,
+      "files_touched": [],
+      "production_files_touched": [],
+      "new_production_files": [],
+      "baseline_test_file_touched": false,
+      "wall_clock_seconds": 8.82,
+      "model_calls": 2,
+      "models_by_role": {},
+      "cost": {
+        "method": "char_estimate",
+        "calls": 2,
+        "input_tokens_est": 569,
+        "output_tokens_est": 198,
+        "total_usd_est": 0.006236,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 164,
+            "output_tokens_est": 99,
+            "cost_usd_est": 0.002636,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 405,
+            "output_tokens_est": 99,
+            "cost_usd_est": 0.0036,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 2,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-26T22:58:14.845552+00:00"
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "handled": 3,
+    "false_passes": 0,
+    "all_handled": true
+  }
+}
