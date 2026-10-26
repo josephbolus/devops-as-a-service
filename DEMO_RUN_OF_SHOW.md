@@ -43,7 +43,7 @@ never mutated. Only Live + "Open real PR" touches the real repo.
 ## Pre-flight (complete before pressing record)
 
 - [ ] Connector check: `meta_api.py ping` returns `{"ok": true}`,
-      then one Live Tier-1 **pre-warm** run in the console (split
+      then one Live Tier-1 **pre-warm** run in the console (all-frontier
       env set — see below) completes passed; reset the timeline
       afterwards. This proves the API path on the day and absorbs
       first-call latency before the camera is rolling.
@@ -62,11 +62,17 @@ never mutated. Only Live + "Open real PR" touches the real repo.
       nothing else is pasted). No real client names, repos, or data
       anywhere on screen.
 - [ ] Eval scorecard open in a tab: `eval-scorecard/SCORECARD.md`.
-- [ ] For Live runs, the split configuration is set in the console's
-      environment (the Oct 25 measured decision, `split-runs.json`):
+- [ ] For Live runs, the CONTEST configuration is set in the
+      console's environment (Joseph's Oct 26 directive — all roles on
+      the Meta frontier model, superseding the Oct 25 split decision
+      in `split-runs.json` for contest runs):
+      `DAAS_MODEL_TRIAGE=muse-wonder-1.0`,
+      `DAAS_MODEL_PLANNER=muse-wonder-1.0`,
       `DAAS_MODEL_CODER=muse-wonder-1.0` and
-      `DAAS_MODEL_REVIEWER=muse-wonder-1.0`; TRIAGE/PLANNER stay on
-      the `muse-spark-1.3` default.
+      `DAAS_MODEL_REVIEWER=muse-wonder-1.0`. Spark-tier models are
+      configured ONLY as availability fallbacks
+      (`DAAS_FALLBACK_MODEL=muse-spark-1.3`), never as primary
+      role models for contest runs.
 
 ## Timed beats (2:30–3:00 total)
 
@@ -86,8 +92,9 @@ Fallback 1 and keep narrating the same beats.
 ## Rehearsal-derived timings (15-minute cut)
 
 Measured Oct 25, 2026, driving the real console over HTTP exactly
-as the 15-minute script directs (split config in the console's
-environment; connector ping ok first). Machine time is small next
+as the 15-minute script directs (the rehearsal ran under the
+then-current split config; the contest config is now all-frontier
+— see Pre-flight; connector ping ok first). Machine time is small next
 to the ~13 minutes of narration — the envelope holds with slack.
 
 | Script beat | Budget | Machine time (measured) | Notes |

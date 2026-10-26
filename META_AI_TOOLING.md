@@ -8,9 +8,14 @@ NOT decided or proven yet.
 
 ## The models and the endpoint
 
-- Models: `muse-spark-1.3` (the default for every agent role) and,
-  since the Oct 25 split experiment below, `muse-wonder-1.0` for the
-  CODER and REVIEWER roles in the entry's live configuration. Since
+- Models: `muse-spark-1.3` (the code default for every agent role)
+  and, since the Oct 25 split experiment below, `muse-wonder-1.0`
+  for the CODER and REVIEWER roles. CONTEST CONFIGURATION (Joseph's
+  Oct 26 directive, section below): ALL four roles run on the Meta
+  frontier model `muse-wonder-1.0` — the strongest model verified
+  through the connector (probed live Oct 26; `muse-wonder-1.1`
+  returned HTTP 404 `model_not_found`). Spark-tier models remain
+  configured ONLY as availability fallbacks. Since
   Oct 26 (iteration 28, Model fallback below), `muse-spark-1.2` is
   also proven live in all four roles (fallback configuration), and
   since iteration 29 `muse-spark-1.1` is proven live in all four
@@ -111,6 +116,23 @@ the premium-priced tier. The winning margin is one regression test
 on n=3 seeded issues, one run each — a real but thin margin, kept
 because the rule was registered before the runs, not because the
 split is proven generally better.
+
+## Contest configuration: all-frontier (Oct 26 directive)
+
+Per Joseph's Oct 26, 2026 directive ("use meta frontier models for
+the contests"), the contest configuration supersedes the split
+decision above FOR CONTEST RUNS: `DAAS_MODEL_TRIAGE`,
+`DAAS_MODEL_PLANNER`, `DAAS_MODEL_CODER` and `DAAS_MODEL_REVIEWER`
+are ALL set to `muse-wonder-1.0`. The split experiment and its
+decision rule stand above as the historical record of how the split
+was chosen; they no longer describe the contest configuration.
+Spark-tier models (`muse-spark-1.3`) remain configured ONLY as
+availability fallbacks (`DAAS_FALLBACK_MODEL`), used solely on
+model-availability failure or transient exhaustion — never as
+primary role models. The all-frontier configuration is measured
+live in `eval-scorecard/FRONTIER.md` + `frontier-runs.json`
+(`hackathon-agent-scaffold/run_frontier_eval.py`, maximizer
+iteration 31).
 
 ## Per-run cost accounting (and what the API does not expose)
 

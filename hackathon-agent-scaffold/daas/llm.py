@@ -21,6 +21,11 @@ client's default model. Split decided Oct 25, 2026 by measured
 experiment (repo-root META_AI_TOOLING.md, eval-scorecard/split-runs.json):
 the entry's live configuration sets CODER and REVIEWER to
 muse-wonder-1.0; TRIAGE and PLANNER run the default.
+Contest configuration (Joseph's Oct 26, 2026 directive, superseding
+the split for contests): ALL roles run on the frontier model
+muse-wonder-1.0 (DAAS_MODEL_TRIAGE/PLANNER/CODER/REVIEWER all set
+to muse-wonder-1.0); spark-tier models are availability fallbacks
+only. Measured in eval-scorecard/FRONTIER.md (iteration 31).
 """
 import json
 import os
