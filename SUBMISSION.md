@@ -94,10 +94,15 @@ the full seeded set passed live with every role on
 `muse-spark-1.2` — Tier 1 6 → 13, Tier 2 6 → 14, Tier 3 6 → 11,
 guardrail escalated, 88.59s, growth +20, est. $0.0309 total (char
 estimate; spark-1.2 priced at spark-1.3 rates). One pass on the
-seeded set: the kept split is NOT re-decided on it, and
-`muse-spark-1.1` is probe-proven only
+seeded set: the kept split is NOT re-decided on it
 (`eval-scorecard/MODEL_FALLBACK.md`,
-`eval-scorecard/model-fallback-runs.json`).
+`eval-scorecard/model-fallback-runs.json`). And the last
+probe-only model is now pipeline-proven: the full seeded set
+passed live with every role on `muse-spark-1.1` — Tier 1
+6 → 10, Tier 2 6 → 9, Tier 3 6 → 9, guardrail escalated, growth
++10, 77.67s, est. $0.0245 total (char estimate; spark-1.1 priced
+at spark-1.3 rates) (`eval-scorecard/SPARK11.md`,
+`eval-scorecard/spark11-runs.json`).
 
 ## Demo (25%)
 
@@ -189,7 +194,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 245/245, demo repo 6/6, generalization
+- Suites at drafting: scaffold 249/249, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

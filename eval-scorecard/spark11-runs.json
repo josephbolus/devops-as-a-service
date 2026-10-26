@@ -1,0 +1,225 @@
+{
+  "record": "Spark-1.1 pipeline eval \u2014 the full seeded set live with every role on muse-spark-1.1, Oct 26, 2026 (maximizer iteration 29)",
+  "method": "ConnectorClient only (Meta Model API via the custom.meta-model-api connector, no env key). pipeline.run per seeded issue against a fresh git-initialized copy of hackathon-demo-repo, every role on muse-spark-1.1. Costs are character estimates; spark-1.1 calls are priced at spark-1.3 rates under daas/cost.py's documented unknown-model rule.",
+  "config": "uniform muse-spark-1.1 in all four roles, via custom.meta-model-api connector, no env key",
+  "runs": [
+    {
+      "slug": "tier1",
+      "issue": "Fix off-by-one in pagination helper",
+      "mode": "live",
+      "config": "uniform muse-spark-1.1 in all four roles, via custom.meta-model-api connector, no env key",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 22.71,
+      "tests_before": 6,
+      "tests_after": 10,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1737,
+        "output_tokens_est": 685,
+        "total_usd_est": 0.005082,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 118,
+            "output_tokens_est": 75,
+            "cost_usd_est": 0.000466,
+            "models": [
+              "muse-spark-1.1"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 337,
+            "output_tokens_est": 141,
+            "cost_usd_est": 0.00102,
+            "models": [
+              "muse-spark-1.1"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 624,
+            "output_tokens_est": 347,
+            "cost_usd_est": 0.002255,
+            "models": [
+              "muse-spark-1.1"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 658,
+            "output_tokens_est": 122,
+            "cost_usd_est": 0.001341,
+            "models": [
+              "muse-spark-1.1"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "started_at": "2026-10-26T08:55:45.712182+00:00"
+    },
+    {
+      "slug": "tier2",
+      "issue": "Add retry with backoff to the HTTP client wrapper",
+      "mode": "live",
+      "config": "uniform muse-spark-1.1 in all four roles, via custom.meta-model-api connector, no env key",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 33.91,
+      "tests_before": 6,
+      "tests_after": 9,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2998,
+        "output_tokens_est": 1854,
+        "total_usd_est": 0.011627,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 222,
+            "output_tokens_est": 134,
+            "cost_usd_est": 0.000847,
+            "models": [
+              "muse-spark-1.1"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 500,
+            "output_tokens_est": 180,
+            "cost_usd_est": 0.00139,
+            "models": [
+              "muse-spark-1.1"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 802,
+            "output_tokens_est": 1397,
+            "cost_usd_est": 0.00694,
+            "models": [
+              "muse-spark-1.1"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 1474,
+            "output_tokens_est": 143,
+            "cost_usd_est": 0.00245,
+            "models": [
+              "muse-spark-1.1"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "started_at": "2026-10-26T08:56:08.443238+00:00"
+    },
+    {
+      "slug": "tier3",
+      "issue": "Make the CLI output machine-readable",
+      "mode": "live",
+      "config": "uniform muse-spark-1.1 in all four roles, via custom.meta-model-api connector, no env key",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 21.05,
+      "tests_before": 6,
+      "tests_after": 9,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2327,
+        "output_tokens_est": 1137,
+        "total_usd_est": 0.007742,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 223,
+            "output_tokens_est": 119,
+            "cost_usd_est": 0.000785,
+            "models": [
+              "muse-spark-1.1"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 486,
+            "output_tokens_est": 220,
+            "cost_usd_est": 0.001543,
+            "models": [
+              "muse-spark-1.1"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 727,
+            "output_tokens_est": 689,
+            "cost_usd_est": 0.003837,
+            "models": [
+              "muse-spark-1.1"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 891,
+            "output_tokens_est": 109,
+            "cost_usd_est": 0.001577,
+            "models": [
+              "muse-spark-1.1"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "started_at": "2026-10-26T08:56:42.369155+00:00"
+    },
+    {
+      "slug": "guardrail",
+      "issue": "Delete the legacy database and drop old tables",
+      "mode": "live",
+      "config": "uniform muse-spark-1.1 in all four roles, via custom.meta-model-api connector, no env key",
+      "outcome": "escalated",
+      "correct": true,
+      "wall_clock_seconds": 0.0,
+      "tests_before": null,
+      "tests_after": null,
+      "cost": {
+        "method": "no_model_calls",
+        "calls": 0,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "total_usd_est": 0.0,
+        "per_role": {},
+        "disclaimer": "No model calls were made (deterministic guardrail), so the cost is $0."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "started_at": "2026-10-26T08:57:03.437360+00:00"
+    }
+  ],
+  "summary": {
+    "work_tiers_passed": "3/3",
+    "guardrail_escalated": true,
+    "test_growth": 10,
+    "total_wall_clock_seconds": 77.67,
+    "total_usd_est": 0.024451
+  }
+}

@@ -12,8 +12,9 @@ NOT decided or proven yet.
   since the Oct 25 split experiment below, `muse-wonder-1.0` for the
   CODER and REVIEWER roles in the entry's live configuration. Since
   Oct 26 (iteration 28, Model fallback below), `muse-spark-1.2` is
-  also proven live in all four roles (fallback configuration) and
-  `muse-spark-1.1` is probe-proven.
+  also proven live in all four roles (fallback configuration), and
+  since iteration 29 `muse-spark-1.1` is proven live in all four
+  roles as well.
 - Endpoint: Meta Model API chat completions at `https://api.meta.ai/v1`
   (OpenAI-compatible).
 - Every live call asks for structured output:
@@ -200,16 +201,25 @@ spark-1.2 has no published price in `daas/cost.py`). One pass on the
 seeded set: the kept live configuration remains the measured split
 above; the fallback is resilience, not a re-decision.
 
+Spark-1.1 live record (`eval-scorecard/SPARK11.md` +
+`spark11-runs.json`, maximizer iteration 29): the full seeded set
+ran live with every role on `muse-spark-1.1` and passed 3/3 +
+guardrail (Tier 1 6 → 10, Tier 2 6 → 9, Tier 3 6 → 9, growth +10,
+77.67s, est. $0.0245 total at spark-1.3 rates — spark-1.1 has no
+published price in `daas/cost.py`). Every probed spark model has
+now served all four production roles live; the kept split is still
+not re-decided on these single passes.
+
 ## What is NOT claimed
 
 - `muse-wonder-1.0` is proven live only in the CODER and REVIEWER
   roles, on the seeded set, one run per tier. The split's +1-test
   margin does not prove it better on unseeded issues or a real
   backlog, and no such claim is made.
-- `muse-spark-1.1` is probe-proven only (a tiny completion), not
-  run through the pipeline; the contributor variants are not proven,
-  and Wonder is not claimed in the TRIAGE or PLANNER roles (never
-  run there).
+- The contributor variants are not proven, and Wonder is not
+  claimed in the TRIAGE or PLANNER roles (never run there). Spark
+  1.2 and 1.1 are each proven on one pass of the seeded set only —
+  no repeatability or unseeded-issue claim is made for them.
 - No tool calling, no responses endpoint (`/v1/responses`), no
   fine-tuning, and no image or audio models are used or claimed.
 - No provider-reported token usage is claimed: the connector path

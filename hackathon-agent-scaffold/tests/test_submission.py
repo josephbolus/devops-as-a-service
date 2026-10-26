@@ -61,7 +61,7 @@ class TestSubmissionDraft(unittest.TestCase):
         for token in ("3/3", "94.65s", "6 → 9", "6 → 10", "6 → 8",
                       "#16", "#17", "#18", "50 min saved",
                       "216.7", "+10 vs +9", "209.14s", "16.84s",
-                      "245/245"):
+                      "249/249"):
             self.assertIn(token, self.text, token)
 
     def test_current_evidence_included(self):
@@ -80,7 +80,9 @@ class TestSubmissionDraft(unittest.TestCase):
                       "REGRESSION_GATE2.md", "TARGET_GATE.md",
                       "issue-target", "MODEL_FALLBACK.md",
                       "model-fallback-runs.json", "fallback_stats",
-                      "muse-spark-1.2", "88.59s"):
+                      "muse-spark-1.2", "88.59s",
+                      "SPARK11.md", "spark11-runs.json",
+                      "muse-spark-1.1", "77.67s"):
             self.assertIn(token, self.text, token)
         self.assertNotIn("one run each", self.text)
 
