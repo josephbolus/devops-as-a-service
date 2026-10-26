@@ -96,7 +96,16 @@ under the same contest configuration
 passed issue, char estimate) (`eval-scorecard/EXPANSION_BATCH3.md`,
 `eval-scorecard/expansion-batch3-runs.json`). The work set is now
 12 seeded issues — the full researched spec, all nine expansion
-families measured live. The contest configuration's record is not
+families measured live. The expansion set has since been replicated:
+`run_expansion_replicate_eval.py` ran all nine issues a second time
+LIVE through the pipeline under the same contest configuration and
+passed 9/9 again (24 → 29 / 24 → 28 / 24 → 27 / 24 → 28 / 24 → 27 /
+24 → 27 / 24 → 27 / 24 → 27 / 24 → 27; growth +31 vs the first
+pass's +32 — per-issue growth identical except deploy-token, +3 vs
++4; 201.76s; est. $0.0303 per passed issue, char estimate), so the
+expansion record is now two direct pipeline passes, 18/18
+issue-runs (`eval-scorecard/EXPANSION_REPLICATE.md`,
+`eval-scorecard/expansion-replicate-runs.json`). The contest configuration's record is not
 seeded-set-only either
 (`eval-scorecard/FRONTIER_GENERALIZATION.md`,
 `eval-scorecard/frontier-generalization-runs.json`). The worked impact model
@@ -106,7 +115,7 @@ the middle volume, at an estimated API cost of $0.0254 per passed
 issue — $0.0305 per senior-hour saved (`eval-scorecard/COST_ACCOUNTING.md`;
 character-count estimate, not billing data, because the API does not
 expose usage on the connector path). Honest limits: n=3 original seeded issues
-(three attempts each) plus 9 expansion issues (one live pass each) plus three generalization issues on three
+(three attempts each) plus 9 expansion issues (two direct live pipeline passes each) plus three generalization issues on three
 different unseen codebases (all three issues have since been run
 under two configurations — split and all-frontier — and passed
 under both),
@@ -334,7 +343,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 331/331, demo repo 24/24, generalization
+- Suites at drafting: scaffold 336/336, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

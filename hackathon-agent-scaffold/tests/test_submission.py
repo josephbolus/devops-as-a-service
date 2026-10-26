@@ -61,7 +61,7 @@ class TestSubmissionDraft(unittest.TestCase):
         for token in ("3/3", "94.65s", "6 → 9", "6 → 10", "6 → 8",
                       "#16", "#17", "#18", "50 min saved",
                       "216.7", "+10 vs +9", "209.14s", "16.84s",
-                      "331/331"):
+                      "336/336"):
             self.assertIn(token, self.text, token)
 
     def test_current_evidence_included(self):
@@ -111,6 +111,9 @@ class TestSubmissionDraft(unittest.TestCase):
                       "expansion-batch2-runs.json", "78.09s",
                       "$0.0322", "EXPANSION_BATCH3.md",
                       "expansion-batch3-runs.json", "72.86s",
+                      "EXPANSION_REPLICATE.md",
+                      "expansion-replicate-runs.json", "201.76s",
+                      "$0.0303", "18/18",
                       "$0.0308", "FALLBACK_REFRESH.md", "24 → 25"):
             self.assertIn(token, self.text, token)
         self.assertNotIn("one run each", self.text)
