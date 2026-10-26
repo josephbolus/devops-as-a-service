@@ -229,6 +229,13 @@ The tour has since run live under the contest configuration
 self-guided (6 → 8 / 6 → 12 / 6 → 8, combined +10, 134.23s, est.
 $0.1103), the guardrail stop escalated with zero model calls, and
 every card records muse-wonder-1.0 on every role.
+That tour ran at the pre-expansion 6-test baseline; the tour has
+since been re-run live at the current 24-test baseline judges
+will actually see (`eval-scorecard/FRONTIER_JUDGE_CURRENT.md`,
+`frontier-judge-current.json`): all three work issues passed
+self-guided again (24 → 26 / 24 → 30 / 24 → 27, combined +11,
+156.09s, est. $0.1090), the guardrail stop escalated with zero
+model calls, and every card records muse-wonder-1.0 on every role.
 Video status: not yet recorded.
 
 ## Technical depth & execution (20%)
@@ -298,7 +305,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 308/308, demo repo 24/24, generalization
+- Suites at drafting: scaffold 316/316, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

@@ -123,6 +123,24 @@ The tour is recorded as measured in
 `frontier-judge-live-tour.json`, pinned by
 `tests/test_frontier_judge_live_tour.py`; it was not re-run.
 
+## Live tour at the current baseline (Oct 26, iteration 40)
+
+That tour ran at the pre-expansion 6-test baseline. Iterations
+35–37 tripled the demo repo to a 24-test baseline, so
+`hackathon-agent-scaffold/run_frontier_judge_current_eval.py`
+re-ran the same one-click tour live under the same contest
+configuration at the baseline judges will actually see.
+Measured: Tier 1 **pass** (tests 24 → 26, 20.27s, est. $0.0170),
+Tier 2 **pass** (24 → 30, 113.70s, est. $0.0615), Tier 3 **pass**
+(24 → 27, 22.08s, est. $0.0305), and the guardrail stop
+**escalated** with zero model calls — work issues 3/3, combined
+delta +11, 28 captions, total 156.09s, combined card cost est.
+$0.1090 (char estimates at wonder prices). Every work stop's card
+records `muse-wonder-1.0` on every role. Recorded in
+`eval-scorecard/FRONTIER_JUDGE_CURRENT.md` +
+`frontier-judge-current.json`, pinned by
+`tests/test_frontier_judge_current.py`; it was not re-run.
+
 ## Pinned by tests
 
 `tests/test_judge_tour.py` pins the tour record (summary recomputed
@@ -132,6 +150,9 @@ way, including the Tier 2 503 failure row.
 `tests/test_frontier_judge_live_tour.py` pins the frontier live
 tour record (all-frontier models on every card, summary recomputed,
 doc == runner render, prior split tour agreeing with its record).
+`tests/test_frontier_judge_current.py` pins the current-baseline
+tour the same way (tests_before 24 on every work card, prior
+frontier tour agreeing with its iteration-34 record).
 `tests/test_judge_mode.py` (8 tests): a caption exists and is
 event-derived for every stage (including blocked-guardrail and
 failing-tests variants), the results card's pass/fail/delta/link
