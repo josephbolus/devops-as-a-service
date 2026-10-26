@@ -94,10 +94,21 @@ class DemoUiServer(unittest.TestCase):
     def test_issues_catalog(self):
         data = _http(self.port, "/api/issues")
         issues = {i["id"]: i for i in data["issues"]}
-        self.assertEqual(sorted(issues), ["guardrail", "tier1", "tier2", "tier3"])
+        self.assertEqual(sorted(issues), [
+            "alert_threshold", "api_pagination", "config_drift",
+            "connection_pool", "deploy_token", "guardrail",
+            "health_check", "log_rotation", "retry_storm",
+            "scheduled_job", "tier1", "tier2", "tier3"])
         self.assertEqual(issues["tier1"]["title"],
                          "Fix off-by-one in pagination helper")
         self.assertEqual(issues["guardrail"]["kind"], "guardrail")
+        # Expansion issues are work issues, labeled live-only (no
+        # MockClient canned answers exist for them).
+        for stem in ("config_drift", "health_check", "alert_threshold",
+                     "connection_pool", "log_rotation", "scheduled_job",
+                     "retry_storm", "deploy_token", "api_pagination"):
+            self.assertEqual(issues[stem]["kind"], "work", stem)
+            self.assertIn("live only", issues[stem]["label"], stem)
 
     def test_guardrail_endpoint_escalates_destructive_text(self):
         data = _http(self.port, "/api/guardrail",
