@@ -1,0 +1,740 @@
+{
+  "record": "Frontier Judge Mode live tour of the nine expansion issues \u2014 DevOps as a Service, Oct 26, 2026 (maximizer iteration 41)",
+  "config": "live via Judge Mode tour (POST /api/judge/run, mode=live, all nine expansion issues), all-frontier (contest config): TRIAGE/PLANNER/CODER/REVIEWER=muse-wonder-1.0, muse-spark-1.3 configured only as availability fallback, Meta Model API through the custom.meta-model-api connector, no env key",
+  "model": "muse-wonder-1.0",
+  "fallback_model": "muse-spark-1.3",
+  "prior_direct_pipeline": {
+    "source": "eval-scorecard/expansion-batch{1,2,3}-runs.json (maximizer iterations 35-37, direct pipeline.run, all-frontier)",
+    "batches": [
+      {
+        "issues_passed": "3/3",
+        "test_growth": 12,
+        "total_wall_clock_seconds": 60.85,
+        "total_usd_est": 0.077584,
+        "cost_per_passed_issue": 0.025861
+      },
+      {
+        "issues_passed": "3/3",
+        "test_growth": 10,
+        "total_wall_clock_seconds": 78.09,
+        "total_usd_est": 0.096616,
+        "cost_per_passed_issue": 0.032205
+      },
+      {
+        "issues_passed": "3/3",
+        "test_growth": 10,
+        "total_wall_clock_seconds": 72.86,
+        "total_usd_est": 0.092444,
+        "cost_per_passed_issue": 0.030815
+      }
+    ],
+    "issues_passed": "9/9",
+    "test_growth": 32,
+    "total_usd_est": 0.266644,
+    "total_wall_clock_seconds": 211.8
+  },
+  "runs": [
+    {
+      "issue_id": "config_drift",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "started_at": "2026-10-26T18:58:05.670903+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 36
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 5262
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 9696
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 22264
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "24 \u2192 28 (+4)",
+          "elapsed_ms": 22427
+        },
+        {
+          "stage": "review",
+          "status": "pass",
+          "detail": "approve",
+          "elapsed_ms": 25120
+        },
+        {
+          "stage": "done",
+          "status": "pass",
+          "detail": "PR-ready",
+          "elapsed_ms": 25121
+        }
+      ],
+      "tests_before": 24,
+      "tests_after": 28,
+      "tests_delta": 4,
+      "captions": 9,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 25121,
+      "cost_total_usd_est": 0.025412,
+      "cost_method": "char_estimate",
+      "cost_calls": 4,
+      "cost_per_role_models": {
+        "TRIAGE": [
+          "muse-wonder-1.0"
+        ],
+        "PLANNER": [
+          "muse-wonder-1.0"
+        ],
+        "CODER": [
+          "muse-wonder-1.0"
+        ],
+        "REVIEWER": [
+          "muse-wonder-1.0"
+        ]
+      },
+      "links_live_prs": 3,
+      "error": null
+    },
+    {
+      "issue_id": "health_check",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "started_at": "2026-10-26T18:58:31.280702+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 31
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 4883
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 11261
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 26816
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "24 \u2192 28 (+4)",
+          "elapsed_ms": 27046
+        },
+        {
+          "stage": "review",
+          "status": "pass",
+          "detail": "approve",
+          "elapsed_ms": 39475
+        },
+        {
+          "stage": "done",
+          "status": "pass",
+          "detail": "PR-ready",
+          "elapsed_ms": 39475
+        }
+      ],
+      "tests_before": 24,
+      "tests_after": 28,
+      "tests_delta": 4,
+      "captions": 9,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 39475,
+      "cost_total_usd_est": 0.031852,
+      "cost_method": "char_estimate",
+      "cost_calls": 4,
+      "cost_per_role_models": {
+        "TRIAGE": [
+          "muse-wonder-1.0"
+        ],
+        "PLANNER": [
+          "muse-wonder-1.0"
+        ],
+        "CODER": [
+          "muse-wonder-1.0"
+        ],
+        "REVIEWER": [
+          "muse-wonder-1.0"
+        ]
+      },
+      "links_live_prs": 3,
+      "error": null
+    },
+    {
+      "issue_id": "alert_threshold",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "started_at": "2026-10-26T18:59:10.981928+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 43
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 2663
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 6082
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 11888
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "24 \u2192 27 (+3)",
+          "elapsed_ms": 12018
+        },
+        {
+          "stage": "review",
+          "status": "pass",
+          "detail": "approve",
+          "elapsed_ms": 15611
+        },
+        {
+          "stage": "done",
+          "status": "pass",
+          "detail": "PR-ready",
+          "elapsed_ms": 15611
+        }
+      ],
+      "tests_before": 24,
+      "tests_after": 27,
+      "tests_delta": 3,
+      "captions": 9,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 15611,
+      "cost_total_usd_est": 0.017892,
+      "cost_method": "char_estimate",
+      "cost_calls": 4,
+      "cost_per_role_models": {
+        "TRIAGE": [
+          "muse-wonder-1.0"
+        ],
+        "PLANNER": [
+          "muse-wonder-1.0"
+        ],
+        "CODER": [
+          "muse-wonder-1.0"
+        ],
+        "REVIEWER": [
+          "muse-wonder-1.0"
+        ]
+      },
+      "links_live_prs": 3,
+      "error": null
+    },
+    {
+      "issue_id": "connection_pool",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "started_at": "2026-10-26T18:59:27.067835+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 52
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 4064
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 8221
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 15924
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "24 \u2192 29 (+5)",
+          "elapsed_ms": 16035
+        },
+        {
+          "stage": "review",
+          "status": "pass",
+          "detail": "approve",
+          "elapsed_ms": 19317
+        },
+        {
+          "stage": "done",
+          "status": "pass",
+          "detail": "PR-ready",
+          "elapsed_ms": 19317
+        }
+      ],
+      "tests_before": 24,
+      "tests_after": 29,
+      "tests_delta": 5,
+      "captions": 9,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 19317,
+      "cost_total_usd_est": 0.034628,
+      "cost_method": "char_estimate",
+      "cost_calls": 4,
+      "cost_per_role_models": {
+        "TRIAGE": [
+          "muse-wonder-1.0"
+        ],
+        "PLANNER": [
+          "muse-wonder-1.0"
+        ],
+        "CODER": [
+          "muse-wonder-1.0"
+        ],
+        "REVIEWER": [
+          "muse-wonder-1.0"
+        ]
+      },
+      "links_live_prs": 3,
+      "error": null
+    },
+    {
+      "issue_id": "log_rotation",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "started_at": "2026-10-26T18:59:46.653054+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 21
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 6889
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 12859
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 36523
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "24 \u2192 27 (+3)",
+          "elapsed_ms": 36678
+        },
+        {
+          "stage": "review",
+          "status": "pass",
+          "detail": "approve",
+          "elapsed_ms": 41386
+        },
+        {
+          "stage": "done",
+          "status": "pass",
+          "detail": "PR-ready",
+          "elapsed_ms": 41386
+        }
+      ],
+      "tests_before": 24,
+      "tests_after": 27,
+      "tests_delta": 3,
+      "captions": 9,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 41386,
+      "cost_total_usd_est": 0.044392,
+      "cost_method": "char_estimate",
+      "cost_calls": 4,
+      "cost_per_role_models": {
+        "TRIAGE": [
+          "muse-wonder-1.0"
+        ],
+        "PLANNER": [
+          "muse-wonder-1.0"
+        ],
+        "CODER": [
+          "muse-wonder-1.0"
+        ],
+        "REVIEWER": [
+          "muse-wonder-1.0"
+        ]
+      },
+      "links_live_prs": 3,
+      "error": null
+    },
+    {
+      "issue_id": "scheduled_job",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "started_at": "2026-10-26T19:00:28.344243+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 34
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 3578
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 8707
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 16599
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "24 \u2192 28 (+4)",
+          "elapsed_ms": 16729
+        },
+        {
+          "stage": "review",
+          "status": "pass",
+          "detail": "approve",
+          "elapsed_ms": 21225
+        },
+        {
+          "stage": "done",
+          "status": "pass",
+          "detail": "PR-ready",
+          "elapsed_ms": 21226
+        }
+      ],
+      "tests_before": 24,
+      "tests_after": 28,
+      "tests_delta": 4,
+      "captions": 9,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 21226,
+      "cost_total_usd_est": 0.035984,
+      "cost_method": "char_estimate",
+      "cost_calls": 4,
+      "cost_per_role_models": {
+        "TRIAGE": [
+          "muse-wonder-1.0"
+        ],
+        "PLANNER": [
+          "muse-wonder-1.0"
+        ],
+        "CODER": [
+          "muse-wonder-1.0"
+        ],
+        "REVIEWER": [
+          "muse-wonder-1.0"
+        ]
+      },
+      "links_live_prs": 3,
+      "error": null
+    },
+    {
+      "issue_id": "retry_storm",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "started_at": "2026-10-26T19:00:49.985294+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 82
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 4036
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 7882
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 19002
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "24 \u2192 27 (+3)",
+          "elapsed_ms": 19191
+        },
+        {
+          "stage": "review",
+          "status": "pass",
+          "detail": "approve",
+          "elapsed_ms": 25993
+        },
+        {
+          "stage": "done",
+          "status": "pass",
+          "detail": "PR-ready",
+          "elapsed_ms": 25994
+        }
+      ],
+      "tests_before": 24,
+      "tests_after": 27,
+      "tests_delta": 3,
+      "captions": 9,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 25994,
+      "cost_total_usd_est": 0.033416,
+      "cost_method": "char_estimate",
+      "cost_calls": 4,
+      "cost_per_role_models": {
+        "TRIAGE": [
+          "muse-wonder-1.0"
+        ],
+        "PLANNER": [
+          "muse-wonder-1.0"
+        ],
+        "CODER": [
+          "muse-wonder-1.0"
+        ],
+        "REVIEWER": [
+          "muse-wonder-1.0"
+        ]
+      },
+      "links_live_prs": 3,
+      "error": null
+    },
+    {
+      "issue_id": "deploy_token",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "started_at": "2026-10-26T19:01:16.101195+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 44
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 3812
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 7721
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 18083
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "24 \u2192 27 (+3)",
+          "elapsed_ms": 18196
+        },
+        {
+          "stage": "review",
+          "status": "pass",
+          "detail": "approve",
+          "elapsed_ms": 23451
+        },
+        {
+          "stage": "done",
+          "status": "pass",
+          "detail": "PR-ready",
+          "elapsed_ms": 23452
+        }
+      ],
+      "tests_before": 24,
+      "tests_after": 27,
+      "tests_delta": 3,
+      "captions": 9,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 23452,
+      "cost_total_usd_est": 0.029892,
+      "cost_method": "char_estimate",
+      "cost_calls": 4,
+      "cost_per_role_models": {
+        "TRIAGE": [
+          "muse-wonder-1.0"
+        ],
+        "PLANNER": [
+          "muse-wonder-1.0"
+        ],
+        "CODER": [
+          "muse-wonder-1.0"
+        ],
+        "REVIEWER": [
+          "muse-wonder-1.0"
+        ]
+      },
+      "links_live_prs": 3,
+      "error": null
+    },
+    {
+      "issue_id": "api_pagination",
+      "mode": "live",
+      "judge_mode": true,
+      "status": "done",
+      "overall": "pass",
+      "started_at": "2026-10-26T19:01:39.701685+00:00",
+      "stages": [
+        {
+          "stage": "guardrail",
+          "status": "pass",
+          "detail": "allowed",
+          "elapsed_ms": 30
+        },
+        {
+          "stage": "triage",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 2673
+        },
+        {
+          "stage": "plan",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 7190
+        },
+        {
+          "stage": "code",
+          "status": "pass",
+          "detail": "completed",
+          "elapsed_ms": 16842
+        },
+        {
+          "stage": "tests",
+          "status": "pass",
+          "detail": "24 \u2192 27 (+3)",
+          "elapsed_ms": 16963
+        },
+        {
+          "stage": "review",
+          "status": "pass",
+          "detail": "approve",
+          "elapsed_ms": 19929
+        },
+        {
+          "stage": "done",
+          "status": "pass",
+          "detail": "PR-ready",
+          "elapsed_ms": 19929
+        }
+      ],
+      "tests_before": 24,
+      "tests_after": 27,
+      "tests_delta": 3,
+      "captions": 9,
+      "all_captions_judge_mode": true,
+      "total_elapsed_ms": 19929,
+      "cost_total_usd_est": 0.02522,
+      "cost_method": "char_estimate",
+      "cost_calls": 4,
+      "cost_per_role_models": {
+        "TRIAGE": [
+          "muse-wonder-1.0"
+        ],
+        "PLANNER": [
+          "muse-wonder-1.0"
+        ],
+        "CODER": [
+          "muse-wonder-1.0"
+        ],
+        "REVIEWER": [
+          "muse-wonder-1.0"
+        ]
+      },
+      "links_live_prs": 3,
+      "error": null
+    }
+  ],
+  "summary": {
+    "runs": 9,
+    "work_passed": 9,
+    "work_total": 9,
+    "total_tests_delta": 32,
+    "total_captions": 81,
+    "cost_total_usd_est": 0.278688,
+    "total_elapsed_ms": 231511
+  }
+}

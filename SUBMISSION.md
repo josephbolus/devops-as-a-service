@@ -236,6 +236,15 @@ will actually see (`eval-scorecard/FRONTIER_JUDGE_CURRENT.md`,
 self-guided again (24 → 26 / 24 → 30 / 24 → 27, combined +11,
 156.09s, est. $0.1090), the guardrail stop escalated with zero
 model calls, and every card records muse-wonder-1.0 on every role.
+Until iteration 41 the console catalog exposed only those original
+issues; it now includes all nine expansion issues (labeled
+live-only — MockClient has no canned answers for them), and the
+expansion tour has run live self-guided under the same contest
+configuration (`eval-scorecard/FRONTIER_JUDGE_EXPANSION.md`,
+`frontier-judge-expansion.json`): 9/9 passed at the 24-test
+baseline (combined +32, 81 captions, 231.51s, est. $0.2787), every
+card records muse-wonder-1.0 on every role — Judge Mode live
+coverage is now the full 12-work-issue seeded set.
 Video status: not yet recorded.
 
 ## Technical depth & execution (20%)
@@ -305,7 +314,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 316/316, demo repo 24/24, generalization
+- Suites at drafting: scaffold 324/324, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

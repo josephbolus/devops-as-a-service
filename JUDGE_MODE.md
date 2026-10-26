@@ -141,6 +141,29 @@ records `muse-wonder-1.0` on every role. Recorded in
 `frontier-judge-current.json`, pinned by
 `tests/test_frontier_judge_current.py`; it was not re-run.
 
+## Live tour of the expansion issues (Oct 26, iteration 41)
+
+Until this iteration the console catalog exposed only the original
+four issues, so no judge could run an expansion scenario through
+Judge Mode at all. `demo_ui.ISSUE_CATALOG` now includes all nine
+expansion issues, labeled live-only (MockClient has no canned
+answers for them), and
+`hackathon-agent-scaffold/run_frontier_judge_expansion_eval.py`
+exercised the one-click endpoint over real HTTP in live mode for
+all nine under the all-frontier contest configuration at the
+24-test baseline. Measured: **9/9 passed** — config_drift
+24 → 28, health_check 24 → 28, alert_threshold 24 → 27,
+connection_pool 24 → 29, log_rotation 24 → 27, scheduled_job
+24 → 28, retry_storm 24 → 27, deploy_token 24 → 27,
+api_pagination 24 → 27 — combined delta +32, 81 captions, total
+231.51s, combined card cost est. $0.2787 (char estimates at wonder
+prices). Every card records `muse-wonder-1.0` on every role.
+Judge Mode's live coverage is now the full 12-work-issue set
+(original tiers at iteration 40 plus these nine). Recorded in
+`eval-scorecard/FRONTIER_JUDGE_EXPANSION.md` +
+`frontier-judge-expansion.json`, pinned by
+`tests/test_frontier_judge_expansion.py`; it was not re-run.
+
 ## Pinned by tests
 
 `tests/test_judge_tour.py` pins the tour record (summary recomputed
@@ -153,6 +176,10 @@ doc == runner render, prior split tour agreeing with its record).
 `tests/test_frontier_judge_current.py` pins the current-baseline
 tour the same way (tests_before 24 on every work card, prior
 frontier tour agreeing with its iteration-34 record).
+`tests/test_frontier_judge_expansion.py` pins the expansion tour
+the same way (all nine cards at tests_before 24, every-role
+frontier models, prior direct-pipeline record agreeing with the
+iteration 35–37 batch records, catalog exposing all 13 issues).
 `tests/test_judge_mode.py` (8 tests): a caption exists and is
 event-derived for every stage (including blocked-guardrail and
 failing-tests variants), the results card's pass/fail/delta/link
