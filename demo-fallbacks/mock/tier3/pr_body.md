@@ -14,7 +14,13 @@ Closes: Make the CLI output machine-readable
 - tests/test_cli_json.py
 
 ### Tests
-All tests pass (6 → 8 discovered).
+All tests pass (24 → 26 discovered).
+
+### Regression gate
+Verified: suite fails on baseline production code, so the new tests demonstrate the claimed change.
+
+### Issue-target gate
+Not applicable: issue names no existing function, or no production code changed — nothing to verify the target against.
 
 ### Reviewer
 approve: Diff limited to expected files; regression test added.

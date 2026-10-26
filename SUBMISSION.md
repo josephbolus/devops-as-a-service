@@ -245,6 +245,16 @@ configuration (`eval-scorecard/FRONTIER_JUDGE_EXPANSION.md`,
 baseline (combined +32, 81 captions, 231.51s, est. $0.2787), every
 card records muse-wonder-1.0 on every role — Judge Mode live
 coverage is now the full 12-work-issue seeded set.
+The recording-day fallback package itself was refreshed Oct 26
+(`eval-scorecard/FALLBACK_REFRESH.md`): its mock end states were
+generated Oct 25 at the pre-expansion 6-test baseline and no longer
+matched the demo — they now regenerate deterministically at the
+current baseline (Tier 1 24 → 25, Tier 2 24 → 27, Tier 3 24 → 26,
+guardrail escalated, PR bodies carrying the regression-gate and
+issue-target-gate sections, mock cost $0.00), and every stale
+"Nov 2 recording" reference in the package and READMEs now reads
+Thu Oct 29. This is mock packaging consistency, not model
+performance, and the live PR captures stand unaltered.
 Video status: not yet recorded.
 
 ## Technical depth & execution (20%)
@@ -314,7 +324,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 324/324, demo repo 24/24, generalization
+- Suites at drafting: scaffold 326/326, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

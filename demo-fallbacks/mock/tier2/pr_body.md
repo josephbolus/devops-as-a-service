@@ -13,7 +13,13 @@ Closes: Add retry with backoff to the HTTP client wrapper
 - tests/test_http_retry.py
 
 ### Tests
-All tests pass (6 → 9 discovered).
+All tests pass (24 → 27 discovered).
+
+### Regression gate
+Verified: suite fails on baseline production code, so the new tests demonstrate the claimed change.
+
+### Issue-target gate
+Verified: the fix changes the issue's named target(s): get.
 
 ### Reviewer
 approve: Diff limited to expected files; regression test added.

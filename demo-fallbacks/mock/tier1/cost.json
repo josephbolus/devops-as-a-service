@@ -1,0 +1,90 @@
+{
+  "summary": {
+    "method": "mock_no_api_call",
+    "calls": 4,
+    "input_tokens_est": 0,
+    "output_tokens_est": 0,
+    "total_usd_est": 0.0,
+    "per_role": {
+      "TRIAGE": {
+        "calls": 1,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "models": [
+          "mock"
+        ]
+      },
+      "PLANNER": {
+        "calls": 1,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "models": [
+          "mock"
+        ]
+      },
+      "CODER": {
+        "calls": 1,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "models": [
+          "mock"
+        ]
+      },
+      "REVIEWER": {
+        "calls": 1,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "models": [
+          "mock"
+        ]
+      }
+    },
+    "disclaimer": "Mock run: no API call was made, so the cost is $0."
+  },
+  "calls": [
+    {
+      "role": "TRIAGE",
+      "model": "mock",
+      "method": "mock_no_api_call",
+      "input_chars": 472,
+      "output_chars": 169,
+      "input_tokens_est": 0,
+      "output_tokens_est": 0,
+      "cost_usd_est": 0.0
+    },
+    {
+      "role": "PLANNER",
+      "model": "mock",
+      "method": "mock_no_api_call",
+      "input_chars": 1489,
+      "output_chars": 228,
+      "input_tokens_est": 0,
+      "output_tokens_est": 0,
+      "cost_usd_est": 0.0
+    },
+    {
+      "role": "CODER",
+      "model": "mock",
+      "method": "mock_no_api_call",
+      "input_chars": 2161,
+      "output_chars": 514,
+      "input_tokens_est": 0,
+      "output_tokens_est": 0,
+      "cost_usd_est": 0.0
+    },
+    {
+      "role": "REVIEWER",
+      "model": "mock",
+      "method": "mock_no_api_call",
+      "input_chars": 2015,
+      "output_chars": 89,
+      "input_tokens_est": 0,
+      "output_tokens_est": 0,
+      "cost_usd_est": 0.0
+    }
+  ]
+}

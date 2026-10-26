@@ -6,10 +6,74 @@
     "tests/test_http_retry.py"
   ],
   "tests_ok": true,
-  "tests_before": 6,
-  "tests_after": 9,
+  "tests_before": 24,
+  "tests_after": 27,
   "unexpected_files": [],
-  "test_log_tail": "----------------------------------------------------------------------\nRan 9 tests in 0.001s\n\nOK",
+  "test_log_tail": "----------------------------------------------------------------------\nRan 27 tests in 0.003s\n\nOK",
+  "regression_gate": {
+    "applicable": true,
+    "passed": true,
+    "tests_ok_on_baseline": false,
+    "tests_on_baseline": 27,
+    "reason": "suite fails on baseline production code, so the new tests demonstrate the claimed change"
+  },
+  "target_gate": {
+    "applicable": true,
+    "passed": true,
+    "mentioned_targets": [
+      "get"
+    ],
+    "changed_functions": [
+      "get"
+    ],
+    "reason": "the fix changes the issue's named target(s): get"
+  },
+  "cost": {
+    "method": "mock_no_api_call",
+    "calls": 4,
+    "input_tokens_est": 0,
+    "output_tokens_est": 0,
+    "total_usd_est": 0.0,
+    "per_role": {
+      "TRIAGE": {
+        "calls": 1,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "models": [
+          "mock"
+        ]
+      },
+      "PLANNER": {
+        "calls": 1,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "models": [
+          "mock"
+        ]
+      },
+      "CODER": {
+        "calls": 1,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "models": [
+          "mock"
+        ]
+      },
+      "REVIEWER": {
+        "calls": 1,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "cost_usd_est": 0.0,
+        "models": [
+          "mock"
+        ]
+      }
+    },
+    "disclaimer": "Mock run: no API call was made, so the cost is $0."
+  },
   "issue": "Add retry with backoff to the HTTP client wrapper",
   "changed_unique": [
     "app/http_client.py",

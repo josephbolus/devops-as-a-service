@@ -1,9 +1,11 @@
 # Demo fallback package — recording-day end states
 
-The demo script (Nov 2 recording) has three fallbacks. This package is
+The demo script (Thu Oct 29, 2026 recording) has three fallbacks. This package is
 the artifact each fallback points at, so no fallback depends on memory,
-a live network, or re-running anything under pressure. Everything here
-was generated and verified on Oct 25, 2026, and is pinned by
+a live network, or re-running anything under pressure. The live half
+was captured Oct 25, 2026; the mock half was refreshed Oct 26, 2026 at
+the current 24-test demo baseline (see
+`../eval-scorecard/FALLBACK_REFRESH.md`), and the package is pinned by
 `hackathon-agent-scaffold/tests/test_demo_fallbacks.py`.
 
 ## What's here
@@ -11,7 +13,7 @@ was generated and verified on Oct 25, 2026, and is pinned by
 | Path | What it is | Honesty label |
 |---|---|---|
 | `live/tier1-pr16/` | End state of a **real** run: Meta Model API (via the secure connector) → triage/planner/coder/reviewer → branch → PR #16 opened. `pr_body.md` and `diff.patch` are captured verbatim from GitHub; `pr.json` + `PROVENANCE.md` record the source. Tests 6 → 8 discovered, reviewer approved, diff limited to the two planned files. | LIVE |
-| `mock/tier1/`, `mock/tier2/`, `mock/tier3/` | MockClient end states for all three eval tiers: `pr_body.md`, `result.json` (passed, test counts 6→7 / 6→9 / 6→8, no unexpected files), and `diff.patch` vs the pristine demo repo. | MOCK — say so if shown |
+| `mock/tier1/`, `mock/tier2/`, `mock/tier3/` | MockClient end states for all three eval tiers, refreshed Oct 26, 2026: `pr_body.md` (now with the regression-gate and issue-target-gate sections), `result.json` (passed, test counts 24→25 / 24→27 / 24→26, no unexpected files), `cost.json` ($0.00, mock — no API call), and `diff.patch` vs the pristine demo repo. | MOCK — say so if shown |
 | `mock/guardrail/` | Mock guardrail end state: `escalation.md` (structured human approval request: no PR opened, what the pipeline did NOT do, three human options, blank decision record) + `approval_request.json` (the same request, machine-readable) + `result.json` with the escalation reason. | MOCK — the escalation logic is deterministic code, identical in live mode |
 | `mock/manifest.json` | Machine-readable summary of the four mock runs. | — |
 
@@ -40,7 +42,7 @@ cd hackathon-agent-scaffold && python3 generate_demo_fallbacks.py
 The timed operator sheet for recording day (beats, console actions,
 fallback thresholds, two-take log) is `../DEMO_RUN_OF_SHOW.md`.
 
-## Rehearsal checklist (do once before Nov 2)
+## Rehearsal checklist (do once before Oct 29)
 
 - [ ] Open every file above once at 125% browser zoom — diff text readable.
 - [ ] Time the fallback-3 walkthrough against the script: it must fit

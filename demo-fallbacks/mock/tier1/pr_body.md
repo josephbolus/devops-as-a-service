@@ -12,7 +12,13 @@ Closes: Fix off-by-one in pagination helper
 - tests/test_pagination_regression.py
 
 ### Tests
-All tests pass (6 → 7 discovered).
+All tests pass (24 → 25 discovered).
+
+### Regression gate
+Verified: suite fails on baseline production code, so the new tests demonstrate the claimed change.
+
+### Issue-target gate
+Verified: the fix changes the issue's named target(s): paginate.
 
 ### Reviewer
 approve: Diff limited to expected files; regression test added.

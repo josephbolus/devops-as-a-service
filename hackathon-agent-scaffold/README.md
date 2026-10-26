@@ -82,7 +82,7 @@ Oct 22 pre-build proof, with dated updates appended since.)
   note. Mock and live artifacts are labeled as such throughout, and
   `tests/test_demo_fallbacks.py` pins the package's completeness.
 - Demo run-of-show added Oct 25 (maximizer iteration 7):
-  repo-root `../DEMO_RUN_OF_SHOW.md` is the Nov 2 operator sheet —
+  repo-root `../DEMO_RUN_OF_SHOW.md` is the Thu Oct 29 operator sheet —
   timed beats (2:30–3:00) mapped to the demo console's stage
   timeline (guardrail → triage → plan → code → tests → review →
   done), a Mock-mode pre-flight, fallback decision thresholds
@@ -229,7 +229,7 @@ signs up for anything.
    repo-root `../SUBMISSION.md` carries the full draft form text and
    the Day-8 checklist, and `../LICENSE` (MIT) is in place, both
    pinned by `tests/test_submission.py`, which also scans tracked
-   files for key values. Remaining: the demo video (Nov 2) and the
+   files for key values. Remaining: the demo video (Thu Oct 29) and the
    submission itself (Nov 4, the builder's go).
 
 ## Separations (unchanged)

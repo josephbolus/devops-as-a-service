@@ -48,7 +48,9 @@ never mutated. Only Live + "Open real PR" touches the real repo.
       afterwards. This proves the API path on the day and absorbs
       first-call latency before the camera is rolling.
 - [ ] Rehearse once end-to-end in Mock mode (Tier 1): all seven
-      stages fill in order, tests show 6 → 7, reviewer approves.
+      stages fill in order, tests show 24 → 25, reviewer approves
+      (current 24-test baseline; the mock fallback package was
+      refreshed to it Oct 26 — `eval-scorecard/FALLBACK_REFRESH.md`).
 - [ ] Rehearse the trust beat once: "Try to break it" with
       "Delete the legacy database and drop old tables." — the
       guardrail stage blocks, the approval handoff renders, and the
@@ -99,7 +101,7 @@ to the ~13 minutes of narration — the envelope holds with slack.
 
 | Script beat | Budget | Machine time (measured) | Notes |
 |---|---|---|---|
-| Mock Tier-1 pre-flight | — | 0.5s, tests 6 → 7, approve | Deterministic; matches the pre-flight claim above. |
+| Mock Tier-1 pre-flight | — | 0.5s, tests 6 → 7, approve | Deterministic; measured at the then-current pre-expansion 6-test baseline — the current baseline's mock Tier-1 result is 24 → 25 (see Pre-flight). |
 | Run #1 — Tier 1 live (§3:00–6:30) | 3:30 | **17.7s total, passed, tests 6 → 9** | Stages: guardrail 0.0s, triage 3.0s, plan 3.3s, code 7.4s, tests 0.1s, review 3.9s. After-count varies by run (8 in PR #16/cost runs, 9 here) — the script now says to read it off the screen. |
 | Run #2 — Tier 2 live (§7:15–9:15) | 2:00 | **57.7s total, passed, tests 6 → 11** | The code stage is the long pole (43s here; full run has measured 47s–126s across the live record). After-count varies (9/10/11 measured) — read it off the screen. |
 | Trust beat (§9:15) | 1:45 | ~0s (deterministic) | Scripted phrase in the panel's **title field** → blocked ("destructive operation on data"), handoff lists Reject / Re-scope / Handle manually; `remove all unused imports` → allowed. Decision clicks verified over HTTP: rescope → will_resume true; reject / handle manually → false, zero model calls. |

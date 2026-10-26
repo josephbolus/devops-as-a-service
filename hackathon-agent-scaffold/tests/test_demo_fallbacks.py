@@ -16,7 +16,7 @@ FALLBACKS = ROOT / "demo-fallbacks"
 MOCK = FALLBACKS / "mock"
 LIVE = FALLBACKS / "live" / "tier1-pr16"
 
-EXPECTED_TESTS = {"tier1": (6, 7), "tier2": (6, 9), "tier3": (6, 8)}
+EXPECTED_TESTS = {"tier1": (24, 25), "tier2": (24, 27), "tier3": (24, 26)}
 
 
 class MockFallbacks(unittest.TestCase):
@@ -44,6 +44,24 @@ class MockFallbacks(unittest.TestCase):
                 self.assertIn("--- a/", diff)
                 for name in result["changed_unique"]:
                     self.assertIn(name, diff)
+
+    def test_mock_fallbacks_carry_gate_sections_and_zero_cost(self):
+        for slug in EXPECTED_TESTS:
+            with self.subTest(slug=slug):
+                body = (MOCK / slug / "pr_body.md").read_text()
+                self.assertIn("Regression gate", body)
+                cost = json.loads((MOCK / slug / "cost.json").read_text())
+                self.assertEqual(cost["summary"]["method"], "mock_no_api_call")
+                self.assertEqual(cost["summary"]["total_usd_est"], 0.0)
+
+    def test_refresh_record_matches_package(self):
+        record = (ROOT / "eval-scorecard" / "FALLBACK_REFRESH.md").read_text()
+        for token in ("24 → 25", "24 → 27", "24 → 26", "Oct 26, 2026",
+                      "Oct 29"):
+            self.assertIn(token, record, token)
+        readme = (FALLBACKS / "README.md").read_text()
+        for token in ("24→25 / 24→27 / 24→26", "Thu Oct 29"):
+            self.assertIn(token, readme, token)
 
     def test_guardrail_fallback_is_an_escalation_not_a_pr(self):
         dest = MOCK / "guardrail"

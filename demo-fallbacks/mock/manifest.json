@@ -7,8 +7,8 @@
       "issue": "Fix off-by-one in pagination helper",
       "escalated": false,
       "passed": true,
-      "tests_before": 6,
-      "tests_after": 7,
+      "tests_before": 24,
+      "tests_after": 25,
       "changed": [
         "app/pagination.py",
         "tests/test_pagination_regression.py"
@@ -20,8 +20,8 @@
       "issue": "Add retry with backoff to the HTTP client wrapper",
       "escalated": false,
       "passed": true,
-      "tests_before": 6,
-      "tests_after": 9,
+      "tests_before": 24,
+      "tests_after": 27,
       "changed": [
         "app/http_client.py",
         "tests/test_http_retry.py"
@@ -33,8 +33,8 @@
       "issue": "Make the CLI output machine-readable",
       "escalated": false,
       "passed": true,
-      "tests_before": 6,
-      "tests_after": 8,
+      "tests_before": 24,
+      "tests_after": 26,
       "changed": [
         "app/cli.py",
         "app/report.py",
