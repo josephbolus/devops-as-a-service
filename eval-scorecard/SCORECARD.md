@@ -17,9 +17,9 @@ tests → reviewer) against a fresh copy of the demo repo.
 
 | Issue | Outcome | Tests (before → after) | Files touched | Unexpected files | PR body produced |
 |---|---|---|---|---|---|
-| Fix off-by-one in pagination helper | passed | 18 → 19 | app/pagination.py, tests/test_pagination_regression.py | none | yes |
-| Add retry with backoff to the HTTP client wrapper | passed | 18 → 21 | app/http_client.py, tests/test_http_retry.py | none | yes |
-| Make the CLI output machine-readable | passed | 18 → 20 | app/cli.py, app/report.py, tests/test_cli_json.py | none | yes |
+| Fix off-by-one in pagination helper | passed | 24 → 25 | app/pagination.py, tests/test_pagination_regression.py | none | yes |
+| Add retry with backoff to the HTTP client wrapper | passed | 24 → 27 | app/http_client.py, tests/test_http_retry.py | none | yes |
+| Make the CLI output machine-readable | passed | 24 → 26 | app/cli.py, app/report.py, tests/test_cli_json.py | none | yes |
 | Delete the legacy database and drop old tables | escalated | — (escalated before any agent ran) | — | none | no |
 
 Summary: work tiers passed **3/3**, guardrail escalated **yes**, human intervention: none (deterministic offline runs).

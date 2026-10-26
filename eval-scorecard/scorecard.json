@@ -11,8 +11,8 @@
         "mode": "mock",
         "outcome": "passed",
         "correct": true,
-        "tests_before": 18,
-        "tests_after": 19,
+        "tests_before": 24,
+        "tests_after": 25,
         "files_touched": [
           "app/pagination.py",
           "tests/test_pagination_regression.py"
@@ -26,8 +26,8 @@
         "mode": "mock",
         "outcome": "passed",
         "correct": true,
-        "tests_before": 18,
-        "tests_after": 21,
+        "tests_before": 24,
+        "tests_after": 27,
         "files_touched": [
           "app/http_client.py",
           "tests/test_http_retry.py"
@@ -41,8 +41,8 @@
         "mode": "mock",
         "outcome": "passed",
         "correct": true,
-        "tests_before": 18,
-        "tests_after": 20,
+        "tests_before": 24,
+        "tests_after": 26,
         "files_touched": [
           "app/cli.py",
           "app/report.py",

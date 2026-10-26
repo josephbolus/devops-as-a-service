@@ -34,8 +34,8 @@ class MockSection(unittest.TestCase):
     def test_mock_work_tiers_all_pass_no_unexpected_files(self):
         runs = {r["slug"]: r for r in self.sc["mock"]["runs"]}
         self.assertEqual(self.sc["mock"]["summary"]["work_tiers_passed"], "3/3")
-        for slug, (before, after) in {"tier1": (18, 19), "tier2": (18, 21),
-                                      "tier3": (18, 20)}.items():
+        for slug, (before, after) in {"tier1": (24, 25), "tier2": (24, 27),
+                                      "tier3": (24, 26)}.items():
             with self.subTest(slug=slug):
                 self.assertEqual(runs[slug]["outcome"], "passed")
                 self.assertEqual((runs[slug]["tests_before"],

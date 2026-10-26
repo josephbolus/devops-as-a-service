@@ -56,7 +56,7 @@ class OnEventOrder(unittest.TestCase):
                          ["app/pagination.py", "tests/test_pagination_regression.py"])
         self.assertIn("items[start:end]", by_stage["code"]["diff"])
         self.assertEqual((by_stage["tests"]["tests_before"],
-                          by_stage["tests"]["tests_after"]), (18, 19))
+                          by_stage["tests"]["tests_after"]), (24, 25))
         self.assertEqual(by_stage["review"]["verdict"], "approve")
         self.assertTrue(by_stage["done"]["result"]["passed"])
         self.assertIn("paginate()", by_stage["done"]["pr_body"])

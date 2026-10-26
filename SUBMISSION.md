@@ -70,9 +70,17 @@ skips after a transient failure while reporting success — and all
 three passed live under the same contest configuration
 (18 → 22, 18 → 21, 18 → 21; growth +10; 78.09s; est. $0.0322 per
 passed issue, char estimate) (`eval-scorecard/EXPANSION_BATCH2.md`,
-`eval-scorecard/expansion-batch2-runs.json`). The work set is now
-9 seeded issues, with 3 more scenario families from the spec still
-to seed. (`eval-scorecard/FRONTIER_GENERALIZATION.md`,
+`eval-scorecard/expansion-batch2-runs.json`). Expansion batch 3
+completed the spec the same way — a retry loop storming an upstream
+with no backoff, a deploy helper that crashes on an expired token
+and prints the token in its logs, and an API client silently
+dropping every page after the first — and all three passed live
+under the same contest configuration
+(24 → 27, 24 → 28, 24 → 27; growth +10; 72.86s; est. $0.0308 per
+passed issue, char estimate) (`eval-scorecard/EXPANSION_BATCH3.md`,
+`eval-scorecard/expansion-batch3-runs.json`). The work set is now
+12 seeded issues — the full researched spec, all nine expansion
+families measured live. (`eval-scorecard/FRONTIER_GENERALIZATION.md`,
 `eval-scorecard/frontier-generalization-runs.json`) — so the
 contest configuration's record is not seeded-set-only either. The worked impact model
 (`IMPACT_MODEL.md`, every input labeled measured / asserted / assumed)
@@ -81,7 +89,7 @@ the middle volume, at an estimated API cost of $0.0254 per passed
 issue — $0.0305 per senior-hour saved (`eval-scorecard/COST_ACCOUNTING.md`;
 character-count estimate, not billing data, because the API does not
 expose usage on the connector path). Honest limits: n=3 original seeded issues
-(three attempts each) plus 6 expansion issues (one live pass each) plus three generalization issues on three
+(three attempts each) plus 9 expansion issues (one live pass each) plus three generalization issues on three
 different unseen codebases (the gradebook issue has since been run
 under two configurations — split and all-frontier — and passed
 under both), no real users
@@ -260,7 +268,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 290/290, demo repo 18/18, generalization
+- Suites at drafting: scaffold 296/296, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 
