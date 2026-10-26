@@ -121,8 +121,8 @@ def build_record():
         "method": "ConnectorClient only (Meta Model API via the "
                   "custom.meta-model-api connector, no env key). "
                   "pipeline.run per expansion issue against a fresh "
-                  "git-initialized copy of hackathon-demo-repo (12-test "
-                  "baseline: 6 original + 6 expansion baseline tests, "
+                  "git-initialized copy of hackathon-demo-repo (18-test "
+                  "baseline: 6 original + 12 expansion baseline tests, "
                   "all passing with the seeded defects present). Costs "
                   "are character estimates at wonder's published prices "
                   "($4/$20 per 1M in/out, daas/cost.py).",
