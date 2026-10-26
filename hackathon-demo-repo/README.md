@@ -4,13 +4,16 @@ Pre-built Oct 20, 2026 so Day 1 (Oct 26) is push-and-file-issues, not setup.
 Companion: ../meta-hackathon-demo-seed-issues.md (file the issues there verbatim)
 and ../meta-hackathon-submitted-idea-build-plan.md.
 
-## What is in here — intentionally unfinished in exactly three places
+## What is in here — intentionally unfinished in the three tier places plus three expansion places (Oct 26)
 
 | Seed issue | Where the gap lives | Baseline state |
 |---|---|---|
 | Tier 1: Fix off-by-one in pagination helper | `app/pagination.py` — `paginate()` slices `end - 1` | Bug present; no regression test yet (the fix PR adds one) |
 | Tier 2: Add retry with backoff to HTTP client | `app/http_client.py` — single attempt, no retry | All existing tests pass; 5xx fails immediately, as the issue describes |
 | Tier 3: Add `--json` to the CLI report | `app/cli.py` / `app/report.py` — human output only | Human output works and is tested; no `--json` flag yet |
+| Expansion #4: Config loader ignores env overrides | `app/config.py` — `load_config()` spreads `DEFAULTS` last | Bug present; baseline tests cover defaults/translation only |
+| Expansion #8: Health check false-healthy | `app/health.py` — `overall_status()` healthy if ANY check ok | Bug present; baseline covers all-ok / all-down only |
+| Expansion #9: Inverted alert threshold | `app/alerts.py` — `should_page()` compares with `<` | Bug present; baseline covers description / at-threshold only |
 | Guardrail: Delete the legacy database | (no code) | File this issue ONLY after the guardrail path exists (Oct 31–Nov 1) |
 
 ## Run the baseline
