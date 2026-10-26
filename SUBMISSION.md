@@ -52,7 +52,14 @@ passed under the all-frontier contest configuration (every role on
 `muse-wonder-1.0`): tests 12 → 18, 32.87s, reviewer approve, no
 unexpected files, the independent probe passed 8/8 again, est.
 $0.0340 (char estimate at wonder prices; the split's pass on the
-same target was 42.41s at est. $0.0248)
+same target was 42.41s at est. $0.0248). The ledgerlite target has
+now also been passed under the all-frontier contest configuration:
+tests 9 → 11, 18.51s, reviewer approve, no unexpected files, an
+independent probe passed 6/6, est. $0.0177 (char estimate at wonder
+prices; the split's pass on the same target was 9 → 13 in 37.73s —
+frontier growth was smaller (+2 vs +4) and faster, stated not
+hidden) (`eval-scorecard/FRONTIER_GENERALIZATION_LEDGERLITE.md`,
+`eval-scorecard/frontier-generalization-ledgerlite-runs.json`).
 The seeded bench itself is now broader: expansion batch 1
 (Oct 26, per the researched DevOps/SRE scenario spec) added three
 scenario families to the demo codebase as genuine pre-existing
@@ -80,9 +87,10 @@ under the same contest configuration
 passed issue, char estimate) (`eval-scorecard/EXPANSION_BATCH3.md`,
 `eval-scorecard/expansion-batch3-runs.json`). The work set is now
 12 seeded issues — the full researched spec, all nine expansion
-families measured live. (`eval-scorecard/FRONTIER_GENERALIZATION.md`,
-`eval-scorecard/frontier-generalization-runs.json`) — so the
-contest configuration's record is not seeded-set-only either. The worked impact model
+families measured live. The contest configuration's record is not
+seeded-set-only either
+(`eval-scorecard/FRONTIER_GENERALIZATION.md`,
+`eval-scorecard/frontier-generalization-runs.json`). The worked impact model
 (`IMPACT_MODEL.md`, every input labeled measured / asserted / assumed)
 gives 50 min saved per passed issue and 216.7 senior hours per year at
 the middle volume, at an estimated API cost of $0.0254 per passed
@@ -90,9 +98,10 @@ issue — $0.0305 per senior-hour saved (`eval-scorecard/COST_ACCOUNTING.md`;
 character-count estimate, not billing data, because the API does not
 expose usage on the connector path). Honest limits: n=3 original seeded issues
 (three attempts each) plus 9 expansion issues (one live pass each) plus three generalization issues on three
-different unseen codebases (the gradebook issue has since been run
-under two configurations — split and all-frontier — and passed
-under both), no real users
+different unseen codebases (the gradebook and ledgerlite issues
+have since been run under two configurations — split and
+all-frontier — and passed under both; textkit remains split-only),
+no real users
 yet, and review time is still the model's 10-minute assumption.
 
 - Eval scorecard: `eval-scorecard/SCORECARD.md`
@@ -170,7 +179,14 @@ configuration has also passed live outside the seeded set: on the
 unseen gradebook codebase it passed 12 → 18 in 32.87s with the
 independent probe at 8/8 and `muse-wonder-1.0` recorded on every
 role's calls (fallbacks 0; `eval-scorecard/FRONTIER_GENERALIZATION.md`,
-`eval-scorecard/frontier-generalization-runs.json`).
+`eval-scorecard/frontier-generalization-runs.json`), and on the
+unseen ledgerlite codebase it passed 9 → 11 in 18.51s with the
+independent probe at 6/6, est. $0.0177, and `muse-wonder-1.0`
+recorded on every role's calls (fallbacks 0;
+`eval-scorecard/FRONTIER_GENERALIZATION_LEDGERLITE.md`,
+`eval-scorecard/frontier-generalization-ledgerlite-runs.json`).
+Frontier generalization now rests on two of the three unseen
+codebases (gradebook and ledgerlite); textkit remains split-only.
 
 ## Demo (25%)
 
@@ -268,7 +284,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 296/296, demo repo 24/24, generalization
+- Suites at drafting: scaffold 302/302, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 
