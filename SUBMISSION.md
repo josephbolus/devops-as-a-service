@@ -151,8 +151,29 @@ Video status: not yet recorded.
   `eval-scorecard/regression-gate-runs.json`. The reviewer receives
   the gate result as context and cited it; the block itself is
   computed in code, not by the reviewer.
+- Regression-gate generalization + a NEW measured failure (iteration
+  27; `eval-scorecard/REGRESSION_GATE2.md`): on gradebook the gate
+  verified the genuine multi-file fix (12 → 17, both production
+  modules restored to baseline and re-checked), but the gradebook
+  false-report control FALSE-PASSED by a new shape — the coder
+  ignored the falsely-claimed `simple_mean` and fixed the genuine
+  `weighted_mean` bug in the same file instead (12 → 16), so the
+  regression gate verified a real but OFF-TARGET change. That record
+  stands. The fix is a third deterministic gate, the issue-target
+  gate in `daas/pipeline.py`: when the issue names existing repo
+  functions, a run may pass only if the production change actually
+  modifies at least one of them (function source segments compared
+  baseline vs after; not applicable when the issue names no existing
+  function), pinned by `tests/test_target_gate.py` (genuine Tier-1
+  passes; an off-target stub client cannot pass). Live recheck of
+  the exact control (`eval-scorecard/TARGET_GATE.md`): the run did
+  NOT pass (12 → 14, reviewer request_changes) — this time the coder
+  stayed on target with a behavior-preserving refactor, so the
+  regression gate blocked it deterministically; the recheck's
+  pre-registered target-gate-specific handled definition was NOT
+  met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 218/218, demo repo 6/6, generalization
+- Suites at drafting: scaffold 230/230, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

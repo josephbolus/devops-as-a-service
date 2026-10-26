@@ -141,7 +141,7 @@ class JudgeRunOverHttp(unittest.TestCase):
         # still summarises the seven JUDGE_STAGES.
         self.assertEqual([e["stage"] for e in snap["events"]],
                          ["guardrail", "triage", "plan", "code", "tests",
-                          "regression_gate", "review", "done"])
+                          "regression_gate", "target_gate", "review", "done"])
         # Captions + timings travel with each event.
         for e in snap["events"]:
             self.assertTrue(e["caption"].startswith("Judge Mode:"), e)

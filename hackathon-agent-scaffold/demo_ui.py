@@ -125,6 +125,18 @@ def caption_for_event(event):
         return (f"Judge Mode: A deterministic regression gate — plain code, "
                 f"not a model — re-ran the new tests against the original "
                 f"production code. The suite {verdict}.")
+    if stage == "target_gate":
+        if not d.get("applicable"):
+            return ("Judge Mode: A deterministic issue-target gate checked "
+                    "whether the fix touches the function the issue actually "
+                    "names; it was not applicable to this issue.")
+        verdict = ("changes the function the issue names"
+                   if d.get("passed") else
+                   "does NOT touch the function the issue names — an "
+                   "off-target fix, however real, cannot pass this run")
+        return (f"Judge Mode: A deterministic issue-target gate — plain "
+                f"code, not a model — verified the production change "
+                f"{verdict}.")
     if stage == "review":
         return (f"Judge Mode: An independent reviewer agent read the actual "
                 f"diff and returned '{d.get('verdict', '?')}'. The pipeline "

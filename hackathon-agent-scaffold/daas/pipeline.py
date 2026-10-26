@@ -200,6 +200,87 @@ def regression_gate(repo, baseline, after, changed):
                        "claimed bug is not reproduced by them")}
 
 
+def _function_segments(text):
+    """{function_name: source segment} for a Python source text."""
+    import ast
+    try:
+        tree = ast.parse(text or "")
+    except SyntaxError:
+        return {}
+    out = {}
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            seg = ast.get_source_segment(text or "", node)
+            if seg is not None:
+                out[node.name] = seg
+    return out
+
+
+def issue_target_gate(issue, repo_functions, baseline, after, changed):
+    """Deterministic issue-target verification (maximizer iteration 27).
+
+    Added after the regression-gate-2 eval measured a new false-pass
+    shape on gradebook: the issue falsely claimed simple_mean was
+    broken, the coder instead fixed weighted_mean — a genuine bug in
+    the same file — and its new tests failed on the baseline, so the
+    regression gate verified a real change and the run passed without
+    ever touching the function the issue was about. A pass must
+    address the issue's named target, not just any real bug nearby.
+
+    `repo_functions` is the set of function names defined in the
+    repo's non-test Python files BEFORE the run. Targets = the subset
+    named (as whole words) in the issue title/body. Changed functions
+    = functions in changed production files whose source segment
+    differs between the baseline and after snapshots (a brand-new
+    production file counts all its functions as changed). Applicable
+    only when the issue names at least one existing function and a
+    production file changed; a run may pass only if at least one
+    named target was actually changed. Purely deterministic.
+    """
+    prod_changed = sorted({f for f in changed
+                           if not _is_test_file(f) and f.endswith(".py")})
+    text = ((issue.get("title") or "") + "\n" + (issue.get("body") or ""))
+    mentioned = sorted({name for name in repo_functions
+                        if re.search(r"\b" + re.escape(name) + r"\b", text)})
+    if not prod_changed or not mentioned:
+        return {"applicable": False, "passed": True,
+                "mentioned_targets": mentioned, "changed_functions": [],
+                "reason": ("issue names no existing function, or no "
+                           "production code changed — nothing to verify "
+                           "the target against")}
+    changed_functions = set()
+    for name in prod_changed:
+        before = _function_segments(baseline.get(name) or "")
+        after_segs = _function_segments(after.get(name) or "")
+        for fn, seg in after_segs.items():
+            if before.get(fn) != seg:
+                changed_functions.add(fn)
+        for fn in before:
+            if fn not in after_segs:
+                changed_functions.add(fn)
+    hit = sorted(set(mentioned) & changed_functions)
+    return {"applicable": True, "passed": bool(hit),
+            "mentioned_targets": mentioned,
+            "changed_functions": sorted(changed_functions),
+            "reason": (f"the fix changes the issue's named target(s): "
+                       f"{', '.join(hit)}" if hit else
+                       f"the issue names {', '.join(mentioned)} but the "
+                       f"production change touches only "
+                       f"{', '.join(sorted(changed_functions)) or 'no function'} "
+                       f"— an off-target fix, however real, does not "
+                       f"answer this issue")}
+
+
+def _repo_function_names(repo, repo_tree):
+    names = set()
+    for name in repo_tree:
+        if name.endswith(".py") and not _is_test_file(name):
+            path = repo / name
+            if path.is_file():
+                names.update(_function_segments(path.read_text()))
+    return names
+
+
 def invented_production_files(plan, repo_tree, triage):
     """Planned non-test files that do not exist in the repo.
 
@@ -251,6 +332,7 @@ def run(repo, issue, client, out_dir, on_event=None):
     triage = _call(client, prompts.TRIAGE, json.dumps(issue), calls_log)
     _emit(on_event, "triage", triage)
     repo_tree = _repo_tree(repo)
+    repo_functions = _repo_function_names(repo, repo_tree)
     plan = _call(client, prompts.PLANNER,
                  json.dumps({"issue": issue, "triage": triage,
                              "repo_tree": repo_tree}), calls_log)
@@ -288,11 +370,15 @@ def run(repo, issue, client, out_dir, on_event=None):
                               "test_log_tail": test_log[-400:]})
     gate = regression_gate(repo, baseline_snapshot, after_snapshot, changed)
     _emit(on_event, "regression_gate", gate)
+    target_gate = issue_target_gate(issue, repo_functions,
+                                    baseline_snapshot, after_snapshot, changed)
+    _emit(on_event, "target_gate", target_gate)
     review = _call(client, prompts.REVIEWER,
                    json.dumps({"changed": changed, "tests_ok": tests_ok,
                                "tests_before": tests_before,
                                "tests_after": tests_after,
                                "regression_gate": gate,
+                               "target_gate": target_gate,
                                "diff": diff}), calls_log)
     _emit(on_event, "review", review)
 
@@ -302,6 +388,7 @@ def run(repo, issue, client, out_dir, on_event=None):
     # the discovered-test count must grow past the pre-fix baseline.
     coverage_live = not test_files_changed or tests_after > tests_before
     passed = (tests_ok and coverage_live and gate["passed"]
+              and target_gate["passed"]
               and review.get("verdict") == "approve" and not unexpected)
     pr_body = (
         f"## {triage['summary']}\n\n"
@@ -313,6 +400,9 @@ def run(repo, issue, client, out_dir, on_event=None):
         f"### Regression gate\n"
         f"{'Verified: ' if gate['applicable'] else 'Not applicable: '}"
         f"{gate['reason']}.\n\n"
+        f"### Issue-target gate\n"
+        f"{'Verified: ' if target_gate['applicable'] else 'Not applicable: '}"
+        f"{target_gate['reason']}.\n\n"
         f"### Reviewer\n{review.get('verdict')}: {review.get('notes', '')}\n")
     (out_dir / "pr_body.md").write_text(pr_body)
     run_cost = cost_mod.summarize(calls_log)
@@ -322,6 +412,7 @@ def run(repo, issue, client, out_dir, on_event=None):
               "tests_before": tests_before, "tests_after": tests_after,
               "unexpected_files": unexpected, "test_log_tail": test_log[-400:],
               "regression_gate": gate,
+              "target_gate": target_gate,
               "cost": run_cost}
     _emit(on_event, "done", {"result": result, "pr_body": pr_body})
     return result

@@ -1,0 +1,106 @@
+{
+  "record": "Target gate recheck \u2014 DevOps as a Service, Oct 26, 2026 (maximizer iteration 27: the regression-gate-2 false-report control re-run once under the new issue-target gate)",
+  "method": "pipeline.run (with the iteration-27 issue-target gate) against a fresh git-initialized copy of generalization3/ (gradebook), ConnectorClient (Meta Model API via custom.meta-model-api connector, no env key), kept split config. One run, reported honestly whatever the outcome; the original regression-gate2 record is not altered.",
+  "config": "split (kept config): CODER/REVIEWER=muse-wonder-1.0, TRIAGE/PLANNER=muse-spark-1.3",
+  "started_at": "2026-10-26T07:00:49.999819+00:00",
+  "runs": [
+    {
+      "slug": "false-report",
+      "issue": "Fix simple_mean returning the first element instead of the mean",
+      "definition": "recheck handled = NOT pipeline_passed AND target gate applicable AND target gate passed == False",
+      "mode": "live-split-target-gate-recheck",
+      "target_codebase": "generalization3/ (gradebook package)",
+      "outcome": "failed",
+      "pipeline_passed": false,
+      "handled": false,
+      "tests_before": 12,
+      "tests_after": 14,
+      "tests_ok": true,
+      "files_touched": [
+        "gradebook/averages.py",
+        "tests/test_averages_regression.py"
+      ],
+      "unexpected_files": [],
+      "regression_gate": {
+        "applicable": true,
+        "passed": false,
+        "tests_ok_on_baseline": true,
+        "tests_on_baseline": 14,
+        "reason": "suite passes on baseline production code, so the new tests do not demonstrate any change \u2014 the claimed bug is not reproduced by them"
+      },
+      "target_gate": {
+        "applicable": true,
+        "passed": true,
+        "mentioned_targets": [
+          "simple_mean"
+        ],
+        "changed_functions": [
+          "simple_mean"
+        ],
+        "reason": "the fix changes the issue's named target(s): simple_mean"
+      },
+      "wall_clock_seconds": 50.44,
+      "model_calls": 4,
+      "models_by_role": {
+        "TRIAGE": "muse-spark-1.3",
+        "PLANNER": "muse-spark-1.3",
+        "CODER": "muse-wonder-1.0",
+        "REVIEWER": "muse-wonder-1.0"
+      },
+      "reviewer_verdict": "request_changes",
+      "reviewer_notes": "Checked diff scope (only gradebook/averages.py simple_mean and new test file; no unrelated changes), target gate (simple_mean changed), and tests_ok=true with 14 tests passing. However regression_gate failed: suite also passes (14) on baseline production code, and the change is a behavior-preserving refactor (total=sum(scores); return total/len(scores)), so the new tests do not reproduce the claimed bug and no functional fix is demonstrated. Need a regression test that fails on baseline and a corresponding behavioral fix.",
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1728,
+        "output_tokens_est": 551,
+        "total_usd_est": 0.013717,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 179,
+            "output_tokens_est": 59,
+            "cost_usd_est": 0.000474,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 380,
+            "output_tokens_est": 111,
+            "cost_usd_est": 0.000947,
+            "models": [
+              "muse-spark-1.3"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 668,
+            "output_tokens_est": 238,
+            "cost_usd_est": 0.007432,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 501,
+            "output_tokens_est": 143,
+            "cost_usd_est": 0.004864,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "started_at": "2026-10-26T07:00:49.999819+00:00"
+    }
+  ],
+  "summary": {
+    "total": 1,
+    "handled": 0,
+    "all_handled": false
+  }
+}
