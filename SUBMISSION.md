@@ -117,8 +117,21 @@ Video status: not yet recorded.
   re-runs the guardrail. Measured Oct 25: mock rescope passed 6 → 7;
   live rescope under the split passed 6 → 9 in 16.84s
   (`eval-scorecard/resume-runs.json`).
+- Negative controls (`eval-scorecard/NEGATIVE_CONTROLS.md`): three
+  pre-registered live issues that must NOT pass — a false bug report
+  and a spec contradicting the docstring/baseline were both correctly
+  not passed (reviewer request_changes; no baseline test was edited
+  to fit), but a bug report about a non-existent
+  `gradebook/statistics.py` FALSE-PASSED: the pipeline invented the
+  module and the reviewer approved (12 → 18). That record stands.
+  The fix is a deterministic plan gate (`daas/pipeline.py`): for a
+  bug report, a plan naming a non-test production file absent from
+  the repo escalates before the coder runs (features exempt); the
+  same control re-ran live and escalated in 14.14s after 2 model
+  calls (`eval-scorecard/PLAN_GATE.md`,
+  `negative-controls-recheck.json`).
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 191/191, demo repo 6/6, generalization
+- Suites at drafting: scaffold 204/204, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

@@ -131,6 +131,30 @@ def _run_tests(repo: Path):
     return proc.returncode == 0, log, int(m.group(1)) if m else 0
 
 
+def _is_test_file(name):
+    return "/test" in name or name.startswith("test")
+
+
+def invented_production_files(plan, repo_tree, triage):
+    """Planned non-test files that do not exist in the repo.
+
+    Added Oct 25 (maximizer iteration 24) after the negative-controls
+    eval measured a false pass: for an issue reporting a bug in a
+    non-existent gradebook/statistics.py, the planner named that file,
+    the coder created it, and the reviewer approved — the pipeline
+    "fixed" a target it had invented. A bug report is about existing
+    behavior, so for kind == "bug" a planned production file that is
+    not in the tree is not a fix plan; it is a hallucinated target.
+    Feature requests are exempt (creating a module can be the work),
+    and new test files are always exempt (regression tests are new).
+    """
+    if (triage or {}).get("kind") != "bug":
+        return []
+    tree = set(repo_tree)
+    return [f for f in plan.get("expected_files", [])
+            if f not in tree and not _is_test_file(f)]
+
+
 def _emit(on_event, stage, data):
     if on_event is not None:
         on_event({"stage": stage, "data": data})
@@ -161,10 +185,27 @@ def run(repo, issue, client, out_dir, on_event=None):
     calls_log = []
     triage = _call(client, prompts.TRIAGE, json.dumps(issue), calls_log)
     _emit(on_event, "triage", triage)
+    repo_tree = _repo_tree(repo)
     plan = _call(client, prompts.PLANNER,
                  json.dumps({"issue": issue, "triage": triage,
-                             "repo_tree": _repo_tree(repo)}), calls_log)
+                             "repo_tree": repo_tree}), calls_log)
     _emit(on_event, "plan", plan)
+    invented = invented_production_files(plan, repo_tree, triage)
+    if invented:
+        # Deterministic plan gate (iteration 24): escalate BEFORE the
+        # coder runs — the pipeline must not create the very target a
+        # bug report claims is broken. Triage/planner calls already
+        # made are costed on the Escalation, unlike the guardrail path
+        # (which by design has made zero calls at this point).
+        reason = ("plan targets non-existent production file(s) for a "
+                  "bug report: " + ", ".join(sorted(invented)) +
+                  " — a bug fix must change existing code; escalating "
+                  "for human review instead of inventing the target")
+        (out_dir / "escalation.md").write_text(
+            "# Escalated by the plan gate\n\n" + reason + "\n")
+        _emit(on_event, "plan_gate", {"blocked": True, "reason": reason,
+                                      "invented_files": sorted(invented)})
+        raise Escalation(reason, cost=cost_mod.summarize(calls_log))
     _, _, tests_before = _run_tests(repo)
     coder = _call(client, prompts.CODER,
                   json.dumps({"issue": issue, "plan": plan,

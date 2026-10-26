@@ -61,7 +61,7 @@ class TestSubmissionDraft(unittest.TestCase):
         for token in ("3/3", "94.65s", "6 → 9", "6 → 10", "6 → 8",
                       "#16", "#17", "#18", "50 min saved",
                       "216.7", "+10 vs +9", "209.14s", "16.84s",
-                      "191/191"):
+                      "204/204"):
             self.assertIn(token, self.text, token)
 
     def test_current_evidence_included(self):
@@ -72,7 +72,9 @@ class TestSubmissionDraft(unittest.TestCase):
                       "JUDGE_LIVE_TOUR.md", "503", "RETRY.md",
                       "retry-runs.json", "retry_stats",
                       "GENERALIZATION.md", "GENERALIZATION2.md",
-                      "GENERALIZATION3.md", "12 → 18"):
+                      "GENERALIZATION3.md", "12 → 18",
+                      "NEGATIVE_CONTROLS.md", "PLAN_GATE.md",
+                      "negative-controls-recheck.json"):
             self.assertIn(token, self.text, token)
         self.assertNotIn("one run each", self.text)
 
