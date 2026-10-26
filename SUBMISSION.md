@@ -166,6 +166,12 @@ the full live tour (`eval-scorecard/JUDGE_LIVE_TOUR.md`): Tier 1
 and Tier 3 passed live, the guardrail stop escalated live, and
 Tier 2's card honestly reported fail after a provider HTTP 503
 interrupted its reviewer call (its tests stage had passed 6 → 11).
+The tour has since run live under the contest configuration
+(`eval-scorecard/FRONTIER_JUDGE_LIVE_TOUR.md`,
+`frontier-judge-live-tour.json`): all three work issues passed
+self-guided (6 → 8 / 6 → 12 / 6 → 8, combined +10, 134.23s, est.
+$0.1103), the guardrail stop escalated with zero model calls, and
+every card records muse-wonder-1.0 on every role.
 Video status: not yet recorded.
 
 ## Technical depth & execution (20%)
@@ -235,7 +241,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 270/270, demo repo 6/6, generalization
+- Suites at drafting: scaffold 278/278, demo repo 6/6, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

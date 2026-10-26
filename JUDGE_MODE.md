@@ -102,12 +102,36 @@ pass. The tour is recorded as measured (2/3 work issues) in
 pinned by `tests/test_judge_live_tour.py`; it was not re-run for a
 cleaner record.
 
+## Live tour under the contest configuration (Oct 26, iteration 34)
+
+The live proof above ran under the Oct 25 kept split, which the
+Oct 26 contest directive superseded. `hackathon-agent-scaffold/run_frontier_judge_live_tour.py`
+exercised the same one-click endpoint over real HTTP with
+`mode: "live"` for all four seeded issues under the all-frontier
+contest configuration (every role `muse-wonder-1.0`;
+`muse-spark-1.3` configured only as availability fallback).
+Measured: Tier 1 **pass** (tests 6 → 8, 16.20s, est. $0.0150),
+Tier 2 **pass** (6 → 12, 96.34s, est. $0.0656 — the stop the split
+tour lost to a provider 503), Tier 3 **pass** (6 → 8, 21.66s, est.
+$0.0297), and the guardrail stop **escalated** with zero model
+calls — work issues 3/3, combined delta +10, 28 captions, total
+134.23s, combined card cost est. $0.1103 (char estimates at wonder
+prices — higher than the split tour's $0.0342, stated not hidden).
+Every work stop's card records `muse-wonder-1.0` on every role.
+The tour is recorded as measured in
+`eval-scorecard/FRONTIER_JUDGE_LIVE_TOUR.md` +
+`frontier-judge-live-tour.json`, pinned by
+`tests/test_frontier_judge_live_tour.py`; it was not re-run.
+
 ## Pinned by tests
 
 `tests/test_judge_tour.py` pins the tour record (summary recomputed
 from the per-run rows; the doc must agree with the record).
 `tests/test_judge_live_tour.py` pins the live tour record the same
 way, including the Tier 2 503 failure row.
+`tests/test_frontier_judge_live_tour.py` pins the frontier live
+tour record (all-frontier models on every card, summary recomputed,
+doc == runner render, prior split tour agreeing with its record).
 `tests/test_judge_mode.py` (8 tests): a caption exists and is
 event-derived for every stage (including blocked-guardrail and
 failing-tests variants), the results card's pass/fail/delta/link
