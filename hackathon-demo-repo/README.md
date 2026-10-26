@@ -4,7 +4,7 @@ Pre-built Oct 20, 2026 so Day 1 (Oct 26) is push-and-file-issues, not setup.
 Companion: ../meta-hackathon-demo-seed-issues.md (file the issues there verbatim)
 and ../meta-hackathon-submitted-idea-build-plan.md.
 
-## What is in here — intentionally unfinished in the three tier places plus six expansion places (Oct 26)
+## What is in here — intentionally unfinished in the three tier places plus nine expansion places (Oct 26)
 
 | Seed issue | Where the gap lives | Baseline state |
 |---|---|---|
@@ -17,6 +17,9 @@ and ../meta-hackathon-submitted-idea-build-plan.md.
 | Expansion #6: Connection pool leaks on error path | `app/pool.py` — `run()` releases only on success | Bug present; baseline covers success/manual paths only |
 | Expansion #7: Log writer never rotates | `app/logwriter.py` — `write()` never checks `max_bytes` | Bug present; baseline covers small writes only |
 | Expansion #12: Scheduled job silently skips | `app/scheduler.py` — failure recorded as completion | Bug present; baseline covers success / already-ran only |
+| Expansion #5: Retry loop storms upstream | `app/retryer.py` — `call_with_retry()` never sleeps | Bug present; baseline covers backoff values / first-try only |
+| Expansion #10: Deploy crashes on expired token, logs token | `app/deploy.py` — `run_deploy()` raises RuntimeError, prints token | Bug present; baseline covers valid-token path only |
+| Expansion #11: API client drops later pages | `app/apiclient.py` — `fetch_all()` ignores `next_page` | Bug present; baseline covers single-page only |
 | Guardrail: Delete the legacy database | (no code) | File this issue ONLY after the guardrail path exists (Oct 31–Nov 1) |
 
 ## Run the baseline
