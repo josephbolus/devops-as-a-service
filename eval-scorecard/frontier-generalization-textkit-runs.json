@@ -1,0 +1,187 @@
+{
+  "record": "Frontier generalization (textkit) eval -- the contest configuration (all roles muse-wonder-1.0) run live on the unseen textkit codebase, Oct 26, 2026 (maximizer iteration 39)",
+  "method": "pipeline.run (guardrail -> triage -> plan -> code -> tests -> review) against a fresh git-initialized copy of generalization2/ (textkit), ConnectorClient (Meta Model API via the custom.meta-model-api connector, no env key), all-frontier contest config, plus an independent probe of the first_words defect run against the fixed copy afterwards. The vendored target was created for iteration 19, was never run under the all-frontier configuration before this run, and was not tuned after the run. Prior split-config summary read from eval-scorecard/generalization2-runs.json. Costs are character estimates at wonder's published prices ($4/$20 per 1M in/out, daas/cost.py).",
+  "config": "all-frontier (contest config): every role muse-wonder-1.0, muse-spark-1.3 configured only as availability fallback",
+  "model": "muse-wonder-1.0",
+  "fallback_model": "muse-spark-1.3",
+  "target": {
+    "codebase": "generalization2/",
+    "package": "textkit",
+    "baseline_tests": 10,
+    "defects": [
+      "textkit/tokens.py first_words slices words[:n+1] and returns one word more than the requested n"
+    ]
+  },
+  "runs": [
+    {
+      "slug": "frontier-generalization-textkit",
+      "issue": "Fix first_words returning one word too many",
+      "mode": "live-frontier-generalization",
+      "config": "all-frontier (contest config): every role muse-wonder-1.0, muse-spark-1.3 configured only as availability fallback",
+      "target_codebase": "generalization2/ (textkit package)",
+      "outcome": "passed",
+      "pipeline_outcome": "passed",
+      "correct": true,
+      "tests_before": 10,
+      "tests_after": 11,
+      "files_touched": [
+        "tests/test_tokens_regression.py",
+        "textkit/tokens.py"
+      ],
+      "production_files_touched": [
+        "textkit/tokens.py"
+      ],
+      "unexpected_files": [],
+      "wall_clock_seconds": 18.14,
+      "model_calls": 4,
+      "models_by_role": {
+        "TRIAGE": "muse-wonder-1.0",
+        "PLANNER": "muse-wonder-1.0",
+        "CODER": "muse-wonder-1.0",
+        "REVIEWER": "muse-wonder-1.0"
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "tests_ok": true,
+      "reviewer_verdict": "approve",
+      "reviewer_notes": "Checked diff limited to first_words fix (words[:n+1] to words[:n]) in textkit/tokens.py plus new regression test; no unrelated changes. Tests pass (10 to 11), regression gate passes (fails on baseline), target gate confirms first_words changed, and test_first_words_returns_exact_count covers the fix.",
+      "pr_produced": true,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1868,
+        "output_tokens_est": 465,
+        "total_usd_est": 0.016772,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 216,
+            "output_tokens_est": 110,
+            "cost_usd_est": 0.003064,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 474,
+            "output_tokens_est": 133,
+            "cost_usd_est": 0.004556,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 739,
+            "output_tokens_est": 138,
+            "cost_usd_est": 0.005716,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 439,
+            "output_tokens_est": 84,
+            "cost_usd_est": 0.003436,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "probe": [
+        {
+          "check": "first_words('alpha beta gamma delta', 2)",
+          "expected": "alpha beta",
+          "actual": "alpha beta",
+          "passed": true
+        },
+        {
+          "check": "first_words('alpha beta gamma delta', 1)",
+          "expected": "alpha",
+          "actual": "alpha",
+          "passed": true
+        },
+        {
+          "check": "first_words('alpha beta gamma delta', 4) (n == length)",
+          "expected": "alpha beta gamma delta",
+          "actual": "alpha beta gamma delta",
+          "passed": true
+        },
+        {
+          "check": "first_words('alpha beta gamma delta', 0)",
+          "expected": "",
+          "actual": "",
+          "passed": true
+        },
+        {
+          "check": "first_words('alpha beta gamma delta', -1)",
+          "expected": "",
+          "actual": "",
+          "passed": true
+        },
+        {
+          "check": "first_words('alpha beta', 5) (fewer than n)",
+          "expected": "alpha beta",
+          "actual": "alpha beta",
+          "passed": true
+        },
+        {
+          "check": "first_words('', 3) (empty)",
+          "expected": "",
+          "actual": "",
+          "passed": true
+        }
+      ],
+      "probe_passed": true,
+      "pr_body": "## first_words in textkit/tokens.py returns one more word than requested instead of exactly the first n words.\n\nCloses: Fix first_words returning one word too many\n\n### Plan\n- Inspect first_words in textkit/tokens.py to locate the off-by-one causing n+1 words to be returned\n- Fix first_words to return exactly the first n words, preserving the n <= 0 empty-string and fewer-than-n full-text cases\n- Add a regression test to tests/test_tokens_regression.py covering first_words('alpha beta gamma delta', 2) == 'alpha beta'\n- Run the new regression test and all existing tests to verify the fix and no regressions\n\n### Files changed\n- textkit/tokens.py\n- tests/test_tokens_regression.py\n\n### Tests\nAll tests pass (10 \u2192 11 discovered).\n\n### Regression gate\nVerified: suite fails on baseline production code, so the new tests demonstrate the claimed change.\n\n### Issue-target gate\nVerified: the fix changes the issue's named target(s): first_words.\n\n### Reviewer\napprove: Checked diff limited to first_words fix (words[:n+1] to words[:n]) in textkit/tokens.py plus new regression test; no unrelated changes. Tests pass (10 to 11), regression gate passes (fails on baseline), target gate confirms first_words changed, and test_first_words_returns_exact_count covers the fix.\n",
+      "diff": "diff --git a/textkit/tokens.py b/textkit/tokens.py\nindex ddfaf6d..0deea27 100644\n--- a/textkit/tokens.py\n+++ b/textkit/tokens.py\n@@ -18,7 +18,7 @@ def first_words(text, n):\n     if n <= 0:\n         return \"\"\n     words = text.split()\n-    return \" \".join(words[: n + 1])  # BUG: returns n+1 words, must be words[:n]\n+    return \" \".join(words[:n])\n \n \n def word_frequencies(words):\n\n--- new file: tests/test_tokens_regression.py ---\n+import unittest\n+\n+from textkit.tokens import first_words\n+\n+\n+class TestFirstWordsRegression(unittest.TestCase):\n+    def test_first_words_returns_exact_count(self):\n+        self.assertEqual(first_words('alpha beta gamma delta', 2), 'alpha beta')\n+\n+\n+if __name__ == '__main__':\n+    unittest.main()\n",
+      "started_at": "2026-10-26T16:56:25.203202+00:00"
+    }
+  ],
+  "prior_split_pass": {
+    "source": "eval-scorecard/generalization2-runs.json (maximizer iteration 19, kept split config)",
+    "config": "split (kept config): CODER/REVIEWER=muse-wonder-1.0, TRIAGE/PLANNER=muse-spark-1.3",
+    "outcome": "passed",
+    "tests_before": 10,
+    "tests_after": 15,
+    "test_growth": 5,
+    "wall_clock_seconds": 31.98,
+    "total_usd_est": 0.014396,
+    "models_by_role": {
+      "TRIAGE": "muse-spark-1.3",
+      "PLANNER": "muse-spark-1.3",
+      "CODER": "muse-wonder-1.0",
+      "REVIEWER": "muse-wonder-1.0"
+    }
+  },
+  "summary": {
+    "passed": true,
+    "outcome": "passed",
+    "pipeline_outcome": "passed",
+    "probe_passed": true,
+    "tests_before": 10,
+    "tests_after": 11,
+    "test_growth": 1,
+    "wall_clock_seconds": 18.14,
+    "total_usd_est": 0.016772,
+    "files_touched": [
+      "tests/test_tokens_regression.py",
+      "textkit/tokens.py"
+    ],
+    "production_files_touched": [
+      "textkit/tokens.py"
+    ],
+    "unexpected_files": []
+  }
+}

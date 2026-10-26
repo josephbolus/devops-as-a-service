@@ -60,6 +60,15 @@ prices; the split's pass on the same target was 9 → 13 in 37.73s —
 frontier growth was smaller (+2 vs +4) and faster, stated not
 hidden) (`eval-scorecard/FRONTIER_GENERALIZATION_LEDGERLITE.md`,
 `eval-scorecard/frontier-generalization-ledgerlite-runs.json`).
+The textkit target has now also been passed under the all-frontier
+contest configuration: tests 10 → 11, 18.14s, reviewer approve, no
+unexpected files, an independent probe passed 7/7, est. $0.0168
+(char estimate at wonder prices; the split's pass on the same
+target was 10 → 15 in 31.98s at est. $0.0144 — frontier growth was
+smaller (+1 vs +5) and faster, stated not hidden)
+(`eval-scorecard/FRONTIER_GENERALIZATION_TEXTKIT.md`,
+`eval-scorecard/frontier-generalization-textkit-runs.json`).
+Every unseen codebase now has an all-frontier record.
 The seeded bench itself is now broader: expansion batch 1
 (Oct 26, per the researched DevOps/SRE scenario spec) added three
 scenario families to the demo codebase as genuine pre-existing
@@ -98,9 +107,9 @@ issue — $0.0305 per senior-hour saved (`eval-scorecard/COST_ACCOUNTING.md`;
 character-count estimate, not billing data, because the API does not
 expose usage on the connector path). Honest limits: n=3 original seeded issues
 (three attempts each) plus 9 expansion issues (one live pass each) plus three generalization issues on three
-different unseen codebases (the gradebook and ledgerlite issues
-have since been run under two configurations — split and
-all-frontier — and passed under both; textkit remains split-only),
+different unseen codebases (all three issues have since been run
+under two configurations — split and all-frontier — and passed
+under both),
 no real users
 yet, and review time is still the model's 10-minute assumption.
 
@@ -184,9 +193,14 @@ unseen ledgerlite codebase it passed 9 → 11 in 18.51s with the
 independent probe at 6/6, est. $0.0177, and `muse-wonder-1.0`
 recorded on every role's calls (fallbacks 0;
 `eval-scorecard/FRONTIER_GENERALIZATION_LEDGERLITE.md`,
-`eval-scorecard/frontier-generalization-ledgerlite-runs.json`).
-Frontier generalization now rests on two of the three unseen
-codebases (gradebook and ledgerlite); textkit remains split-only.
+`eval-scorecard/frontier-generalization-ledgerlite-runs.json`),
+and on the unseen textkit codebase it passed 10 → 11 in 18.14s
+with the independent probe at 7/7, est. $0.0168, and
+`muse-wonder-1.0` recorded on every role's calls (fallbacks 0;
+`eval-scorecard/FRONTIER_GENERALIZATION_TEXTKIT.md`,
+`eval-scorecard/frontier-generalization-textkit-runs.json`).
+Frontier generalization now rests on all three unseen codebases
+(gradebook, ledgerlite, and textkit).
 
 ## Demo (25%)
 
@@ -284,7 +298,7 @@ Video status: not yet recorded.
   pre-registered target-gate-specific handled definition was NOT
   met and the record says so.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 302/302, demo repo 24/24, generalization
+- Suites at drafting: scaffold 308/308, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 
