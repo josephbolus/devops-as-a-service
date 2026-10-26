@@ -75,6 +75,60 @@ def _backoff(sleeper, base, attempt):
     sleeper(base * (2 ** attempt))
 
 
+# --- Model fallback (iteration 28) -------------------------------------------
+# Measured motivation: until this iteration only two Meta models had
+# ever served a production role (muse-spark-1.3 and muse-wonder-1.0),
+# and a model-level failure (an unavailable / unknown model, or a
+# transient failure that survives every retry) killed the call with no
+# recourse. Clients now accept a fallback model — per role via
+# `DAAS_FALLBACK_<ROLE>`, or one global fallback via
+# `DAAS_FALLBACK_MODEL` — and use it ONLY when the primary call fails
+# for a model-availability reason (HTTP 404, model_not_found / unknown
+# model markers) or after transient retries are exhausted. Auth and
+# other 4xx failures NEVER fall back: a bad key fails on every model,
+# and falling back would only hide it. Fallbacks are recorded in
+# `fallback_stats` ({fallbacks, fallback_successes}), never silent.
+MODEL_ERROR_MARKERS = ("model_not_found", "model not found",
+                       "unknown model", "invalid model",
+                       "no such model", "model is not available",
+                       "model unavailable", "model_not_available")
+
+
+def is_model_error(text, code=None):
+    """True only for model-availability failures worth falling back on."""
+    low = (text or "").lower()
+    if any(m in low for m in NON_TRANSIENT_MARKERS):
+        return False
+    if code == 404:
+        return True
+    return any(m in low for m in MODEL_ERROR_MARKERS)
+
+
+def _fallback_warranted(error_text):
+    if any(m in (error_text or "").lower() for m in NON_TRANSIENT_MARKERS):
+        return False
+    return is_model_error(error_text) or is_transient_error(error_text)
+
+
+def fallback_models_from_env(environ=None):
+    """Per-role fallback models from DAAS_FALLBACK_<ROLE> env vars."""
+    env = os.environ if environ is None else environ
+    out = {}
+    for role in AGENT_ROLES:
+        model = env.get(f"DAAS_FALLBACK_{role}")
+        if model:
+            out[role] = model
+    return out
+
+
+def resolve_fallback(system, primary, fallback_model, fallback_models):
+    """Fallback model for this call, or None if none / same as primary."""
+    words = system.strip().split()
+    role = "".join(ch for ch in words[0] if ch.isalnum()).upper() if words else ""
+    candidate = (fallback_models or {}).get(role, fallback_model)
+    return candidate if candidate and candidate != primary else None
+
+
 AGENT_ROLES = ("TRIAGE", "PLANNER", "CODER", "REVIEWER")
 
 
@@ -103,7 +157,7 @@ def resolve_model(system, default, role_models):
 class MetaModelClient:
     def __init__(self, model="muse-spark-1.3", base="https://api.meta.ai/v1",
                  role_models=None, max_attempts=3, backoff_base=1.0,
-                 sleeper=None):
+                 sleeper=None, fallback_model=None, fallback_models=None):
         self.key = os.environ.get("MODEL_API_KEY") or os.environ.get("META_API_KEY")
         if not self.key:
             raise LLMError("Set MODEL_API_KEY (or META_API_KEY) for the Meta Model API.")
@@ -114,10 +168,29 @@ class MetaModelClient:
         self.backoff_base = float(backoff_base)
         self.sleeper = sleeper if sleeper is not None else time.sleep
         self.retry_stats = {"calls": 0, "retries": 0, "transient_failures": 0}
+        self.fallback_model = (os.environ.get("DAAS_FALLBACK_MODEL")
+                               if fallback_model is None else fallback_model)
+        self.fallback_models = (fallback_models_from_env()
+                                if fallback_models is None else fallback_models)
+        self.fallback_stats = {"fallbacks": 0, "fallback_successes": 0}
 
     def complete_json(self, system, user):
+        primary = resolve_model(system, self.model, self.role_models)
+        try:
+            return self._complete_with_model(system, user, primary)
+        except LLMError as e:
+            fb = resolve_fallback(system, primary, self.fallback_model,
+                                  self.fallback_models)
+            if not fb or not _fallback_warranted(str(e)):
+                raise
+            self.fallback_stats["fallbacks"] += 1
+            out = self._complete_with_model(system, user, fb)
+            self.fallback_stats["fallback_successes"] += 1
+            return out
+
+    def _complete_with_model(self, system, user, model):
         body = json.dumps({
-            "model": resolve_model(system, self.model, self.role_models),
+            "model": model,
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user", "content": user},
@@ -370,7 +443,8 @@ class ConnectorClient:
               / "custom.meta-model-api" / "bin" / "meta_api.py")
 
     def __init__(self, model="muse-spark-1.3", role_models=None,
-                 max_attempts=3, backoff_base=1.0, sleeper=None):
+                 max_attempts=3, backoff_base=1.0, sleeper=None,
+                 fallback_model=None, fallback_models=None):
         if not self.HELPER.is_file():
             raise LLMError(f"Connector helper not found at {self.HELPER}")
         self.model = model
@@ -379,10 +453,29 @@ class ConnectorClient:
         self.backoff_base = float(backoff_base)
         self.sleeper = sleeper if sleeper is not None else time.sleep
         self.retry_stats = {"calls": 0, "retries": 0, "transient_failures": 0}
+        self.fallback_model = (os.environ.get("DAAS_FALLBACK_MODEL")
+                               if fallback_model is None else fallback_model)
+        self.fallback_models = (fallback_models_from_env()
+                                if fallback_models is None else fallback_models)
+        self.fallback_stats = {"fallbacks": 0, "fallback_successes": 0}
 
     def complete_json(self, system, user):
+        primary = resolve_model(system, self.model, self.role_models)
+        try:
+            return self._complete_with_model(system, user, primary)
+        except LLMError as e:
+            fb = resolve_fallback(system, primary, self.fallback_model,
+                                  self.fallback_models)
+            if not fb or not _fallback_warranted(str(e)):
+                raise
+            self.fallback_stats["fallbacks"] += 1
+            out = self._complete_with_model(system, user, fb)
+            self.fallback_stats["fallback_successes"] += 1
+            return out
+
+    def _complete_with_model(self, system, user, model):
         payload = json.dumps({
-            "model": resolve_model(system, self.model, self.role_models),
+            "model": model,
             "system": system,
             "user": user,
         })

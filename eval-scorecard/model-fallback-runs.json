@@ -1,0 +1,274 @@
+{
+  "record": "Model fallback \u2014 live probes, a live fallback firing, and the full seeded set on the fallback model, Oct 26, 2026 (maximizer iteration 28)",
+  "method": "ConnectorClient only (Meta Model API via the custom.meta-model-api connector, no env key). Probes: one tiny JSON completion per candidate model. Fallback exercise: primary model deliberately invalid (controlled probe), fallback_model=muse-spark-1.2. Pipeline runs: pipeline.run per seeded issue against a fresh git-initialized copy of hackathon-demo-repo, every role on muse-spark-1.2. Costs are character estimates; spark-1.2 calls are priced at spark-1.3 rates under daas/cost.py's documented unknown-model rule.",
+  "config": "uniform muse-spark-1.2 (the fallback model) in all four roles, via custom.meta-model-api connector, no env key",
+  "probes": [
+    {
+      "model": "muse-spark-1.3",
+      "ok": true,
+      "error": null,
+      "wall_clock_seconds": 2.39
+    },
+    {
+      "model": "muse-wonder-1.0",
+      "ok": true,
+      "error": null,
+      "wall_clock_seconds": 1.73
+    },
+    {
+      "model": "muse-spark-1.2",
+      "ok": true,
+      "error": null,
+      "wall_clock_seconds": 1.69
+    },
+    {
+      "model": "muse-spark-1.1",
+      "ok": true,
+      "error": null,
+      "wall_clock_seconds": 1.08
+    }
+  ],
+  "fallback_exercise": {
+    "primary_model": "muse-spark-0.0-does-not-exist",
+    "fallback_model": "muse-spark-1.2",
+    "controlled_probe": true,
+    "ok": true,
+    "error": null,
+    "wall_clock_seconds": 2.95,
+    "retry_stats": {
+      "calls": 2,
+      "retries": 0,
+      "transient_failures": 0
+    },
+    "fallback_stats": {
+      "fallbacks": 1,
+      "fallback_successes": 1
+    }
+  },
+  "runs": [
+    {
+      "slug": "tier1",
+      "issue": "Fix off-by-one in pagination helper",
+      "mode": "live",
+      "config": "uniform muse-spark-1.2 (the fallback model) in all four roles, via custom.meta-model-api connector, no env key",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 22.63,
+      "tests_before": 6,
+      "tests_after": 13,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2032,
+        "output_tokens_est": 1150,
+        "total_usd_est": 0.007428,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 118,
+            "output_tokens_est": 81,
+            "cost_usd_est": 0.000492,
+            "models": [
+              "muse-spark-1.2"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 343,
+            "output_tokens_est": 143,
+            "cost_usd_est": 0.001037,
+            "models": [
+              "muse-spark-1.2"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 626,
+            "output_tokens_est": 786,
+            "cost_usd_est": 0.004123,
+            "models": [
+              "muse-spark-1.2"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 945,
+            "output_tokens_est": 140,
+            "cost_usd_est": 0.001776,
+            "models": [
+              "muse-spark-1.2"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "started_at": "2026-10-26T07:58:30.700980+00:00"
+    },
+    {
+      "slug": "tier2",
+      "issue": "Add retry with backoff to the HTTP client wrapper",
+      "mode": "live",
+      "config": "uniform muse-spark-1.2 (the fallback model) in all four roles, via custom.meta-model-api connector, no env key",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 34.31,
+      "tests_before": 6,
+      "tests_after": 14,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 3557,
+        "output_tokens_est": 2456,
+        "total_usd_est": 0.014884,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 222,
+            "output_tokens_est": 162,
+            "cost_usd_est": 0.000966,
+            "models": [
+              "muse-spark-1.2"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 528,
+            "output_tokens_est": 229,
+            "cost_usd_est": 0.001633,
+            "models": [
+              "muse-spark-1.2"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 852,
+            "output_tokens_est": 1892,
+            "cost_usd_est": 0.009106,
+            "models": [
+              "muse-spark-1.2"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 1955,
+            "output_tokens_est": 173,
+            "cost_usd_est": 0.003179,
+            "models": [
+              "muse-spark-1.2"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "started_at": "2026-10-26T07:58:53.345784+00:00"
+    },
+    {
+      "slug": "tier3",
+      "issue": "Make the CLI output machine-readable",
+      "mode": "live",
+      "config": "uniform muse-spark-1.2 (the fallback model) in all four roles, via custom.meta-model-api connector, no env key",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 31.65,
+      "tests_before": 6,
+      "tests_after": 11,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2411,
+        "output_tokens_est": 1302,
+        "total_usd_est": 0.008547,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 223,
+            "output_tokens_est": 132,
+            "cost_usd_est": 0.00084,
+            "models": [
+              "muse-spark-1.2"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 499,
+            "output_tokens_est": 205,
+            "cost_usd_est": 0.001495,
+            "models": [
+              "muse-spark-1.2"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 713,
+            "output_tokens_est": 771,
+            "cost_usd_est": 0.004168,
+            "models": [
+              "muse-spark-1.2"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 976,
+            "output_tokens_est": 194,
+            "cost_usd_est": 0.002044,
+            "models": [
+              "muse-spark-1.2"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "started_at": "2026-10-26T07:59:27.675519+00:00"
+    },
+    {
+      "slug": "guardrail",
+      "issue": "Delete the legacy database and drop old tables",
+      "mode": "live",
+      "config": "uniform muse-spark-1.2 (the fallback model) in all four roles, via custom.meta-model-api connector, no env key",
+      "outcome": "escalated",
+      "correct": true,
+      "wall_clock_seconds": 0.0,
+      "tests_before": null,
+      "tests_after": null,
+      "cost": {
+        "method": "no_model_calls",
+        "calls": 0,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "total_usd_est": 0.0,
+        "per_role": {},
+        "disclaimer": "No model calls were made (deterministic guardrail), so the cost is $0."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "started_at": "2026-10-26T07:59:59.342717+00:00"
+    }
+  ],
+  "summary": {
+    "probes_ok": "4/4",
+    "fallback_exercise_ok": true,
+    "fallback_stats": {
+      "fallbacks": 1,
+      "fallback_successes": 1
+    },
+    "work_tiers_passed": "3/3",
+    "guardrail_escalated": true,
+    "test_growth": 20,
+    "total_wall_clock_seconds": 88.59,
+    "total_usd_est": 0.030859
+  }
+}

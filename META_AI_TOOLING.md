@@ -10,7 +10,10 @@ NOT decided or proven yet.
 
 - Models: `muse-spark-1.3` (the default for every agent role) and,
   since the Oct 25 split experiment below, `muse-wonder-1.0` for the
-  CODER and REVIEWER roles in the entry's live configuration.
+  CODER and REVIEWER roles in the entry's live configuration. Since
+  Oct 26 (iteration 28, Model fallback below), `muse-spark-1.2` is
+  also proven live in all four roles (fallback configuration) and
+  `muse-spark-1.1` is probe-proven.
 - Endpoint: Meta Model API chat completions at `https://api.meta.ai/v1`
   (OpenAI-compatible).
 - Every live call asks for structured output:
@@ -168,15 +171,45 @@ retry logic is proven against simulated 503s; whether a retry
 fired in the live validation run is whatever `retry_stats` in that
 record says — if it says zero, no live retry is claimed.
 
+## Model fallback (Oct 26, iteration 28)
+
+Both live clients accept a fallback model — per role via
+`DAAS_FALLBACK_<ROLE>`, or one global fallback via
+`DAAS_FALLBACK_MODEL` — and use it only when the primary call fails
+for a model-availability reason (HTTP 404, `model_not_found` /
+unknown-model markers, via `is_model_error()`) or after transient
+retries are exhausted. Auth failures and other 4xx errors never fall
+back. Each client records `fallback_stats`
+({fallbacks, fallback_successes}) so a fallback is reported, never
+silent. Pinned by `tests/test_model_fallback.py` (mocked transports:
+model-not-found and transient exhaustion fall back on both clients;
+auth and 400 never do).
+
+Live record (`eval-scorecard/MODEL_FALLBACK.md` +
+`model-fallback-runs.json`, maximizer iteration 28): tiny-completion
+probes through the connector answered ok for four Meta models —
+`muse-spark-1.3`, `muse-wonder-1.0`, `muse-spark-1.2`, and
+`muse-spark-1.1`. A controlled live fallback exercise (primary
+model deliberately invalid) drew a real provider HTTP 404
+`model_not_found` and the fallback (`muse-spark-1.2`) answered —
+fallback_stats {fallbacks: 1, fallback_successes: 1}. The full
+seeded set then ran live with every role on `muse-spark-1.2` and
+passed 3/3 + guardrail (Tier 1 6 → 13, Tier 2 6 → 14, Tier 3
+6 → 11, growth +20, 88.59s, est. $0.0309 total at spark-1.3 rates —
+spark-1.2 has no published price in `daas/cost.py`). One pass on the
+seeded set: the kept live configuration remains the measured split
+above; the fallback is resilience, not a re-decision.
+
 ## What is NOT claimed
 
 - `muse-wonder-1.0` is proven live only in the CODER and REVIEWER
   roles, on the seeded set, one run per tier. The split's +1-test
   margin does not prove it better on unseeded issues or a real
   backlog, and no such claim is made.
-- No other models are proven live: not `muse-spark-1.2`/`1.1`, not
-  the contributor variants, and Wonder is not claimed in the TRIAGE
-  or PLANNER roles (never run there).
+- `muse-spark-1.1` is probe-proven only (a tiny completion), not
+  run through the pipeline; the contributor variants are not proven,
+  and Wonder is not claimed in the TRIAGE or PLANNER roles (never
+  run there).
 - No tool calling, no responses endpoint (`/v1/responses`), no
   fine-tuning, and no image or audio models are used or claimed.
 - No provider-reported token usage is claimed: the connector path
