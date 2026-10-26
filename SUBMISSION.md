@@ -42,15 +42,20 @@ the combined live record across three attempts per issue is 9/9 work
 tiers (`REPEATABILITY.md`), and the pipeline also passed live on a
 second codebase it had never seen (ledgerlite, tests 9 → 13;
 `eval-scorecard/GENERALIZATION.md`), and on a third unseen codebase
-(textkit, tests 10 → 15; `eval-scorecard/GENERALIZATION2.md`). The worked impact model
+(textkit, tests 10 → 15; `eval-scorecard/GENERALIZATION2.md`), and on a
+fourth unseen codebase (gradebook, tests 12 → 18;
+`eval-scorecard/GENERALIZATION3.md`) whose issue carried two defects in
+two production modules — the first live fix spanning two production
+files, verified by an independent probe (8/8) rather than the
+pipeline's own tests alone. The worked impact model
 (`IMPACT_MODEL.md`, every input labeled measured / asserted / assumed)
 gives 50 min saved per passed issue and 216.7 senior hours per year at
 the middle volume, at an estimated API cost of $0.0254 per passed
 issue — $0.0305 per senior-hour saved (`eval-scorecard/COST_ACCOUNTING.md`;
 character-count estimate, not billing data, because the API does not
 expose usage on the connector path). Honest limits: n=3 seeded issues
-(three attempts each) plus two generalization issues (n=1 each, on
-two different unseen codebases), no real users
+(three attempts each) plus three generalization issues (n=1 each, on
+three different unseen codebases), no real users
 yet, and review time is still the model's 10-minute assumption.
 
 - Eval scorecard: `eval-scorecard/SCORECARD.md`
@@ -113,8 +118,9 @@ Video status: not yet recorded.
   live rescope under the split passed 6 → 9 in 16.84s
   (`eval-scorecard/resume-runs.json`).
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 184/184, demo repo 6/6, generalization
-  package 9/9, generalization2 package 10/10, all stdlib-only.
+- Suites at drafting: scaffold 191/191, demo repo 6/6, generalization
+  package 9/9, generalization2 package 10/10, generalization3 package
+  12/12, all stdlib-only.
 
 ## Dry-run checklist (Day 8 exit criteria)
 
