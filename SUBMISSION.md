@@ -359,8 +359,25 @@ Video status: not yet recorded.
   pinned by `tests/test_frontier_negative_controls_eval.py`. This
   run measures the current system (models + the three deterministic
   gates) as a whole; it does not isolate the model change.
+- Frontier negative controls 2 (iteration 46;
+  `eval-scorecard/FRONTIER_NEGATIVE_CONTROLS2.md`): the same three
+  pre-registered should-not-pass shapes ran live on the second
+  codebase (textkit, `generalization2/`) under the all-frontier
+  contest configuration and were handled 3/3 with 0 false passes
+  (66.24s, est. $0.0442 total): false report did not pass
+  (10 → 12, reviewer request_changes), contradictory spec did not
+  pass (10 → 11, tests_ok false, reviewer request_changes, no
+  baseline test edited), and the non-existent-target control
+  escalated via the plan gate in 12.04s after 2 model calls with
+  no file created. Every call records `muse-wonder-1.0`;
+  fallbacks 0, retries 0. Record in
+  `eval-scorecard/frontier-negative-controls2-runs.json`, pinned
+  by `tests/test_frontier_negative_controls2_eval.py`. The
+  frontier negative-control record now covers both codebases
+  (gradebook iteration 45, textkit here); like iteration 45, this
+  measures the current system as a whole.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 342/342, demo repo 24/24, generalization
+- Suites at drafting: scaffold 349/349, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 
