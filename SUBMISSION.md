@@ -211,7 +211,18 @@ $0.1047 total ($0.0349 per passed issue) — so three-pass
 frontier growth is +10, +9, +8 (mean +9.0), and the original
 tiers' direct record is no longer stale-baseline
 (`eval-scorecard/FRONTIER_CURRENT.md`,
-`eval-scorecard/frontier-current-runs.json`). The contest
+`eval-scorecard/frontier-current-runs.json`).
+The whole bench has since passed in ONE direct-pipeline session
+(iteration 50): all 12 work issues plus the guardrail issue ran
+live end to end under the all-frontier contest configuration at
+the 24-test baseline — 12/12 passed, guardrail escalated, growth
++42, 433.47s, est. $0.3910 total ($0.0326 per passed issue),
+`muse-wonder-1.0` on every call, fallbacks 0, retries 0
+(`eval-scorecard/FRONTIER_FULL_BENCH.md`,
+`eval-scorecard/frontier-full-bench-runs.json`). Against the
+prior at-baseline composite of iterations 44 + 48 (12/12 +
+guardrail, growth +39), full-bench growth is now +39 and +42
+(mean +40.5) across two complete at-baseline passes. The contest
 configuration has also passed live outside the seeded set: on the
 unseen gradebook codebase it passed 12 → 18 in 32.87s with the
 independent probe at 8/8 and `muse-wonder-1.0` recorded on every
@@ -408,7 +419,7 @@ Video status: not yet recorded.
   (gradebook iteration 45, textkit here); like iteration 45, this
   measures the current system as a whole.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 366/366, demo repo 24/24, generalization
+- Suites at drafting: scaffold 371/371, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

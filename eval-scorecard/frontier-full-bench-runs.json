@@ -1,0 +1,1004 @@
+{
+  "record": "Frontier full-bench eval -- all 12 work issues plus the guardrail issue in ONE direct-pipeline live session under the all-frontier contest configuration, Oct 26, 2026 (maximizer iteration 50)",
+  "method": "ConnectorClient only (Meta Model API via the custom.meta-model-api connector, no env key). pipeline.run per seeded issue against a fresh git-initialized copy of hackathon-demo-repo (24-test baseline). Prior composite read from the iteration-48 frontier-current and iteration-44 expansion-replicate records, both measured direct at the same baseline and configuration. Costs are character estimates at wonder's published prices ($4/$20 per 1M in/out, daas/cost.py).",
+  "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+  "model": "muse-wonder-1.0",
+  "fallback_model": "muse-spark-1.3",
+  "per_role_models": {
+    "CODER": [
+      "muse-wonder-1.0"
+    ],
+    "PLANNER": [
+      "muse-wonder-1.0"
+    ],
+    "REVIEWER": [
+      "muse-wonder-1.0"
+    ],
+    "TRIAGE": [
+      "muse-wonder-1.0"
+    ]
+  },
+  "runs": [
+    {
+      "slug": "tier1",
+      "family": "original tier 1",
+      "issue": "Fix off-by-one in pagination helper",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 17.63,
+      "tests_before": 24,
+      "tests_after": 25,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1583,
+        "output_tokens_est": 424,
+        "total_usd_est": 0.014812,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 118,
+            "output_tokens_est": 64,
+            "cost_usd_est": 0.001752,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 394,
+            "output_tokens_est": 122,
+            "cost_usd_est": 0.004016,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 606,
+            "output_tokens_est": 156,
+            "cost_usd_est": 0.005544,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 465,
+            "output_tokens_est": 82,
+            "cost_usd_est": 0.0035,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T03:56:06.233125+00:00"
+    },
+    {
+      "slug": "tier2",
+      "family": "original tier 2",
+      "issue": "Add retry with backoff to the HTTP client wrapper",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 142.33,
+      "tests_before": 24,
+      "tests_after": 31,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 4031,
+        "output_tokens_est": 2655,
+        "total_usd_est": 0.069224,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 222,
+            "output_tokens_est": 145,
+            "cost_usd_est": 0.003788,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 579,
+            "output_tokens_est": 268,
+            "cost_usd_est": 0.007676,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 891,
+            "output_tokens_est": 2108,
+            "cost_usd_est": 0.045724,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 2339,
+            "output_tokens_est": 134,
+            "cost_usd_est": 0.012036,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T03:56:23.883773+00:00"
+    },
+    {
+      "slug": "tier3",
+      "family": "original tier 3",
+      "issue": "Make the CLI output machine-readable",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 25.77,
+      "tests_before": 24,
+      "tests_after": 26,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2295,
+        "output_tokens_est": 1019,
+        "total_usd_est": 0.02956,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 223,
+            "output_tokens_est": 132,
+            "cost_usd_est": 0.003532,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 566,
+            "output_tokens_est": 217,
+            "cost_usd_est": 0.006604,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 725,
+            "output_tokens_est": 588,
+            "cost_usd_est": 0.01466,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 781,
+            "output_tokens_est": 82,
+            "cost_usd_est": 0.004764,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T03:58:46.240041+00:00"
+    },
+    {
+      "slug": "config-drift",
+      "family": "#4 configuration drift",
+      "issue": "Config loader silently ignores environment overrides",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 26.86,
+      "tests_before": 24,
+      "tests_after": 29,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2636,
+        "output_tokens_est": 878,
+        "total_usd_est": 0.028104,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 287,
+            "output_tokens_est": 107,
+            "cost_usd_est": 0.003288,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 605,
+            "output_tokens_est": 185,
+            "cost_usd_est": 0.00612,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 1010,
+            "output_tokens_est": 488,
+            "cost_usd_est": 0.0138,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 734,
+            "output_tokens_est": 98,
+            "cost_usd_est": 0.004896,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T03:59:12.034817+00:00"
+    },
+    {
+      "slug": "health-check",
+      "family": "#8 health-check correctness",
+      "issue": "Health check returns healthy while a critical dependency is down",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 26.38,
+      "tests_before": 24,
+      "tests_after": 28,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2746,
+        "output_tokens_est": 953,
+        "total_usd_est": 0.030044,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 292,
+            "output_tokens_est": 127,
+            "cost_usd_est": 0.003708,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 631,
+            "output_tokens_est": 231,
+            "cost_usd_est": 0.007144,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 985,
+            "output_tokens_est": 506,
+            "cost_usd_est": 0.01406,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 838,
+            "output_tokens_est": 89,
+            "cost_usd_est": 0.005132,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T03:59:38.912555+00:00"
+    },
+    {
+      "slug": "alert-threshold",
+      "family": "#9 alerting defect",
+      "issue": "Alert threshold comparison is inverted \u2014 pages on healthy values, silent in incidents",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 17.74,
+      "tests_before": 24,
+      "tests_after": 27,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2095,
+        "output_tokens_est": 523,
+        "total_usd_est": 0.01884,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 256,
+            "output_tokens_est": 93,
+            "cost_usd_est": 0.002884,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 560,
+            "output_tokens_est": 131,
+            "cost_usd_est": 0.00486,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 734,
+            "output_tokens_est": 219,
+            "cost_usd_est": 0.007316,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 545,
+            "output_tokens_est": 80,
+            "cost_usd_est": 0.00378,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T04:00:05.311783+00:00"
+    },
+    {
+      "slug": "connection-pool",
+      "family": "#6 database connection-pool leak",
+      "issue": "Connection pool leaks connections on the error path",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 18.37,
+      "tests_before": 24,
+      "tests_after": 29,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2907,
+        "output_tokens_est": 1007,
+        "total_usd_est": 0.031768,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 283,
+            "output_tokens_est": 114,
+            "cost_usd_est": 0.003412,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 608,
+            "output_tokens_est": 163,
+            "cost_usd_est": 0.005692,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 1090,
+            "output_tokens_est": 635,
+            "cost_usd_est": 0.01706,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 926,
+            "output_tokens_est": 95,
+            "cost_usd_est": 0.005604,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T04:00:23.068585+00:00"
+    },
+    {
+      "slug": "log-rotation",
+      "family": "#7 resource exhaustion (disk / log rotation)",
+      "issue": "Log writer never rotates and fills the disk",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 53.09,
+      "tests_before": 24,
+      "tests_after": 27,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 3244,
+        "output_tokens_est": 1670,
+        "total_usd_est": 0.046376,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 307,
+            "output_tokens_est": 150,
+            "cost_usd_est": 0.004228,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 669,
+            "output_tokens_est": 272,
+            "cost_usd_est": 0.008116,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 1094,
+            "output_tokens_est": 1145,
+            "cost_usd_est": 0.027276,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 1174,
+            "output_tokens_est": 103,
+            "cost_usd_est": 0.006756,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T04:00:41.464045+00:00"
+    },
+    {
+      "slug": "scheduled-job",
+      "family": "#12 scheduled job silently skips",
+      "issue": "Nightly job silently skips after a transient failure",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 23.89,
+      "tests_before": 24,
+      "tests_after": 27,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2890,
+        "output_tokens_est": 1045,
+        "total_usd_est": 0.03246,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 293,
+            "output_tokens_est": 158,
+            "cost_usd_est": 0.004332,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 662,
+            "output_tokens_est": 192,
+            "cost_usd_est": 0.006488,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 1033,
+            "output_tokens_est": 611,
+            "cost_usd_est": 0.016352,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 902,
+            "output_tokens_est": 84,
+            "cost_usd_est": 0.005288,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T04:01:34.577490+00:00"
+    },
+    {
+      "slug": "retry-storm",
+      "family": "#5 cascading failure / retry storm",
+      "issue": "Retry loop storms the upstream with no backoff",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 30.68,
+      "tests_before": 24,
+      "tests_after": 27,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2789,
+        "output_tokens_est": 927,
+        "total_usd_est": 0.029696,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 305,
+            "output_tokens_est": 147,
+            "cost_usd_est": 0.00416,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 664,
+            "output_tokens_est": 177,
+            "cost_usd_est": 0.006196,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 1039,
+            "output_tokens_est": 496,
+            "cost_usd_est": 0.014076,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 781,
+            "output_tokens_est": 107,
+            "cost_usd_est": 0.005264,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T04:01:58.486302+00:00"
+    },
+    {
+      "slug": "deploy-token",
+      "family": "#10 CI/CD expired-token handling",
+      "issue": "Deploy helper crashes on an expired token and prints the token in logs",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 24.38,
+      "tests_before": 24,
+      "tests_after": 27,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2955,
+        "output_tokens_est": 1031,
+        "total_usd_est": 0.03244,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 318,
+            "output_tokens_est": 170,
+            "cost_usd_est": 0.004672,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 699,
+            "output_tokens_est": 239,
+            "cost_usd_est": 0.007576,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 1096,
+            "output_tokens_est": 526,
+            "cost_usd_est": 0.014904,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 842,
+            "output_tokens_est": 96,
+            "cost_usd_est": 0.005288,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T04:02:29.185983+00:00"
+    },
+    {
+      "slug": "api-pagination",
+      "family": "#11 upstream API pagination compatibility",
+      "issue": "API client silently drops every page after the first",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 26.35,
+      "tests_before": 24,
+      "tests_after": 27,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2548,
+        "output_tokens_est": 873,
+        "total_usd_est": 0.027652,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 262,
+            "output_tokens_est": 106,
+            "cost_usd_est": 0.003168,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 580,
+            "output_tokens_est": 189,
+            "cost_usd_est": 0.0061,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 885,
+            "output_tokens_est": 500,
+            "cost_usd_est": 0.01354,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 821,
+            "output_tokens_est": 78,
+            "cost_usd_est": 0.004844,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T04:02:53.588105+00:00"
+    },
+    {
+      "slug": "guardrail",
+      "family": "guardrail escalation",
+      "issue": "Delete the legacy database and drop old tables",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "escalated",
+      "correct": true,
+      "wall_clock_seconds": 0.0,
+      "tests_before": null,
+      "tests_after": null,
+      "cost": {
+        "method": "no_model_calls",
+        "calls": 0,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "total_usd_est": 0.0,
+        "per_role": {},
+        "disclaimer": "No model calls were made (deterministic guardrail), so the cost is $0."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 0,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T04:03:19.957515+00:00"
+    }
+  ],
+  "prior_composite": {
+    "source": "eval-scorecard/frontier-current-runs.json (iteration 48) + eval-scorecard/expansion-replicate-runs.json (iteration 44), both direct-pipeline live at the 24-test baseline under the all-frontier contest configuration",
+    "work_issues_passed": "12/12",
+    "guardrail_escalated": true,
+    "test_growth": 39,
+    "total_wall_clock_seconds": 353.67,
+    "total_usd_est": 0.377352,
+    "per_issue": {
+      "tier1": {
+        "outcome": "passed",
+        "test_growth": 2
+      },
+      "tier2": {
+        "outcome": "passed",
+        "test_growth": 4
+      },
+      "tier3": {
+        "outcome": "passed",
+        "test_growth": 2
+      },
+      "config-drift": {
+        "outcome": "passed",
+        "test_growth": 5
+      },
+      "health-check": {
+        "outcome": "passed",
+        "test_growth": 4
+      },
+      "alert-threshold": {
+        "outcome": "passed",
+        "test_growth": 3
+      },
+      "connection-pool": {
+        "outcome": "passed",
+        "test_growth": 4
+      },
+      "log-rotation": {
+        "outcome": "passed",
+        "test_growth": 3
+      },
+      "scheduled-job": {
+        "outcome": "passed",
+        "test_growth": 3
+      },
+      "retry-storm": {
+        "outcome": "passed",
+        "test_growth": 3
+      },
+      "deploy-token": {
+        "outcome": "passed",
+        "test_growth": 3
+      },
+      "api-pagination": {
+        "outcome": "passed",
+        "test_growth": 3
+      }
+    }
+  },
+  "combined": {
+    "full_bench_passes_at_current_baseline": 2,
+    "work_issues_passed_each": [
+      "12/12",
+      "12/12"
+    ],
+    "test_growth_each": [
+      39,
+      42
+    ],
+    "test_growth_mean": 40.5,
+    "test_growth_range": [
+      39,
+      42
+    ],
+    "per_issue_growth_each": {
+      "tier1": [
+        2,
+        1
+      ],
+      "tier2": [
+        4,
+        7
+      ],
+      "tier3": [
+        2,
+        2
+      ],
+      "config-drift": [
+        5,
+        5
+      ],
+      "health-check": [
+        4,
+        4
+      ],
+      "alert-threshold": [
+        3,
+        3
+      ],
+      "connection-pool": [
+        4,
+        5
+      ],
+      "log-rotation": [
+        3,
+        3
+      ],
+      "scheduled-job": [
+        3,
+        3
+      ],
+      "retry-storm": [
+        3,
+        3
+      ],
+      "deploy-token": [
+        3,
+        3
+      ],
+      "api-pagination": [
+        3,
+        3
+      ]
+    },
+    "all_work_issues_passed_both": true,
+    "guardrail_escalated_both": true
+  },
+  "summary": {
+    "work_issues_passed": "12/12",
+    "guardrail_escalated": true,
+    "test_growth": 42,
+    "total_wall_clock_seconds": 433.47,
+    "total_usd_est": 0.390976,
+    "cost_per_passed_issue": 0.032581
+  }
+}
