@@ -202,7 +202,16 @@ Tier 1 6 → 8, Tier 2 6 → 11, Tier 3 6 → 8, growth +9, 171.57s,
 est. $0.1112 total — so two-pass frontier growth is +10 and +9
 (mean +9.5) at a two-pass mean est. $0.0373 per passed issue
 (`eval-scorecard/FRONTIER_REPLICATE.md`,
-`eval-scorecard/frontier-replicate-runs.json`). The contest
+`eval-scorecard/frontier-replicate-runs.json`). Both of those
+passes ran at the pre-expansion 6-test baseline; the direct
+record has since been re-measured at the current 24-test
+baseline (iteration 48): Tier 1 24 → 26, Tier 2 24 → 28,
+Tier 3 24 → 26, guardrail escalated, growth +8, 151.91s, est.
+$0.1047 total ($0.0349 per passed issue) — so three-pass
+frontier growth is +10, +9, +8 (mean +9.0), and the original
+tiers' direct record is no longer stale-baseline
+(`eval-scorecard/FRONTIER_CURRENT.md`,
+`eval-scorecard/frontier-current-runs.json`). The contest
 configuration has also passed live outside the seeded set: on the
 unseen gradebook codebase it passed 12 → 18 in 32.87s with the
 independent probe at 8/8 and `muse-wonder-1.0` recorded on every
@@ -384,7 +393,7 @@ Video status: not yet recorded.
   (gradebook iteration 45, textkit here); like iteration 45, this
   measures the current system as a whole.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 354/354, demo repo 24/24, generalization
+- Suites at drafting: scaffold 359/359, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

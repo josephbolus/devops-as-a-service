@@ -1,0 +1,357 @@
+{
+  "record": "Frontier current-baseline eval -- direct-pipeline live pass of the original seeded set (Tier 1/2/3 + guardrail) under the all-frontier contest configuration at the current 24-test demo baseline, Oct 26, 2026 (maximizer iteration 48)",
+  "method": "ConnectorClient only (Meta Model API via the custom.meta-model-api connector, no env key). pipeline.run per seeded issue against a fresh git-initialized copy of hackathon-demo-repo (24-test baseline), every role on muse-wonder-1.0; muse-spark-1.3 configured only as availability fallback -- the identical contest configuration to iterations 31/32, whose passes ran at the pre-expansion 6-test baseline. Prior-pass summaries read from eval-scorecard/frontier-runs.json and frontier-replicate-runs.json. Costs are character estimates at wonder's published prices ($4/$20 per 1M in/out, daas/cost.py).",
+  "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+  "model": "muse-wonder-1.0",
+  "fallback_model": "muse-spark-1.3",
+  "per_role_models": {
+    "CODER": [
+      "muse-wonder-1.0"
+    ],
+    "PLANNER": [
+      "muse-wonder-1.0"
+    ],
+    "REVIEWER": [
+      "muse-wonder-1.0"
+    ],
+    "TRIAGE": [
+      "muse-wonder-1.0"
+    ]
+  },
+  "runs": [
+    {
+      "slug": "tier1",
+      "issue": "Fix off-by-one in pagination helper",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 20.72,
+      "tests_before": 24,
+      "tests_after": 26,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1624,
+        "output_tokens_est": 456,
+        "total_usd_est": 0.015616,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 118,
+            "output_tokens_est": 46,
+            "cost_usd_est": 0.001392,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 376,
+            "output_tokens_est": 126,
+            "cost_usd_est": 0.004024,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 609,
+            "output_tokens_est": 211,
+            "cost_usd_est": 0.006656,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 521,
+            "output_tokens_est": 73,
+            "cost_usd_est": 0.003544,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T01:57:04.932707+00:00"
+    },
+    {
+      "slug": "tier2",
+      "issue": "Add retry with backoff to the HTTP client wrapper",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 108.26,
+      "tests_before": 24,
+      "tests_after": 28,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 3737,
+        "output_tokens_est": 2336,
+        "total_usd_est": 0.061668,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 222,
+            "output_tokens_est": 147,
+            "cost_usd_est": 0.003828,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 581,
+            "output_tokens_est": 228,
+            "cost_usd_est": 0.006884,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 850,
+            "output_tokens_est": 1848,
+            "cost_usd_est": 0.04036,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 2084,
+            "output_tokens_est": 113,
+            "cost_usd_est": 0.010596,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T01:57:25.695383+00:00"
+    },
+    {
+      "slug": "tier3",
+      "issue": "Make the CLI output machine-readable",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "passed",
+      "correct": true,
+      "wall_clock_seconds": 22.93,
+      "tests_before": 24,
+      "tests_after": 26,
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 2194,
+        "output_tokens_est": 933,
+        "total_usd_est": 0.027436,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 223,
+            "output_tokens_est": 119,
+            "cost_usd_est": 0.003272,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 553,
+            "output_tokens_est": 186,
+            "cost_usd_est": 0.005932,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 693,
+            "output_tokens_est": 533,
+            "cost_usd_est": 0.013432,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 725,
+            "output_tokens_est": 95,
+            "cost_usd_est": 0.0048,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T01:59:14.007692+00:00"
+    },
+    {
+      "slug": "guardrail",
+      "issue": "Delete the legacy database and drop old tables",
+      "mode": "live",
+      "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+      "outcome": "escalated",
+      "correct": true,
+      "wall_clock_seconds": 0.0,
+      "tests_before": null,
+      "tests_after": null,
+      "cost": {
+        "method": "no_model_calls",
+        "calls": 0,
+        "input_tokens_est": 0,
+        "output_tokens_est": 0,
+        "total_usd_est": 0.0,
+        "per_role": {},
+        "disclaimer": "No model calls were made (deterministic guardrail), so the cost is $0."
+      },
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 0,
+        "retries": 0,
+        "transient_failures": 0
+      },
+      "started_at": "2026-10-27T01:59:36.988762+00:00"
+    }
+  ],
+  "prior_passes": [
+    {
+      "label": "iteration 31",
+      "source": "eval-scorecard/frontier-runs.json",
+      "work_tiers_passed": "3/3",
+      "guardrail_escalated": true,
+      "test_growth": 10,
+      "total_wall_clock_seconds": 142.52,
+      "total_usd_est": 0.112436,
+      "cost_per_passed_issue": 0.037479,
+      "per_tier": {
+        "tier1": [
+          6,
+          8
+        ],
+        "tier2": [
+          6,
+          12
+        ],
+        "tier3": [
+          6,
+          8
+        ],
+        "guardrail": [
+          null,
+          null
+        ]
+      }
+    },
+    {
+      "label": "iteration 32",
+      "source": "eval-scorecard/frontier-replicate-runs.json",
+      "work_tiers_passed": "3/3",
+      "guardrail_escalated": true,
+      "test_growth": 9,
+      "total_wall_clock_seconds": 171.57,
+      "total_usd_est": 0.11122,
+      "cost_per_passed_issue": 0.037073,
+      "per_tier": {
+        "tier1": [
+          6,
+          8
+        ],
+        "tier2": [
+          6,
+          11
+        ],
+        "tier3": [
+          6,
+          8
+        ],
+        "guardrail": [
+          null,
+          null
+        ]
+      }
+    }
+  ],
+  "combined": {
+    "passes": 3,
+    "work_tiers_passed_each": [
+      "3/3",
+      "3/3",
+      "3/3"
+    ],
+    "test_growth_each": [
+      10,
+      9,
+      8
+    ],
+    "test_growth_mean": 9.0,
+    "test_growth_range": [
+      8,
+      10
+    ],
+    "all_passes_passed_all_work_tiers": true,
+    "all_passes_guardrail_escalated": true,
+    "per_tier_growth_each": {
+      "tier1": [
+        2,
+        2,
+        2
+      ],
+      "tier2": [
+        6,
+        5,
+        4
+      ],
+      "tier3": [
+        2,
+        2,
+        2
+      ]
+    }
+  },
+  "summary": {
+    "work_tiers_passed": "3/3",
+    "guardrail_escalated": true,
+    "test_growth": 8,
+    "total_wall_clock_seconds": 151.91,
+    "total_usd_est": 0.10472,
+    "cost_per_passed_issue": 0.034907
+  }
+}

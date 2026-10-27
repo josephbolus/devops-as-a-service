@@ -61,7 +61,7 @@ class TestSubmissionDraft(unittest.TestCase):
         for token in ("3/3", "94.65s", "6 → 9", "6 → 10", "6 → 8",
                       "#16", "#17", "#18", "50 min saved",
                       "216.7", "+10 vs +9", "209.14s", "16.84s",
-                      "354/354"):
+                      "359/359"):
             self.assertIn(token, self.text, token)
 
     def test_current_evidence_included(self):
@@ -89,6 +89,8 @@ class TestSubmissionDraft(unittest.TestCase):
                       "FRONTIER.md", "frontier-runs.json",
                       "142.52s", "$0.0375", "FRONTIER_REPLICATE.md",
                       "frontier-replicate-runs.json", "171.57s",
+                      "FRONTIER_CURRENT.md", "frontier-current-runs.json",
+                      "151.91s", "$0.0349", "24 → 28",
                       "FRONTIER_GENERALIZATION.md",
                       "frontier-generalization-runs.json", "32.87s",
                       "$0.0340", "FRONTIER_GENERALIZATION_LEDGERLITE.md",
