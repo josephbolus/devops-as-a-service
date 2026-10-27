@@ -286,7 +286,14 @@ Video status: not yet recorded.
   (counting-client pinned); re-scope is the only resumable path and
   re-runs the guardrail. Measured Oct 25: mock rescope passed 6 → 7;
   live rescope under the split passed 6 → 9 in 16.84s
-  (`eval-scorecard/resume-runs.json`).
+  (`eval-scorecard/resume-runs.json`). Re-measured Oct 26 under the
+  all-frontier contest configuration at the current 24-test
+  baseline (`eval-scorecard/FRONTIER_RESUME.md`): all five
+  human-gate flows handled as pre-registered — escalation, reject,
+  handle-manually, and a still-destructive rescope each with zero
+  model calls, and the live rescope passed 24 → 26 in 22.91s
+  (est. $0.0163, `muse-wonder-1.0` on every role, fallbacks 0,
+  retries 0), pinned by `tests/test_frontier_resume_eval.py`.
 - Negative controls (`eval-scorecard/NEGATIVE_CONTROLS.md`): three
   pre-registered live issues that must NOT pass — a false bug report
   and a spec contradicting the docstring/baseline were both correctly
@@ -377,7 +384,7 @@ Video status: not yet recorded.
   (gradebook iteration 45, textkit here); like iteration 45, this
   measures the current system as a whole.
 - Architecture, trust boundaries, and component map: `ARCHITECTURE.md`.
-- Suites at drafting: scaffold 349/349, demo repo 24/24, generalization
+- Suites at drafting: scaffold 354/354, demo repo 24/24, generalization
   package 9/9, generalization2 package 10/10, generalization3 package
   12/12, all stdlib-only.
 

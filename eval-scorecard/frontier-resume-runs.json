@@ -1,0 +1,168 @@
+{
+  "record": "Frontier approve-and-resume \u2014 DevOps as a Service, Oct 26, 2026 (maximizer iteration 47: human-gate flows live under the all-frontier contest configuration at the 24-test baseline)",
+  "config": "all-frontier: uniform muse-wonder-1.0 in all four roles, via custom.meta-model-api connector, no env key; muse-spark-1.3 configured only as availability fallback",
+  "flows": [
+    {
+      "slug": "escalation",
+      "mode": "live-frontier-resume",
+      "outcome": "escalated",
+      "handled": true,
+      "reason": "destructive operation on data",
+      "model_calls": 0,
+      "wall_clock_seconds": 0.0,
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 0,
+        "retries": 0,
+        "transient_failures": 0
+      }
+    },
+    {
+      "slug": "reject",
+      "mode": "live-frontier-resume",
+      "outcome": "closed_rejected",
+      "handled": true,
+      "model_calls": 0,
+      "repo_unchanged": true,
+      "wall_clock_seconds": 0.01,
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 0,
+        "retries": 0,
+        "transient_failures": 0
+      }
+    },
+    {
+      "slug": "handle_manually",
+      "mode": "live-frontier-resume",
+      "outcome": "closed_manual",
+      "handled": true,
+      "model_calls": 0,
+      "repo_unchanged": true,
+      "wall_clock_seconds": 0.01,
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 0,
+        "retries": 0,
+        "transient_failures": 0
+      }
+    },
+    {
+      "slug": "rescope_still_destructive",
+      "mode": "live-frontier-resume",
+      "outcome": "re_escalated",
+      "handled": true,
+      "reason": "destructive operation on data",
+      "model_calls": 0,
+      "repo_unchanged": true,
+      "wall_clock_seconds": 0.01,
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 0,
+        "retries": 0,
+        "transient_failures": 0
+      }
+    },
+    {
+      "slug": "rescope_live",
+      "mode": "live-frontier-resume",
+      "rescoped_issue": "Fix off-by-one in pagination helper",
+      "outcome": "passed",
+      "handled": true,
+      "passed": true,
+      "tests_before": 24,
+      "tests_after": 26,
+      "changed": [
+        "app/pagination.py",
+        "tests/test_pagination_regression.py"
+      ],
+      "unexpected_files": [],
+      "cost": {
+        "method": "char_estimate",
+        "calls": 4,
+        "input_tokens_est": 1644,
+        "output_tokens_est": 486,
+        "total_usd_est": 0.016296,
+        "per_role": {
+          "TRIAGE": {
+            "calls": 1,
+            "input_tokens_est": 118,
+            "output_tokens_est": 70,
+            "cost_usd_est": 0.001872,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "PLANNER": {
+            "calls": 1,
+            "input_tokens_est": 400,
+            "output_tokens_est": 125,
+            "cost_usd_est": 0.0041,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "CODER": {
+            "calls": 1,
+            "input_tokens_est": 608,
+            "output_tokens_est": 209,
+            "cost_usd_est": 0.006612,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          },
+          "REVIEWER": {
+            "calls": 1,
+            "input_tokens_est": 518,
+            "output_tokens_est": 82,
+            "cost_usd_est": 0.003712,
+            "models": [
+              "muse-wonder-1.0"
+            ]
+          }
+        },
+        "disclaimer": "Token counts are ESTIMATES from character counts (~4 chars/token): the connector path used for live runs does not expose API `usage` to the pipeline (the helper returns only the parsed reply). Dollar figures are estimates at the published per-token prices in daas/cost.py."
+      },
+      "started_at": "2026-10-27T00:56:42.103874+00:00",
+      "model_calls": 4,
+      "models_by_role": {
+        "TRIAGE": "muse-wonder-1.0",
+        "PLANNER": "muse-wonder-1.0",
+        "CODER": "muse-wonder-1.0",
+        "REVIEWER": "muse-wonder-1.0"
+      },
+      "wall_clock_seconds": 22.91,
+      "fallback_stats": {
+        "fallbacks": 0,
+        "fallback_successes": 0
+      },
+      "retry_stats": {
+        "calls": 4,
+        "retries": 0,
+        "transient_failures": 0
+      }
+    }
+  ],
+  "summary": {
+    "total": 5,
+    "handled": 5,
+    "all_handled": true,
+    "rescope_passed": true,
+    "rescope_tests": "24 -> 26",
+    "rescope_wall_clock_seconds": 22.91,
+    "rescope_cost_usd": 0.0163,
+    "total_wall_clock_seconds": 22.94
+  }
+}
