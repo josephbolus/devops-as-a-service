@@ -1,0 +1,45 @@
+{
+ "record": "Claims audit -- submission-facing docs (SUBMISSION.md, README.md) checked fresh against the measured records, Oct 26, 2026 (maximizer iteration 51)",
+ "method": "Deterministic, no API calls: fresh demo-suite run, full-bench summary recomputed from its per-run rows, and token/framing checks on the two judge-facing docs. Dated historical eval records are not audited or altered.",
+ "demo_suite": {
+  "tests": 24,
+  "expected": 24,
+  "ok": true
+ },
+ "full_bench": {
+  "summary": {
+   "work_issues_passed": "12/12",
+   "guardrail_escalated": true,
+   "test_growth": 42,
+   "total_wall_clock_seconds": 433.47,
+   "total_usd_est": 0.390976,
+   "cost_per_passed_issue": 0.032581
+  },
+  "recomputed": {
+   "work_issues_passed": "12/12",
+   "guardrail_escalated": true,
+   "test_growth": 42,
+   "total_wall_clock_seconds": 433.47,
+   "total_usd_est": 0.390976,
+   "cost_per_passed_issue": 0.032581
+  },
+  "matches": true
+ },
+ "docs": {
+  "submission_carries_full_bench_figures": true,
+  "submission_labels_split_era_cost": true,
+  "submission_split_paragraph_past_tense_superseded": true,
+  "readme_tooling_row_names_supersession": true,
+  "readme_baseline_current": true
+ },
+ "checks": {
+  "demo_suite_fresh_24": true,
+  "full_bench_summary_recomputes": true,
+  "submission_carries_full_bench_figures": true,
+  "submission_labels_split_era_cost": true,
+  "submission_split_framing_current": true,
+  "readme_tooling_row_current": true,
+  "readme_baseline_current": true
+ },
+ "all_checks_pass": true
+}
