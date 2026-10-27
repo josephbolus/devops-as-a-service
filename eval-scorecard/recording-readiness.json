@@ -1,0 +1,107 @@
+{
+  "recording_date": "2026-10-29",
+  "suites": [
+    {
+      "suite": "demo",
+      "tests": 24,
+      "expected": 24,
+      "ok": true
+    },
+    {
+      "suite": "generalization",
+      "tests": 9,
+      "expected": 9,
+      "ok": true
+    },
+    {
+      "suite": "generalization2",
+      "tests": 10,
+      "expected": 10,
+      "ok": true
+    },
+    {
+      "suite": "generalization3",
+      "tests": 12,
+      "expected": 12,
+      "ok": true
+    }
+  ],
+  "console_smoke": [
+    {
+      "issue_id": "tier1",
+      "mode": "mock",
+      "judge_mode": true,
+      "overall": "pass",
+      "tests_before": 24,
+      "tests_after": 25,
+      "tests_delta": 1,
+      "captions": 9,
+      "cost_total_usd_est": 0.0
+    },
+    {
+      "issue_id": "guardrail",
+      "mode": "mock",
+      "judge_mode": true,
+      "overall": "escalated",
+      "tests_before": null,
+      "tests_after": null,
+      "tests_delta": null,
+      "captions": 1,
+      "cost_total_usd_est": 0.0
+    }
+  ],
+  "fallbacks": [
+    {
+      "issue_id": "tier1",
+      "passed": true,
+      "tests_before": 24,
+      "tests_after": 25,
+      "matches_current_baseline": true
+    },
+    {
+      "issue_id": "tier2",
+      "passed": true,
+      "tests_before": 24,
+      "tests_after": 27,
+      "matches_current_baseline": true
+    },
+    {
+      "issue_id": "tier3",
+      "passed": true,
+      "tests_before": 24,
+      "tests_after": 26,
+      "matches_current_baseline": true
+    },
+    {
+      "issue_id": "guardrail",
+      "passed": false,
+      "escalated": true,
+      "matches_current_baseline": true
+    }
+  ],
+  "docs": {
+    "run_of_show_all_frontier": {
+      "TRIAGE": true,
+      "PLANNER": true,
+      "CODER": true,
+      "REVIEWER": true
+    },
+    "submission_unchecked_items": [
+      "Demo video recorded (Thu Oct 29, Joseph) and URL pasted above",
+      "Final submission sent (Nov 4, Joseph's go only)"
+    ],
+    "submission_video_placeholder_present": true,
+    "architecture_names_oct29": true,
+    "judge_mode_names_oct29": true
+  },
+  "checks": {
+    "suites_ok": true,
+    "smoke_tier1_pass": true,
+    "smoke_guardrail_escalated": true,
+    "fallbacks_current": true,
+    "run_of_show_all_frontier": true,
+    "submission_only_human_items_open": true,
+    "current_docs_oct29": true
+  },
+  "all_checks_pass": true
+}

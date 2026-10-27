@@ -103,8 +103,9 @@ again. Measured mock + live flows and the safeguards are in
 ## What is not built yet (honest status)
 
 - The **demo video** — nothing is recorded yet; recording is Joseph's
-  Nov 2 work. Every artifact the recording needs exists; the recording
-  itself is not claimed here.
+  Thu Oct 29, 2026 work (moved off Mon Nov 2, his Philippines departure
+  day; Nov 2 morning is emergency-retake only). Every artifact the
+  recording needs exists; the recording itself is not claimed here.
 - The **approve-and-resume flow** (former Days 5–6 item) was completed
   Oct 25: see `APPROVE_AND_RESUME.md`. It is built, test-pinned, and
   measured in mock and live flows — no longer a gap.

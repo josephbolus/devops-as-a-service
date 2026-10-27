@@ -53,8 +53,9 @@ configured). Programmatically: `POST /api/judge/run`, then poll
 - Mock is the one-click default, and mock proves plumbing, not model
   performance — the card's links point at the live evidence (PRs and
   scorecard) for the model-performance claims.
-- It is not the demo video. Nothing is recorded; Joseph's Nov 2
-  recording remains the Demo criterion's human-owned item.
+- It is not the demo video. Nothing is recorded; Joseph's Thu
+  Oct 29, 2026 recording remains the Demo criterion's human-owned
+  item (Nov 2 morning is emergency-retake only).
 
 ## Full tour record (Oct 25, iteration 18)
 
