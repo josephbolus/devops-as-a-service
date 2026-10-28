@@ -2,8 +2,10 @@
 
 Status: **DRAFT — not submitted.** This is the Day-8 submission dry-run
 artifact from the sprint plan: the full submission form text, drafted
-early so Nov 4 is a paste-and-verify, not a writing day. Submitting
-remains Joseph's go in the main chat. Deadline: Nov 4, 2026, 9:00 PM ET.
+early so Nov 4 is a paste-and-verify, not a writing day. Submit
+authority: Joseph granted it to Muse on Oct 27, 2026 — Muse submits
+once the form is verified completely filled (see the goal's
+meta-submit-authority record). Deadline: Nov 4, 2026, 9:00 PM ET.
 
 Honest gaps in this draft, by design:
 
