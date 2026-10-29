@@ -22,8 +22,15 @@ Run the demo from the demo console, not a bare terminal:
 
 ```bash
 cd hackathon-agent-scaffold && python3 demo_ui.py --port 8765
-# then open http://127.0.0.1:8765/ at 1080p, browser zoom 125%
+# then open http://127.0.0.1:8765/v3 at 1080p, browser zoom 125%
 ```
+
+The console recorded is the v3 console at `/v3` (merged Oct 28,
+PR #19). It defaults to the **LIGHT** theme; the dark theme is one
+click on the header toggle — pick the theme before the takes and
+keep it for both. The classic console remains at `/` unchanged.
+The flow is identical: same Judge Mode, same stage timeline,
+same narration captions, same results card.
 
 `demo_ui.py` shows an issue picker (Tier 1/2/3 + guardrail), a
 Mock/Live toggle, and a stage timeline that fills in live via
