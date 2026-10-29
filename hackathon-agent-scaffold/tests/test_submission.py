@@ -5,7 +5,7 @@ diagram, scorecard, how to run, license file, draft submission text,
 and repo hygiene (no secrets, no stray branches claimed falsely).
 This test pins the loop-producible parts: the license, the draft's
 required sections and measured numbers, and its honest status —
-draft, not submitted; video not yet recorded.
+draft, not submitted; video produced Oct 29, 2026, URL pinned below.
 """
 import re
 import subprocess
@@ -37,10 +37,15 @@ class TestSubmissionDraft(unittest.TestCase):
         self.assertIn("not submitted", self.text)
         self.assertIn("Nov 4, 2026, 9:00 PM ET", self.text)
 
-    def test_video_gap_is_a_placeholder_not_a_claim(self):
-        self.assertIn("not yet recorded", self.text)
-        self.assertIn("no video exists yet", self.text)
-        self.assertIn("TO BE ADDED", self.text)
+    def test_video_recorded_and_url_pinned(self):
+        # Oct 29, 2026: the video exists (Remotion build, public on
+        # YouTube, verified playable). Pin the URL and the absence of
+        # the old placeholder/gap wording.
+        self.assertIn("https://www.youtube.com/watch?v=HeMbxjvuN7Y",
+                      self.text)
+        self.assertNotIn("TO BE ADDED", self.text)
+        self.assertNotIn("no video exists yet", self.text)
+        self.assertNotIn("not yet recorded", self.text)
 
     def test_form_fields_present(self):
         for token in (

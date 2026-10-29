@@ -9,12 +9,14 @@ meta-submit-authority record). Deadline: Nov 4, 2026, 9:00 PM ET.
 
 Honest gaps in this draft, by design:
 
-- **Demo video: not yet recorded — no video exists yet.** The video URL
-  field below is a placeholder. Recording is Joseph's Thu Oct 29 work
-  (moved off Nov 2, his Philippines departure day; Nov 2 morning is
-  emergency-retake only); the
+- **Demo video: produced Thu Oct 29, 2026, and public.** At Joseph's
+  direction the video was built with Remotion from real v3 console
+  captures — a Mock Judge Mode Tier 1 run replayed through the console's
+  own rendering (labeled a mock run on its own results card) plus a live
+  guardrail escalation — captioned, no voiceover, 2:45 at 1080p. Its URL
+  is in the form field below and was verified public and playable. The
   run-of-show (`DEMO_RUN_OF_SHOW.md`) and fallback package
-  (`demo-fallbacks/`) are ready for it.
+  (`demo-fallbacks/`) remain the recording-day record.
 - Everything else in this draft is measured or test-pinned in the repo
   and linked below; model claims are labeled model, not measurement.
 
@@ -25,8 +27,7 @@ Honest gaps in this draft, by design:
 - **Tagline:** One GitHub issue in → a tested pull request out — and when
   an issue is destructive, the agents stop and ask a human instead.
 - **Repository:** https://github.com/josephbolus/devops-as-a-service
-- **Demo video URL:** [TO BE ADDED after the Oct 29 recording — no video
-  exists yet]
+- **Demo video URL:** https://www.youtube.com/watch?v=HeMbxjvuN7Y
 
 ## Description (Impact — 30%)
 
@@ -324,7 +325,10 @@ three stale framings in the same iteration (README's pre-expansion
 "6 passing" baseline line, the present-tense "keeps the split"
 framing, and the unlabeled split-era cost figure). This is
 consistency verification, not model performance.
-Video status: not yet recorded.
+Video status: produced Oct 29, 2026 — public at the demo video URL in
+the form fields above (Remotion build from real v3 console captures: a
+Mock Judge Mode run, labeled as such on its own results card, plus a
+live guardrail escalation; captioned, 2:45, 1080p).
 
 ## Technical depth & execution (20%)
 
@@ -450,5 +454,5 @@ Video status: not yet recorded.
   `*.key`; tracked files contain no key values
 - [x] Branches: `main` plus the three `daas/*` branches, each backing an
   open live PR (#16/#17/#18) — not stray branches
-- [ ] Demo video recorded (Thu Oct 29, Joseph) and URL pasted above
+- [x] Demo video recorded (Thu Oct 29) and URL pasted above
 - [ ] Final submission sent (Nov 4, Joseph's go only)

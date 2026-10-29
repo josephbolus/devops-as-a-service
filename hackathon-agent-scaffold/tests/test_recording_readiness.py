@@ -6,9 +6,10 @@ The record verifies, fresh at generation time, every artifact the
 Thu Oct 29 recording depends on: the four non-scaffold suites green,
 a mock Judge Mode console smoke at the current 24-test baseline,
 the fallback package at the current baseline, the run-of-show's
-all-frontier pre-flight, and the submission checklist with only the
-two human-owned items open. These tests recompute the summary from
-the rows and pin the doc's agreement.
+all-frontier pre-flight, and the submission checklist — after the
+Oct 29 video landed, only the final-submission item open. These
+tests recompute the summary from the rows and pin the doc's
+agreement.
 """
 import json
 import sys
@@ -72,8 +73,8 @@ class TestRecordingReadinessRecord(unittest.TestCase):
         self.assertTrue(all(docs["run_of_show_all_frontier"].values()))
         self.assertEqual(set(docs["run_of_show_all_frontier"]),
                          set(rr.ROLES))
-        self.assertEqual(len(docs["submission_unchecked_items"]), 2)
-        self.assertTrue(docs["submission_video_placeholder_present"])
+        self.assertEqual(len(docs["submission_unchecked_items"]), 1)
+        self.assertTrue(docs["submission_video_url_present"])
         self.assertTrue(docs["architecture_names_oct29"])
         self.assertTrue(docs["judge_mode_names_oct29"])
 

@@ -87,10 +87,9 @@
       "REVIEWER": true
     },
     "submission_unchecked_items": [
-      "Demo video recorded (Thu Oct 29, Joseph) and URL pasted above",
       "Final submission sent (Nov 4, Joseph's go only)"
     ],
-    "submission_video_placeholder_present": true,
+    "submission_video_url_present": true,
     "architecture_names_oct29": true,
     "judge_mode_names_oct29": true
   },
