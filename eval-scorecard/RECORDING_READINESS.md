@@ -36,7 +36,7 @@ API calls (console smoke is mock mode — plumbing proof).
 ## Documents
 
 - Run-of-show pre-flight all-frontier (every role muse-wonder-1.0): {'TRIAGE': True, 'PLANNER': True, 'CODER': True, 'REVIEWER': True}
-- Submission unchecked items (human-owned only): ["Final submission sent (Nov 4, Joseph's go only)"]
+- Submission unchecked items (final submission only): ["Final submission sent (Nov 1 pre-flight submits under Joseph's"]
 - Submission video URL present (no placeholder): True
 - ARCHITECTURE.md names Oct 29: True
 - JUDGE_MODE.md names Oct 29: True

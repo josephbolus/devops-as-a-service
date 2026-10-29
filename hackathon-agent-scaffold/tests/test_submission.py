@@ -138,6 +138,13 @@ class TestSubmissionDraft(unittest.TestCase):
         self.assertIn("Dry-run checklist", self.text)
         self.assertIn("LICENSE", self.text)
 
+    def test_final_submission_item_matches_oct27_authority(self):
+        # The header records Joseph's Oct 27 grant (Muse submits once
+        # the form is verified filled); the checklist's one open item
+        # must say the same, not the superseded "Joseph's go only".
+        self.assertIn("Oct 27 authority", self.text)
+        self.assertNotIn("Joseph's go only", self.text)
+
     def test_root_readme_links_both(self):
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         self.assertIn("SUBMISSION.md", readme)

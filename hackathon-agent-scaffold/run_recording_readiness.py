@@ -205,7 +205,7 @@ def render_md(rec):
         "",
         f"- Run-of-show pre-flight all-frontier (every role "
         f"muse-wonder-1.0): {d['run_of_show_all_frontier']}",
-        f"- Submission unchecked items (human-owned only): "
+        f"- Submission unchecked items (final submission only): "
         f"{d['submission_unchecked_items']}",
         f"- Submission video URL present (no placeholder): "
         f"{d['submission_video_url_present']}",

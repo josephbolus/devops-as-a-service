@@ -455,4 +455,6 @@ live guardrail escalation; captioned, 2:45, 1080p).
 - [x] Branches: `main` plus the three `daas/*` branches, each backing an
   open live PR (#16/#17/#18) — not stray branches
 - [x] Demo video recorded (Thu Oct 29) and URL pasted above
-- [ ] Final submission sent (Nov 4, Joseph's go only)
+- [ ] Final submission sent (Nov 1 pre-flight submits under Joseph's
+  Oct 27 authority once the form is verified completely filled;
+  deadline Nov 4, 9:00 PM ET)
