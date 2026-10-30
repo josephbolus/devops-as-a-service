@@ -46,6 +46,18 @@ class TestSubmissionDraft(unittest.TestCase):
         self.assertNotIn("TO BE ADDED", self.text)
         self.assertNotIn("no video exists yet", self.text)
         self.assertNotIn("not yet recorded", self.text)
+        # v2 (swapped in Oct 30, 2026): the submission copy must
+        # describe the video judges will actually watch — a LIVE
+        # Judge Mode Tier 1 run with narration — not v1's Mock
+        # replay with no voiceover.
+        self.assertIn("live Judge Mode Tier 1 run", self.text)
+        self.assertIn("34.2s", self.text)
+        self.assertIn("with narration", self.text)
+        self.assertNotIn("no voiceover", self.text)
+        self.assertNotIn("Mock Judge Mode Tier 1 run replayed",
+                         self.text)
+        self.assertNotIn("Mock Judge Mode run, labeled as such",
+                         self.text)
 
     def test_form_fields_present(self):
         for token in (

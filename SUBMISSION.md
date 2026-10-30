@@ -9,12 +9,15 @@ meta-submit-authority record). Deadline: Nov 4, 2026, 9:00 PM ET.
 
 Honest gaps in this draft, by design:
 
-- **Demo video: produced Thu Oct 29, 2026, and public.** At Joseph's
-  direction the video was built with Remotion from real v3 console
-  captures — a Mock Judge Mode Tier 1 run replayed through the console's
-  own rendering (labeled a mock run on its own results card) plus a live
-  guardrail escalation — captioned, no voiceover, 2:45 at 1080p. Its URL
-  is in the form field below and was verified public and playable. The
+- **Demo video: produced Thu Oct 29, 2026, and public (v2, swapped in
+  Oct 30 at Joseph's direction).** At Joseph's direction the video was
+  built with Remotion from real v3 console captures — a live Judge Mode
+  Tier 1 run under the all-frontier contest configuration (every role
+  `muse-wonder-1.0`; tests 24 → 25, 34.2s, replayed through the
+  console's own rendering) plus a live guardrail escalation —
+  captioned, with narration, 2:45 at 1080p. Its URL is in the form
+  field below and was verified public and playable. (v1, a silent
+  Mock-run replay, remains public as a rollback.) The
   run-of-show (`DEMO_RUN_OF_SHOW.md`) and fallback package
   (`demo-fallbacks/`) remain the recording-day record.
 - Everything else in this draft is measured or test-pinned in the repo
@@ -326,9 +329,10 @@ three stale framings in the same iteration (README's pre-expansion
 framing, and the unlabeled split-era cost figure). This is
 consistency verification, not model performance.
 Video status: produced Oct 29, 2026 — public at the demo video URL in
-the form fields above (Remotion build from real v3 console captures: a
-Mock Judge Mode run, labeled as such on its own results card, plus a
-live guardrail escalation; captioned, 2:45, 1080p).
+the form fields above (v2: Remotion build from real v3 console
+captures: a live Judge Mode Tier 1 run under the all-frontier contest
+configuration, tests 24 → 25 in 34.2s, plus a live guardrail
+escalation; captioned, with narration, 2:45, 1080p).
 
 ## Technical depth & execution (20%)
 
