@@ -118,7 +118,7 @@ def doc_checks():
         "run_of_show_all_frontier": frontier,
         "submission_unchecked_items": unchecked,
         "submission_video_url_present":
-            "https://www.youtube.com/watch?v=HeMbxjvuN7Y" in submission
+            "https://www.youtube.com/watch?v=ALsmXTatIOE" in submission
             and "TO BE ADDED" not in submission,
         "architecture_names_oct29": "Thu Oct 29, 2026" in architecture,
         "judge_mode_names_oct29": "Oct 29, 2026" in judge_mode,

@@ -27,7 +27,7 @@ Honest gaps in this draft, by design:
 - **Tagline:** One GitHub issue in → a tested pull request out — and when
   an issue is destructive, the agents stop and ask a human instead.
 - **Repository:** https://github.com/josephbolus/devops-as-a-service
-- **Demo video URL:** https://www.youtube.com/watch?v=HeMbxjvuN7Y
+- **Demo video URL:** https://www.youtube.com/watch?v=ALsmXTatIOE
 
 ## Description (Impact — 30%)
 

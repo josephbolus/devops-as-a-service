@@ -41,7 +41,7 @@ class TestSubmissionDraft(unittest.TestCase):
         # Oct 29, 2026: the video exists (Remotion build, public on
         # YouTube, verified playable). Pin the URL and the absence of
         # the old placeholder/gap wording.
-        self.assertIn("https://www.youtube.com/watch?v=HeMbxjvuN7Y",
+        self.assertIn("https://www.youtube.com/watch?v=ALsmXTatIOE",
                       self.text)
         self.assertNotIn("TO BE ADDED", self.text)
         self.assertNotIn("no video exists yet", self.text)
