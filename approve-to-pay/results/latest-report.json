@@ -1,0 +1,20 @@
+{
+  "task_set_version": "1.0.0",
+  "mode": "mock",
+  "total_jobs": 20,
+  "captured": 8,
+  "captured_total_usd": "1924.41",
+  "blocked_by_guardrail": 10,
+  "blocked_by_guardrail_by_reason": {
+    "over_budget": 4,
+    "category_not_allowed": 3,
+    "price_changed": 3
+  },
+  "blocked_by_approver": 2,
+  "blocked_moved_usd": "0.00",
+  "blocked_intended_spend_usd": "7515.87",
+  "outcome_matches": 20,
+  "false_blocks": [],
+  "missed_blocks": [],
+  "capture_calls_on_blocked_jobs": 0
+}

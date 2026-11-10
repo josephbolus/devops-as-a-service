@@ -127,3 +127,13 @@ the submission itself (Nov 4, the builder's go).
 ## Separations
 
 - No RAG prototype code — this is the submitted DevOps entry only.
+
+## Approve-to-Pay (PayPal AI Hackathon, Nov 10–12, 2026)
+
+The same guardrail + human-approval pattern, pointed at money instead of
+code — see [`approve-to-pay/`](approve-to-pay/README.md). An agent's
+purchasing jobs pass a deterministic guardrail (budget cap, category
+allowlist, price-drift), become real PayPal Orders API orders that sit
+UNCAPTURED until a human approver authorizes the spend, and every
+decision is written to an append-only log. Measured against a frozen
+20-job task set with the misses published alongside the pass rate.
