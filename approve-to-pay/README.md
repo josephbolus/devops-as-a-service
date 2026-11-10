@@ -49,7 +49,7 @@ Zero dependencies — Python 3.10+ standard library only.
 ```bash
 cd approve-to-pay
 
-# Tests (guardrail, the never-capture-on-no invariant, task-set integrity)
+# Tests (guardrail, never-capture-on-no, task-set integrity, console)
 python3 -m unittest discover -s tests -v
 
 # Run the frozen task set (appends to decision-log.jsonl, writes
@@ -59,6 +59,33 @@ python3 run_tasks.py
 # Run one job
 python3 run_tasks.py --job ATP-019
 ```
+
+### The approval console (the human gate, on screen)
+
+```bash
+cd approve-to-pay
+python3 run_console.py            # http://127.0.0.1:8765
+python3 run_console.py --port 9000
+```
+
+A local web UI (standard library only, no build step) that makes each
+stage legible: the guardrail verdict with its reason, labeled as
+deterministic code; the PayPal order with its real order ID, sitting
+**UNCAPTURED** while the console approver decides; PayPal's **payer
+approval** shown as PayPal's own step, visually distinct from our
+**console approval** gate. **Approve** fires the capture and the order
+flips to **COMPLETED** — the captured order is the receipt. **Deny**
+means capture is never called: the screen shows "$0 moved" next to the
+decision-log entry that proves it (`capture_called: false`). The side
+panels show the frozen task set's measured results — captured, guardrail
+blocks by reason, approver blocks, **and the misses** (false blocks /
+missed blocks) — plus a viewer for the append-only decision log.
+
+The console consumes the pipeline; it never reimplements verdicts.
+Interactive runs pause inside the pipeline's `decide` hook with the
+order already created and uncaptured. In mock mode the header is
+labeled **SANDBOX-FIXTURE**; set the sandbox credentials (below) and
+the same UI runs against the real PayPal sandbox with no changes.
 
 ### PayPal sandbox (live mode)
 
@@ -96,6 +123,8 @@ approvetopay/
                             console approval -> capture (or never)
   decision_log.py           append-only JSONL audit trail
   cli.py                    runner + report (counts incl. the misses)
+  console.py                the approval console (local web UI, stdlib
+                            only) — run via run_console.py
 fixtures/mock_orders.json   recorded-shape Orders API responses
 tests/                      guardrail, invariant, and task-set tests
 results/                    latest run report (md + json)

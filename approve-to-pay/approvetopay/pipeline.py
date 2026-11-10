@@ -13,6 +13,13 @@ Stages, in order — the stage boundaries are the product:
 4. **Console approval** — Approve-to-Pay's human gate. The approver sees
    the exact item and the exact checkout amount. "deny" ends the run:
    `capture()` is NEVER called and the order stays uncaptured ($0 moved).
+   Batch runs take the decision from the job's scripted
+   `approver_decision`; an interactive caller (the approval console)
+   passes `decide`, a callable invoked at this stage with
+   ``(job, order)`` that returns "approve" or "deny" — the pipeline
+   pauses inside the callable while the human decides, with the order
+   already created and still UNCAPTURED. Semantics are identical either
+   way: anything other than "approve" means capture is never called.
 5. **Capture** — only reached on guardrail pass + payer approval +
    console approval. Returns COMPLETED; the captured order is the receipt.
 """
@@ -20,10 +27,11 @@ Stages, in order — the stage boundaries are the product:
 from __future__ import annotations
 
 from decimal import Decimal
+from typing import Callable
 
 from . import guardrail
 from .decision_log import DecisionLog
-from .paypal_client import MockPayPalClient, PayPalClient
+from .paypal_client import MockPayPalClient, Order, PayPalClient
 
 OUTCOME_CAPTURE = "capture"
 OUTCOME_BLOCK_GUARDRAIL = "block_guardrail"
@@ -32,7 +40,8 @@ OUTCOME_BLOCK_APPROVER = "block_approver"
 
 def run_job(job: dict, policy: dict, client: PayPalClient | MockPayPalClient,
             log: DecisionLog, run_id: str,
-            payer_approved: bool = True) -> dict:
+            payer_approved: bool = True,
+            decide: Callable[[dict, Order], str] | None = None) -> dict:
     """Run one job end to end, append its decision-log entry, return it."""
     amount = str(Decimal(job["checkout_price"]).quantize(Decimal("0.01")))
     entry: dict = {
@@ -79,7 +88,9 @@ def run_job(job: dict, policy: dict, client: PayPalClient | MockPayPalClient,
 
     # 4. Console approval gate — the human decides. A "no" is final:
     #    capture is never called and the order stays uncaptured.
-    decision = job["approver_decision"]
+    #    Interactive callers decide live via the `decide` hook; batch
+    #    runs use the job's scripted decision.
+    decision = decide(job, order) if decide is not None else job["approver_decision"]
     entry["approver_decision"] = decision
     if decision != "approve":
         entry["actual_outcome"] = OUTCOME_BLOCK_APPROVER
